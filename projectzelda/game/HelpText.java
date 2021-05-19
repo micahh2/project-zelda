@@ -2,11 +2,14 @@
 // (c) Thorsten Hasbargen
 
 
+package projectzelda.game;
+
+import projectzelda.engine.*;
 import java.awt.Color;
 
-class Gam20_HelpText extends A_TextObject
+class HelpText extends TextObject
 {
-  public Gam20_HelpText(int x, int y)
+  public HelpText(int x, int y)
   { super(x,y, new Color(0,120,255,60));
   }
   

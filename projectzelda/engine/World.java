@@ -1,41 +1,43 @@
 
 // (c) Thorsten Hasbargen
 
+package projectzelda.engine;
 
+import projectzelda.*;
 import java.util.ArrayList;
 
-abstract class A_World
+public abstract class World
 {
-  private  A_GraphicSystem graphicSystem;
-  private  A_PhysicsSystem physicsSystem;
-  private  A_InputSystem   inputSystem;  
-  private  A_UserInput     userInput;
+  private  GraphicSystem graphicSystem;
+  public  PhysicsSystem physicsSystem;
+  private  InputSystem   inputSystem;  
+  private  UserInput     userInput;
   
   // top left corner of the displayed pane of the world
-  double worldPartX = 0;
-  double worldPartY = 0;
+  public double worldPartX = 0;
+  public double worldPartY = 0;
   
   // defines maximum frame rate
   private static final int FRAME_MINIMUM_MILLIS = 10;
   
   // if game is over
-  boolean gameOver = false;
+  public boolean gameOver = false;
   
   // all objects in the game, including the Avatar
-  A_GameObjectList        gameObjects = new A_GameObjectList();
-  A_GameObject            avatar;          
-  ArrayList<A_TextObject> textObjects = new ArrayList<A_TextObject>();
-    
+  public GameObjectList        gameObjects = new GameObjectList();
+  public GameObject            avatar;          
+  public ArrayList<TextObject> textObjects = new ArrayList<TextObject>();
   
-  A_World()
-  { physicsSystem = new Gam20_PhysicsSystem(this);
-  }
+  //public World(PhysicsSystem ps)
+  //{ 
+  //    physicsSystem = ps;//new PhysicsSystem(this);
+  //}
   
   
   //
   // the main GAME LOOP
   //
-  final void run()
+  public final void run()
   {
 	long lastTick =  System.currentTimeMillis();
 	
@@ -70,7 +72,7 @@ abstract class A_World
 	  int gameSize = gameObjects.size();
 	  for(int i=0; i<gameSize; i++)
 	  { 
-        A_GameObject obj = gameObjects.get(i);
+        GameObject obj = gameObjects.get(i);
         if(obj.isLiving)  obj.move(millisDiff/1000.0);
 	  }
 	  
@@ -117,42 +119,42 @@ abstract class A_World
   //
   private final void adjustWorldPart()
   {
-    final int RIGHT_END  = A_Const.WORLD_WIDTH-A_Const.WORLDPART_WIDTH;
-    final int BOTTOM_END = A_Const.WORLD_HEIGHT-A_Const.WORLDPART_HEIGHT;
+    final int RIGHT_END  = Const.WORLD_WIDTH-Const.WORLDPART_WIDTH;
+    final int BOTTOM_END = Const.WORLD_HEIGHT-Const.WORLDPART_HEIGHT;
 	  	  
     
 	// if avatar is too much right in display ...
-    if(avatar.x > worldPartX+A_Const.WORLDPART_WIDTH-A_Const.SCROLL_BOUNDS)
+    if(avatar.x > worldPartX+Const.WORLDPART_WIDTH-Const.SCROLL_BOUNDS)
     {
       // ... adjust display
-      worldPartX = avatar.x+A_Const.SCROLL_BOUNDS-A_Const.WORLDPART_WIDTH;
+      worldPartX = avatar.x+Const.SCROLL_BOUNDS-Const.WORLDPART_WIDTH;
       if(worldPartX >= RIGHT_END)
       { worldPartX = RIGHT_END;
       }
     }
     
     // same left
-    else if(avatar.x < worldPartX+A_Const.SCROLL_BOUNDS)
+    else if(avatar.x < worldPartX+Const.SCROLL_BOUNDS)
     {
-      worldPartX = avatar.x-A_Const.SCROLL_BOUNDS;	
+      worldPartX = avatar.x-Const.SCROLL_BOUNDS;	
       if(worldPartX <=0)
       { worldPartX = 0;
       }
     }
     
     // same bottom
-    if(avatar.y > worldPartY+A_Const.WORLDPART_HEIGHT-A_Const.SCROLL_BOUNDS)
+    if(avatar.y > worldPartY+Const.WORLDPART_HEIGHT-Const.SCROLL_BOUNDS)
     {
-        worldPartY = avatar.y+A_Const.SCROLL_BOUNDS-A_Const.WORLDPART_HEIGHT;
+        worldPartY = avatar.y+Const.SCROLL_BOUNDS-Const.WORLDPART_HEIGHT;
         if(worldPartY >= BOTTOM_END)
         { worldPartY = BOTTOM_END;
         }   	
     }
     
     // same top
-    else if(avatar.y < worldPartY+A_Const.SCROLL_BOUNDS)
+    else if(avatar.y < worldPartY+Const.SCROLL_BOUNDS)
     {
-      worldPartY = avatar.y-A_Const.SCROLL_BOUNDS;
+      worldPartY = avatar.y-Const.SCROLL_BOUNDS;
       if(worldPartY <=0)
       { worldPartY = 0;
       }
@@ -161,14 +163,14 @@ abstract class A_World
   }
   
     
-  protected void setGraphicSystem(A_GraphicSystem p) { graphicSystem = p; }
-  protected void setInputSystem(A_InputSystem p)     { inputSystem   = p; }
+  public void setGraphicSystem(GraphicSystem p) { graphicSystem = p; }
+  public void setInputSystem(InputSystem p)     { inputSystem   = p; }
   
-  protected A_PhysicsSystem getPhysicsSystem()       { return physicsSystem; }
+  public PhysicsSystem getPhysicsSystem()       { return physicsSystem; }
   
   
-  protected abstract void init();
-  protected abstract void processUserInput(A_UserInput input, double diffSec);
-  protected abstract void createNewObjects(double diffSeconds);
+  public abstract void init();
+  public abstract void processUserInput(UserInput input, double diffSec);
+  public abstract void createNewObjects(double diffSeconds);
   
 }
