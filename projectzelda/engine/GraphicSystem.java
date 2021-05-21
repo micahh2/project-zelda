@@ -1,22 +1,23 @@
 
 // (c) Thorsten Hasbargen
+package projectzelda.engine;
 
 
-interface A_GraphicSystem 
+public interface GraphicSystem 
 {
   // prepare to draw a new Screen
   void clear();
   
   // draw ONE GameObject on the Screen
-  void draw(A_GameObject dot);
+  void draw(GameObject dot);
  
   // draw ONE TextObject on the Screen
-  void draw(A_TextObject obj);
+  void draw(TextObject obj);
   
   // display the completed Screen
   void redraw();
   
   
   // set world
-  void setWorld(A_World world);  
+  void setWorld(World world);  
 }

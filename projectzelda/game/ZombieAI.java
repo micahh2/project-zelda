@@ -2,10 +2,14 @@
 // (c) Thorsten Hasbargen
 
 
+package projectzelda.game;
+
+import projectzelda.*;
+import projectzelda.engine.*;
 import java.awt.Color;
 
 
-class Gam20_ZombieAI extends A_GameObject
+class ZombieAI extends GameObject
 {
   private static final int HUNTING  = 1;
   private static final int STUCK    = 2;
@@ -19,7 +23,7 @@ class Gam20_ZombieAI extends A_GameObject
   private double life = 1.0;
   
 
-  public Gam20_ZombieAI(double x, double y)
+  public ZombieAI(double x, double y)
   {
     super(x,y,0,60,15,new Color(160,80,40));
     this.isMoving = false;
@@ -58,21 +62,21 @@ class Gam20_ZombieAI extends A_GameObject
       super.move(diffSeconds);
     
       // handle collisions of the zombie
-	  A_GameObjectList collisions = world.getPhysicsSystem().getCollisions(this);
+	  GameObjectList collisions = world.getPhysicsSystem().getCollisions(this);
 	  for(int i=0; i<collisions.size(); i++)
 	  {
-	    A_GameObject obj = collisions.get(i);
+	    GameObject obj = collisions.get(i);
 	  
 	    int type = obj.type();
 	  
 	    // if object is avatar, game over
-	    if(type==A_Const.TYPE_AVATAR) 
+	    if(type==Const.TYPE_AVATAR) 
 	    { this.moveBack();
 	      world.gameOver=true; 
 	    }
 	  
 	    // if object is zombie, step back
-	    if(type==A_Const.TYPE_ZOMBIE) 
+	    if(type==Const.TYPE_ZOMBIE) 
 	    { 
           moveBack(); 
           state = STUCK;
@@ -80,7 +84,7 @@ class Gam20_ZombieAI extends A_GameObject
 	    }
 	  
 	    // if Object is a tree, move back one step
-	    if(obj.type()==A_Const.TYPE_TREE) 
+	    if(obj.type()==Const.TYPE_TREE) 
 	    { 
           moveBack(); 
           state = STUCK;
@@ -121,7 +125,7 @@ class Gam20_ZombieAI extends A_GameObject
 	  super.move(diffSeconds);
 	  
 	  // check if path was unblocked
-	  A_GameObjectList collisions = world.getPhysicsSystem().getCollisions(this);
+	  GameObjectList collisions = world.getPhysicsSystem().getCollisions(this);
       if(collisions.size()>0)
       {
     	moveBack();
@@ -150,5 +154,5 @@ class Gam20_ZombieAI extends A_GameObject
   }
 
   
-  public int type() { return A_Const.TYPE_ZOMBIE; }
+  public int type() { return Const.TYPE_ZOMBIE; }
 }

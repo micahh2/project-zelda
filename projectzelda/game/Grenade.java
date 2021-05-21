@@ -2,13 +2,17 @@
 // (c) Thorsten Hasbargen
 
 
+package projectzelda.game;
+
+import projectzelda.*;
+import projectzelda.engine.*;
 import java.awt.Color;
 
-class Gam20_Grenade extends A_GameObject
+class Grenade extends GameObject
 {
-  double life = A_Const.LIFE_GRENADE;
+  double life = Const.LIFE_GRENADE;
   
-  public Gam20_Grenade(double x, double y)
+  public Grenade(double x, double y)
   {
     super(x,y,0,0,15,Color.ORANGE);
   }
@@ -23,5 +27,5 @@ class Gam20_Grenade extends A_GameObject
     
   }
   
-  public int type() { return A_Const.TYPE_GRENADE; }
+  public int type() { return Const.TYPE_GRENADE; }
 }
