@@ -14,8 +14,8 @@
 
 - with make: `make`
 - with just javac:
-    javac projectzelda/Main.java
-    java projectzelda/Main.java
+        javac projectzelda/Main.java
+        java projectzelda/Main.java
 
 ## Documentation
 
