@@ -2,21 +2,20 @@
 
 ## Get Started
 
-- Git clone ([Download git for Windows](https://git-scm.com/downloads))
+### Step 1. - Git clone ([Download git for Windows](https://git-scm.com/downloads))
 
     git clone https://github.com/micahh2/project-zelda.git
 
-- Change directory
+### Step 2. - Change directory
 
     cd project-zelda
 
-- Compile
+### Step 3. Compile & Run
 
+- with make: `make`
+- with just javac:
     javac projectzelda/Main.java
-
-- Run
-
-    javac projectzelda/Main.java
+    java projectzelda/Main.java
 
 ## Documentation
 

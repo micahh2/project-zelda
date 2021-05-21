@@ -37,10 +37,9 @@ public class RPGWorld extends World
 
         // add a little forrest
 
-        for(int x=0; x<5000; x+=1000)
+        for(int x=0; x < 5000; x += 1000)
         {
-
-            for(int y=0; y<4000; y+=800)
+            for(int y= 0; y < 4000; y += 800)
             {
                 gameObjects.add(new Tree(x+300,y+200,80));
                 gameObjects.add(new Tree(x+600,y+370,50));
@@ -75,20 +74,18 @@ public class RPGWorld extends World
         //
         // Mouse events
         //
-        if(userInput.isMouseEvent)
-        {
-            // move
-            if(button==1)
-            { avatar.setDestination(userInput.mousePressedX+worldPartX, 
-                    userInput.mousePressedY+worldPartY);
-            }
-        }
+        // if (userInput.isMouseEvent) {
+        //     // move
+        //     if(button==1) { 
+        //         avatar.setDestination(userInput.mousePressedX+worldPartX, 
+        //             userInput.mousePressedY+worldPartY);
+        //     }
+        // }
 
         //
         // Mouse still pressed?
         //
-        if(userInput.isMousePressed && button==3)
-        {
+        if (userInput.isMousePressed && button==1) {
             // only 1 shot every ... seconds:
             timeSinceLastShot += diffSeconds;
             if(timeSinceLastShot > 0.2)
@@ -104,14 +101,43 @@ public class RPGWorld extends World
         //
         // Keyboard events
         //
-        if(userInput.isKeyEvent)
-        {
-            if(userInput.keyPressed==' ')
-            { throwGrenade(userInput.mouseMovedX+worldPartX,userInput.mouseMovedY+worldPartY);
+        if (userInput.isKeyEvent) {
+            switch (userInput.keyPressed) {
+                case ' ':
+                    throwGrenade(userInput.mouseMovedX+worldPartX,userInput.mouseMovedY+worldPartY);
+                    break;
+                case 'q':
+                case (char)27:
+                    System.exit(0);
+                    break;
+                case 'w':
+                case 'a':
+                case 's':
+                case 'd':
+                    break;
+                default:
+                    System.out.println("Unknown key code " + userInput.keyPressed);
+                    break;
             }
-            else if(userInput.keyPressed==(char)27)
-            { System.exit(0);
-            }
+
+        }
+        int vert = 0;
+        int horz = 0;
+        if (userInput.keysPressed.contains('w')) {
+            vert -= 10;
+        }
+        if (userInput.keysPressed.contains('a')) {
+            horz -= 10;
+        }
+        if (userInput.keysPressed.contains('s')) {
+            vert += 10;
+        }
+        if (userInput.keysPressed.contains('d')) {
+            horz += 10;
+        }
+        // Move character
+        if (horz != 0 || vert != 0) {
+            avatar.setDestination(avatar.x+horz, avatar.y+vert);
         }
     }
 
