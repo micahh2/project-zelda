@@ -9,6 +9,8 @@ import java.awt.Color;
 
 class Avatar extends GameObject
 {
+    private final double COOLDOWN = 0.5;
+    private double weaponTemp = 0;
 
     public Avatar(double x, double y) 
     { 
@@ -18,22 +20,42 @@ class Avatar extends GameObject
 
     public void move(double diffSeconds)
     {
+        if (weaponTemp > 0) {
+            weaponTemp -= diffSeconds;
+        }
         // move Avatar one step forward
         super.move(diffSeconds);
 
         // calculate all collisions with other Objects 
         GameObjectList collisions = world.getPhysicsSystem().getCollisions(this);
-        for(int i=0; i<collisions.size(); i++)
-        {
+        for(int i = 0; i < collisions.size(); i++) {
             GameObject obj = collisions.get(i);
 
-            // if Object is a tree, move back one step
-            if(obj.type()==Const.TYPE_TREE) { 
-                this.moveBack(); 
+            switch (obj.type()) {
+                // if Object is a tree, move back one step
+                case Const.TYPE_TREE:
+                    this.moveBack(); 
+                    break;
+                
+                case Const.TYPE_GOBLIN:
+                    this.moveBack(); 
+                    if (weaponTemp <= 0) {
+                        ((GoblinAI)obj).hit();
+                        weaponTemp = COOLDOWN;
+                    }
+                    break;
+
+                // pick up Bones
+                case Const.TYPE_BONES:
+                    ((RPGWorld)world).addBones();
+                    obj.isLiving = false;
+                    break;
+
                 // pick up Grenades
-            } else if(obj.type()==Const.TYPE_GRENADE) { 
-                ((RPGWorld)world).addGrenade();
-                obj.isLiving=false;
+                case Const.TYPE_GRENADE:
+                    ((RPGWorld)world).addGrenade();
+                    obj.isLiving = false;
+                    break;
             }
         }
     }

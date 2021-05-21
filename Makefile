@@ -16,7 +16,6 @@ CLASSES = \
 	  projectzelda/engine/UserInput.java \
 	  projectzelda/engine/World.java \
 	  projectzelda/game/Avatar.java \
-	  projectzelda/game/CounterGrenades.java \
 	  projectzelda/game/Counter.java \
 	  projectzelda/game/Grenade.java \
 	  projectzelda/game/HelpText.java \
@@ -25,6 +24,8 @@ CLASSES = \
 	  projectzelda/game/Shot.java \
 	  projectzelda/game/Tree.java \
 	  projectzelda/game/ZombieAI.java \
+	  projectzelda/game/GoblinAI.java \
+	  projectzelda/game/Bones.java \
 	  projectzelda/gfx/AWTInputSystem.java \
 	  projectzelda/gfx/SwingFrame.java \
 	  projectzelda/gfx/SwingPanel.java \
@@ -35,7 +36,7 @@ default: classes run
 classes: $(CLASSES:.java=.class)
 
 clean:
-	$(RM) *.class
+	$(RM) **/*.class
 
 run: 
 	java projectzelda/Main

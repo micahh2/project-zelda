@@ -22,6 +22,8 @@ public final class Const
   public static final int TYPE_TEXT    = 2;
   public static final int TYPE_TREE    = 3;
   public static final int TYPE_ZOMBIE  = 4;
-  public static final int TYPE_SHOT    = 5;
-  public static final int TYPE_GRENADE = 6;
+  public static final int TYPE_GOBLIN  = 5;
+  public static final int TYPE_SHOT    = 6;
+  public static final int TYPE_GRENADE = 7;
+  public static final int TYPE_BONES   = 8;
 }

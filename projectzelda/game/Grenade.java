@@ -10,22 +10,23 @@ import java.awt.Color;
 
 class Grenade extends GameObject
 {
-  double life = Const.LIFE_GRENADE;
-  
-  public Grenade(double x, double y)
-  {
-    super(x,y,0,0,15,Color.ORANGE);
-  }
-  
-  public void move(double diffSeconds)
-  {
-    life -= diffSeconds;
-    if(life<0)
-    { this.isLiving=false;
-      return;
+    double life = Const.LIFE_GRENADE;
+
+    public Grenade(double x, double y)
+    {
+        super(x,y,0,0,15,Color.ORANGE);
     }
-    
-  }
-  
-  public int type() { return Const.TYPE_GRENADE; }
+
+    public void move(double diffSeconds)
+    {
+        life -= diffSeconds;
+        if(life<0)
+        { 
+            this.isLiving=false;
+            return;
+        }
+
+    }
+
+    public int type() { return Const.TYPE_GRENADE; }
 }

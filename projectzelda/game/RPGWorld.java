@@ -12,10 +12,10 @@ public class RPGWorld extends World
     private double timeSinceLastShot = 0;
 
     // for grenades
-    private int grenades = 5;
-    private CounterGrenades counterG;
-    private Counter         counterZ;
-    private HelpText        helpText;
+    private int         grenades = 5;
+    private Counter     counterG;
+    private Counter     counterB;
+    private HelpText    helpText;
     private double spawnGrenade = 0;
 
     private double lifeHelpText = 10.0;
@@ -52,16 +52,19 @@ public class RPGWorld extends World
 
 
 
-        // add one zombie
-        gameObjects.add(new ZombieAI(100,100));
+        // add some zombies
+        for (int i = 0; i < 10; i++) {
+            double x = worldPartX+Math.random()*Const.WORLDPART_WIDTH;
+            double y = worldPartY+Math.random()*Const.WORLDPART_HEIGHT;
+            gameObjects.add(new GoblinAI(x, y));
+        }
 
-
-        counterZ = new Counter(20,40);
-        counterG = new CounterGrenades(770,40);
+        counterB = new Counter("Bones: ", 20,40);
+        counterG = new Counter("Grenades: ", 770,40);
         helpText = new HelpText(100,400);
 
         counterG.setNumber(grenades);
-        textObjects.add(counterZ);
+        textObjects.add(counterB);
         textObjects.add(counterG);
         textObjects.add(helpText);
     }
@@ -165,7 +168,7 @@ public class RPGWorld extends World
 
     public void createNewObjects(double diffSeconds)
     {
-        createZombie(diffSeconds);
+        // createZombie(diffSeconds);
         createGrenade(diffSeconds);
 
         // delete HelpText after ... seconds
@@ -273,4 +276,8 @@ public class RPGWorld extends World
         counterG.setNumber(grenades);
     }
 
+    public void addBones()
+    {
+        counterB.increment();
+    }
 }
