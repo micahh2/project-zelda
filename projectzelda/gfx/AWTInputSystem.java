@@ -1,20 +1,22 @@
 
 // (c) Thorsten Hasbargen
 
+package projectzelda.gfx;
 
+import projectzelda.engine.*;
 import java.awt.event.*;
 
-class B_InputSystem 
-  implements A_InputSystem, KeyListener, MouseListener, MouseMotionListener
+class AWTInputSystem 
+  implements InputSystem, KeyListener, MouseListener, MouseMotionListener
 {
 	  
   // UserInput variables
-  private A_UserInput userInput = new A_UserInput();
+  private UserInput userInput = new UserInput();
 	  
   public void mousePressed(MouseEvent evt)
   {
-	// an input Event occurs
-	userInput.isMouseEvent      = true;
+    // an input Event occurs
+    userInput.isMouseEvent      = true;
     userInput.mousePressedX     = evt.getX();
     userInput.mousePressedY     = evt.getY();
     userInput.mouseButton       = evt.getButton();
@@ -51,7 +53,8 @@ class B_InputSystem
   public void keyTyped(KeyEvent evt){}	
   
   
-  public A_UserInput getUserInput()
-  { return userInput;
+  public UserInput getUserInput()
+  { 
+      return userInput;
   }  
 }

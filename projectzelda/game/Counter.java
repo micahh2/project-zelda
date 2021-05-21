@@ -2,21 +2,24 @@
 // (c) Thorsten Hasbargen
 
 
+package projectzelda.game;
+
+import projectzelda.engine.*;
 import java.awt.Color;
 
-class Gam20_CounterGrenades extends A_TextObject
+class Counter extends TextObject
 {
   private int number = 1;
 	
-  public Gam20_CounterGrenades(int x, int y)
+  public Counter(int x, int y)
   { super(x,y, new Color(255,255,0,210));
   }
   
   public String toString()
-  { String display = "Grenades: ";
+  { String display = "Zombies: ";
     display += number;
     return display;
   }
   
-  public void setNumber(int n){number=n;}
+  public void increment(){ number++; }
 }

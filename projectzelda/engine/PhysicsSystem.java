@@ -1,19 +1,20 @@
 
 // (c) Thorsten Hasbargen
 
+package projectzelda.engine;
 
-abstract class A_PhysicsSystem 
+public abstract class PhysicsSystem 
 {
-  protected A_World world;
+  public World world;
   
-  public A_PhysicsSystem(A_World w)
+  public PhysicsSystem(World w)
   { world = w;
   }
 
-  protected abstract A_GameObjectList getCollisions(A_GameObject object);
+  public abstract GameObjectList getCollisions(GameObject object);
   
   
-  protected double distance(double x1, double y1, double x2, double y2)
+  public double distance(double x1, double y1, double x2, double y2)
   {
     double xd = x1-x2;
     double yd = y1-y2;
@@ -24,7 +25,7 @@ abstract class A_PhysicsSystem
   //
   // move object "back" reverse alfa until it just does not collide
   //
-  public void moveBackToUncollide(A_GameObject object)
+  public void moveBackToUncollide(GameObject object)
   {
     double dx = Math.cos(object.alfa);
     double dy = Math.sin(object.alfa);
@@ -34,7 +35,7 @@ abstract class A_PhysicsSystem
       object.x -= dx;
       object.y -= dy;
       
-      A_GameObjectList collisions = getCollisions(object);
+      GameObjectList collisions = getCollisions(object);
       if(collisions.size()==0) break;
     }
   }
