@@ -12,10 +12,10 @@ public class RPGWorld extends World
     private double timeSinceLastShot = 0;
 
     // for grenades
-    private int grenades = 5;
-    private CounterGrenades counterG;
-    private Counter         counterZ;
-    private HelpText        helpText;
+    private int         grenades = 5;
+    private Counter     counterG;
+    private Counter     counterB;
+    private HelpText    helpText;
     private double spawnGrenade = 0;
 
     private double lifeHelpText = 10.0;
@@ -37,10 +37,9 @@ public class RPGWorld extends World
 
         // add a little forrest
 
-        for(int x=0; x<5000; x+=1000)
+        for(int x=0; x < 5000; x += 1000)
         {
-
-            for(int y=0; y<4000; y+=800)
+            for(int y= 0; y < 4000; y += 800)
             {
                 gameObjects.add(new Tree(x+300,y+200,80));
                 gameObjects.add(new Tree(x+600,y+370,50));
@@ -53,16 +52,19 @@ public class RPGWorld extends World
 
 
 
-        // add one zombie
-        gameObjects.add(new ZombieAI(100,100));
+        // add some zombies
+        for (int i = 0; i < 10; i++) {
+            double x = worldPartX+Math.random()*Const.WORLDPART_WIDTH;
+            double y = worldPartY+Math.random()*Const.WORLDPART_HEIGHT;
+            gameObjects.add(new GoblinAI(x, y));
+        }
 
-
-        counterZ = new Counter(20,40);
-        counterG = new CounterGrenades(770,40);
+        counterB = new Counter("Bones: ", 20,40);
+        counterG = new Counter("Grenades: ", 770,40);
         helpText = new HelpText(100,400);
 
         counterG.setNumber(grenades);
-        textObjects.add(counterZ);
+        textObjects.add(counterB);
         textObjects.add(counterG);
         textObjects.add(helpText);
     }
@@ -75,20 +77,18 @@ public class RPGWorld extends World
         //
         // Mouse events
         //
-        if(userInput.isMouseEvent)
-        {
-            // move
-            if(button==1)
-            { avatar.setDestination(userInput.mousePressedX+worldPartX, 
-                    userInput.mousePressedY+worldPartY);
-            }
-        }
+        // if (userInput.isMouseEvent) {
+        //     // move
+        //     if(button==1) { 
+        //         avatar.setDestination(userInput.mousePressedX+worldPartX, 
+        //             userInput.mousePressedY+worldPartY);
+        //     }
+        // }
 
         //
         // Mouse still pressed?
         //
-        if(userInput.isMousePressed && button==3)
-        {
+        if (userInput.isMousePressed && button==1) {
             // only 1 shot every ... seconds:
             timeSinceLastShot += diffSeconds;
             if(timeSinceLastShot > 0.2)
@@ -104,14 +104,43 @@ public class RPGWorld extends World
         //
         // Keyboard events
         //
-        if(userInput.isKeyEvent)
-        {
-            if(userInput.keyPressed==' ')
-            { throwGrenade(userInput.mouseMovedX+worldPartX,userInput.mouseMovedY+worldPartY);
+        if (userInput.isKeyEvent) {
+            switch (userInput.keyPressed) {
+                case ' ':
+                    throwGrenade(userInput.mouseMovedX+worldPartX,userInput.mouseMovedY+worldPartY);
+                    break;
+                case 'q':
+                case (char)27:
+                    System.exit(0);
+                    break;
+                case 'w':
+                case 'a':
+                case 's':
+                case 'd':
+                    break;
+                default:
+                    System.out.println("Unknown key code " + userInput.keyPressed);
+                    break;
             }
-            else if(userInput.keyPressed==(char)27)
-            { System.exit(0);
-            }
+
+        }
+        int vert = 0;
+        int horz = 0;
+        if (userInput.keysPressed.contains('w')) {
+            vert -= 10;
+        }
+        if (userInput.keysPressed.contains('a')) {
+            horz -= 10;
+        }
+        if (userInput.keysPressed.contains('s')) {
+            vert += 10;
+        }
+        if (userInput.keysPressed.contains('d')) {
+            horz += 10;
+        }
+        // Move character
+        if (horz != 0 || vert != 0) {
+            avatar.setDestination(avatar.x+horz, avatar.y+vert);
         }
     }
 
@@ -139,7 +168,7 @@ public class RPGWorld extends World
 
     public void createNewObjects(double diffSeconds)
     {
-        createZombie(diffSeconds);
+        // createZombie(diffSeconds);
         createGrenade(diffSeconds);
 
         // delete HelpText after ... seconds
@@ -247,4 +276,8 @@ public class RPGWorld extends World
         counterG.setNumber(grenades);
     }
 
+    public void addBones()
+    {
+        counterB.increment();
+    }
 }
