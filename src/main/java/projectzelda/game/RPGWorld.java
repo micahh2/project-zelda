@@ -2,38 +2,12 @@
 // (c) Thorsten Hasbargen
 
 package projectzelda.game;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import projectzelda.*;
 import projectzelda.engine.*;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 
 public class RPGWorld extends World 
 {
-
-    private static void parseEmployeeObject(JSONObject employee)
-    {
-        //Get employee object within list
-        JSONObject employeeObject = (JSONObject) employee.get("employee");
-
-        //Get employee first name
-        String firstName = (String) employeeObject.get("firstName");
-        System.out.println(firstName);
-
-        //Get employee last name
-        String lastName = (String) employeeObject.get("lastName");
-        System.out.println(lastName);
-
-        //Get employee website name
-        String website = (String) employeeObject.get("website");
-        System.out.println(website);
-    }
 
 
     private double timePassed = 0;
