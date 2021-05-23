@@ -3,11 +3,39 @@
 
 package projectzelda.game;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import projectzelda.*;
 import projectzelda.engine.*;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+
 public class RPGWorld extends World 
 {
+
+    private static void parseEmployeeObject(JSONObject employee)
+    {
+        //Get employee object within list
+        JSONObject employeeObject = (JSONObject) employee.get("employee");
+
+        //Get employee first name
+        String firstName = (String) employeeObject.get("firstName");
+        System.out.println(firstName);
+
+        //Get employee last name
+        String lastName = (String) employeeObject.get("lastName");
+        System.out.println(lastName);
+
+        //Get employee website name
+        String website = (String) employeeObject.get("website");
+        System.out.println(website);
+    }
+
+
     private double timePassed = 0;
     private double timeSinceLastShot = 0;
 
@@ -21,7 +49,7 @@ public class RPGWorld extends World
     private double lifeHelpText = 10.0;
 
     public RPGWorld()
-    { 
+    {
         physicsSystem = new RPGPhysicsSystem(this);
     }
 
@@ -30,6 +58,8 @@ public class RPGWorld extends World
         // add the Avatar
         avatar = new Avatar(2500,2000);
         gameObjects.add(avatar);
+
+
 
         // set WorldPart position
         worldPartX = 1500;
