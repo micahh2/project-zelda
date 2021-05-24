@@ -10,7 +10,7 @@ public class Sound {
     private String fileName;
     private Clip clip;
     private InputStream inputStream;
-    AudioInputStream audioInputStream;
+    private AudioInputStream audioInputStream;
 
     //constructor to initialize streams and clip
     public Sound(String fileName) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
@@ -42,21 +42,10 @@ public class Sound {
 
     }
 
-    public void playSound() throws LineUnavailableException, IOException {
-
+    public void playSound()  {
 
             clip.start();
 
         }
-
-
-
-    public void resetAudioStream() throws UnsupportedAudioFileException, IOException,
-            LineUnavailableException
-    {
-        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(inputStream);
-        clip.open(audioInputStream);
-        clip.loop(Clip.LOOP_CONTINUOUSLY);
-    }
 
 }
