@@ -7,6 +7,9 @@ import projectzelda.*;
 import projectzelda.engine.*;
 import java.awt.*;
 import java.awt.image.*;
+import java.io.IOException;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 
 class SwingPanel extends JPanel implements GraphicSystem
@@ -31,8 +34,7 @@ class SwingPanel extends JPanel implements GraphicSystem
 
   
 	
-  public SwingPanel()
-  { 
+  public SwingPanel() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
 	this.setSize(Const.WORLDPART_WIDTH, Const.WORLDPART_HEIGHT);  
 	imageBuffer = graphicsConf.createCompatibleImage(
 			        this.getWidth(), this.getHeight());	 

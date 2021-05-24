@@ -24,6 +24,8 @@ public class RPGWorld extends World
     private double spawnGrenade = 0;
 
 
+
+
     private double lifeHelpText = 10.0;
 
     public RPGWorld() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
@@ -74,7 +76,7 @@ public class RPGWorld extends World
         textObjects.add(helpText);
     }
 
-    public void processUserInput(UserInput userInput, double diffSeconds) {
+    public void processUserInput(UserInput userInput, double diffSeconds) throws UnsupportedAudioFileException, LineUnavailableException, IOException {
         // distinguish if Avatar shall move or shoots	  
         int button = userInput.mouseButton;
 
@@ -95,10 +97,12 @@ public class RPGWorld extends World
         if (userInput.isMousePressed && button==1) {
             // only 1 shot every ... seconds:
 
+
             timeSinceLastShot += diffSeconds;
             if(timeSinceLastShot > 0.2)
             {
                 timeSinceLastShot = 0;
+
 
                 Shot shot = new Shot(
                         avatar.x,avatar.y,userInput.mouseMovedX+worldPartX,userInput.mouseMovedY+worldPartY);		
@@ -113,6 +117,8 @@ public class RPGWorld extends World
             switch (userInput.keyPressed) {
                 case ' ':
                     throwGrenade(userInput.mouseMovedX+worldPartX,userInput.mouseMovedY+worldPartY);
+                    Sound sword = new Sound("/music/sword-sound-1_16bit.wav");
+                    sword.playSound();
                     break;
                 case 'q':
                 case (char)27:
@@ -133,6 +139,7 @@ public class RPGWorld extends World
         int horz = 0;
         if (userInput.keysPressed.contains('w')) {
             vert -= 10;
+
         }
         if (userInput.keysPressed.contains('a')) {
             horz -= 10;

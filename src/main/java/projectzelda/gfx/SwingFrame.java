@@ -5,7 +5,11 @@ package projectzelda.gfx;
 
 import projectzelda.*;
 import projectzelda.engine.*;
+
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
+import java.io.IOException;
 
 public class SwingFrame extends JFrame implements Frame
 {
@@ -14,8 +18,7 @@ public class SwingFrame extends JFrame implements Frame
 
   private SwingPanel panel = null;
 
-  public SwingFrame()
-  { 
+  public SwingFrame() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
       this.setDefaultCloseOperation(EXIT_ON_CLOSE);
       this.setSize(Const.WORLDPART_WIDTH+2, Const.WORLDPART_HEIGHT+2);
 
