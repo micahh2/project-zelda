@@ -2,12 +2,14 @@
 // (c) Thorsten Hasbargen
 
 package projectzelda.game;
-
 import projectzelda.*;
 import projectzelda.engine.*;
 
+
 public class RPGWorld extends World 
 {
+
+
     private double timePassed = 0;
     private double timeSinceLastShot = 0;
 
@@ -21,7 +23,7 @@ public class RPGWorld extends World
     private double lifeHelpText = 10.0;
 
     public RPGWorld()
-    { 
+    {
         physicsSystem = new RPGPhysicsSystem(this);
     }
 
@@ -30,6 +32,8 @@ public class RPGWorld extends World
         // add the Avatar
         avatar = new Avatar(2500,2000);
         gameObjects.add(avatar);
+
+
 
         // set WorldPart position
         worldPartX = 1500;
