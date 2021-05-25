@@ -12,11 +12,7 @@
 
 ### Step 3. Compile & Run
 
-- with make: `make`
-- with just javac:
-
-        javac projectzelda/Main.java
-        java projectzelda/Main.java
+    mvn compile && cd target/java && java projectzelda.Main
 
 ## Documentation
 
