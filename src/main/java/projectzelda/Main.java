@@ -14,7 +14,10 @@ final class Main
 
     public Main()
     { 
-        Frame frame = new SwingFrame();
+        Map map = new Map("world_map.tmx");
+        System.out.println(map);
+
+        Frame frame = new SwingFrame(map);
         frame.displayOnScreen();
 
         world = new RPGWorld();
@@ -31,8 +34,6 @@ final class Main
     }
 
     public static void main(String[] args) {
-        Map map = new Map("world_map.tmx");
-        System.out.println(map);
         new Main();
     }
 }
