@@ -6,15 +6,17 @@ import java.io.File;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 import org.w3c.dom.*;
+import projectzelda.engine.ImageRef;
 
-public class Tileset {
+public class Tileset implements Comparable<Tileset> {
     public int firstgid;
     public String name;
     public int tileheight;
+    public int tilewidth;
     public int spacing;
     public int margin;
     public int tilecount;
-    public int column;
+    public int columns;
 
     public String imageSource;
 
@@ -34,10 +36,11 @@ public class Tileset {
             NamedNodeMap attrs = tileset.getAttributes();
             name = attrs.getNamedItem("name").getTextContent();
             tileheight = Integer.parseInt(attrs.getNamedItem("tileheight").getTextContent());
+            tilewidth = Integer.parseInt(attrs.getNamedItem("tilewidth").getTextContent());
             spacing = Integer.parseInt(attrs.getNamedItem("spacing").getTextContent());
             tilecount = Integer.parseInt(attrs.getNamedItem("tilecount").getTextContent());
             margin = Integer.parseInt(attrs.getNamedItem("margin").getTextContent());
-            column = Integer.parseInt(attrs.getNamedItem("columns").getTextContent());
+            columns = Integer.parseInt(attrs.getNamedItem("columns").getTextContent());
 
             // Get image attributes
             Node image = document.getElementsByTagName("image").item(0);
@@ -49,15 +52,37 @@ public class Tileset {
             e.printStackTrace();
         }
     }
+
+    public ImageRef getImageRef(int gid) {
+        if (gid < firstgid || gid > (firstgid+tilecount-1)) { 
+            System.out.println("Error");
+            return null;
+        }
+        int index = gid-firstgid;
+        int x = (index % columns);
+        int y = (index / columns);
+        int xpixel = x*(tilewidth+spacing)+margin;
+        int ypixel = y*(tileheight+spacing)+margin;
+        return new ImageRef(imageSource, xpixel, ypixel, xpixel+tilewidth, ypixel+tileheight);
+    }
+
+    @Override
     public String toString() {
         return "Tileset { "
         + "firstgid=" + firstgid
         + "; name=" + name
+        + "; tilewidth=" + tilewidth
         + "; tileheight=" + tileheight
         + "; spacing" + spacing
         + "; margin=" + margin
         + "; tilecount=" + tilecount
-        + "; column=" + column
+        + "; columns=" + columns
         + "; }";
     }
+
+    @Override
+    public int compareTo(Tileset other) {
+        return other.firstgid - firstgid;
+    }
+
 }
