@@ -4,6 +4,10 @@
 package projectzelda.engine;
 
 import projectzelda.*;
+
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public abstract class World
@@ -39,8 +43,7 @@ public abstract class World
     //
     // the main GAME LOOP
     //
-    public final void run()
-    {
+    public final void run() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
         long lastTick =  System.currentTimeMillis();
 
         userInput = inputSystem.getUserInput();
@@ -177,7 +180,7 @@ public abstract class World
 
 
     public abstract void init();
-    public abstract void processUserInput(UserInput input, double diffSec);
+    public abstract void processUserInput(UserInput input, double diffSec) throws UnsupportedAudioFileException, LineUnavailableException, IOException;
     public abstract void createNewObjects(double diffSeconds);
 
 }

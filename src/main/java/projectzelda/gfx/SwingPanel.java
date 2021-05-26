@@ -9,6 +9,9 @@ import javax.imageio.ImageIO;
 import java.io.File;
 import java.awt.*;
 import java.awt.image.*;
+import java.io.IOException;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import java.util.Map;
 import java.util.HashMap;
@@ -16,24 +19,23 @@ import java.util.List;
 
 class SwingPanel extends JPanel implements GraphicSystem
 {
-    // constants
-    private static final long serialVersionUID = 1L;
-    private static final Font font = new Font("Arial",Font.PLAIN,24);
+  // constants
+  private static final long serialVersionUID = 1L;
+  private static final Font font = new Font("Arial",Font.PLAIN,24);
 
+  
+  // InputSystem is an external instance
+  private AWTInputSystem inputSystem = new AWTInputSystem();
+  private World       world       = null;
 
-    // InputSystem is an external instance
-    private AWTInputSystem inputSystem = new AWTInputSystem();
-    private World       world       = null;
-
-
-    // GraphicsSystem variables
-    //
-    private GraphicsConfiguration graphicsConf = 
-        GraphicsEnvironment.getLocalGraphicsEnvironment().
-        getDefaultScreenDevice().getDefaultConfiguration();
-    private BufferedImage imageBuffer;
-    private Graphics      graphics;
-
+	
+  // GraphicsSystem variables
+  //
+  private GraphicsConfiguration graphicsConf = 
+    GraphicsEnvironment.getLocalGraphicsEnvironment().
+    getDefaultScreenDevice().getDefaultConfiguration();
+  private BufferedImage imageBuffer;
+  private Graphics      graphics;
 
     // Images
     private MediaTracker tracker;
@@ -41,7 +43,7 @@ class SwingPanel extends JPanel implements GraphicSystem
     private BufferedImage background;
     private MediaInfo mediaInfo;
 
-    public SwingPanel(MediaInfo mediaInfo)
+    public SwingPanel(MediaInfo mediaInfo) throws UnsupportedAudioFileException, LineUnavailableException, IOException 
     { 
         this.mediaInfo = mediaInfo;
         int width = Const.WORLDPART_WIDTH;
@@ -128,17 +130,17 @@ class SwingPanel extends JPanel implements GraphicSystem
     }
     
     public final void drawPauseMenu(){
-      graphics.setColor(Color.DARK_GRAY);
-      graphics.fillRect(600, 200, 300, 100);
-      graphics.fillRect(600, 500, 300, 100);
-      graphics.setColor(Color.BLACK);
-      graphics.drawRect(600, 200, 300, 100);
-      graphics.drawRect(600, 500, 300, 100);
+        graphics.setColor(Color.DARK_GRAY);
+        graphics.fillRect(600, 200, 300, 100);
+        graphics.fillRect(600, 500, 300, 100);
+        graphics.setColor(Color.BLACK);
+        graphics.drawRect(600, 200, 300, 100);
+        graphics.drawRect(600, 500, 300, 100);
 
-      graphics.setFont(font);
-      graphics.drawString("Resume", 700, 250);
-      graphics.drawString("Quit", 700, 550);
-  }
+        graphics.setFont(font);
+        graphics.drawString("Resume", 700, 250);
+        graphics.drawString("Quit", 700, 550);
+    }
 
     public void redraw()
     { this.getGraphics().drawImage(imageBuffer, 0, 0, this);
@@ -146,7 +148,5 @@ class SwingPanel extends JPanel implements GraphicSystem
 
     public final InputSystem getInputSystem() { return inputSystem; }
     public final void setWorld(World world_)  {this.world = world_;}
-
-
 }
 

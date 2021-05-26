@@ -5,15 +5,17 @@ import projectzelda.game.*;
 import projectzelda.gfx.*;
 import projectzelda.map.*;
 
+import java.io.IOException;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 // (c) Thorsten Hasbargen
 
-final class Main 
-{
+final class Main {
     private World world = null;
 
-    public Main()
-    { 
+    public Main() throws UnsupportedAudioFileException, LineUnavailableException, IOException 
+    {
         Map map = new Map("world_map.tmx");
         System.out.println(map);
 
@@ -33,7 +35,11 @@ final class Main
         world.run();
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws UnsupportedAudioFileException, LineUnavailableException, IOException 
+    {
+
+        Sound sound = new Sound("/music/Forest_Ventures.wav");
+        sound.playBackgroundMusic();
         new Main();
     }
 }
