@@ -71,6 +71,19 @@ class SwingPanel extends JPanel implements GraphicSystem
     graphics.setColor(text.color);
     graphics.drawString(text.toString(), (int)text.x, (int)text.y);
   }
+
+  public final void drawPauseMenu(){
+      graphics.setColor(Color.DARK_GRAY);
+      graphics.fillRect(600, 200, 300, 100);
+      graphics.fillRect(600, 500, 300, 100);
+      graphics.setColor(Color.BLACK);
+      graphics.drawRect(600, 200, 300, 100);
+      graphics.drawRect(600, 500, 300, 100);
+
+      graphics.setFont(font);
+      graphics.drawString("Resume", 700, 250);
+      graphics.drawString("Quit", 700, 550);
+  }
   
   
   public void redraw()
