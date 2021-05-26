@@ -13,6 +13,8 @@ public interface GraphicSystem
  
   // draw ONE TextObject on the Screen
   void draw(TextObject obj);
+
+  void drawPauseMenu();
   
   // display the completed Screen
   void redraw();
