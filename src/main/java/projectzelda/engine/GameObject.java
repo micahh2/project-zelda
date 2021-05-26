@@ -16,6 +16,7 @@ public abstract class GameObject
     public double  speed = 0;
     public int     radius = 7;
     public Color   color;
+    public ImageRef imageRef;
 
     // if the object is existing, moving etc
     public boolean isLiving = true;

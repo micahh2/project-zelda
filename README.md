@@ -10,17 +10,13 @@
 
     cd project-zelda
 
-### Step 3. Compile & Run
+### Step 3. - Compile & Run
 
-- with make: `make`
-- with just javac:
+    mvn compile && cd target/classes && java projectzelda.Main
 
-        javac projectzelda/Main.java
-        java projectzelda/Main.java
+## Art Attributions
 
-## Documentation
-
-Tilesets used for the map, itens and characters:
+Tilesets used for the map, items and characters:
 
 - https://www.deviantart.com/cypressdahlia/art/16x16-Pico-8-Characters-740058321
 - https://0x72.itch.io/16x16-dungeon-tileset

@@ -26,6 +26,7 @@ public abstract class World
 
     // if game is over
     public boolean gameOver = false;
+    public boolean pause = false;
 
     // all objects in the game, including the Avatar
     public GameObjectList        gameObjects = new GameObjectList();
@@ -109,6 +110,10 @@ public abstract class World
             // draw all TextObjects
             for(int i=0; i<textObjects.size(); i++)
             { graphicSystem.draw(textObjects.get(i));
+            }
+
+            if(pause){
+                graphicSystem.drawPauseMenu();
             }
 
             // redraw everything

@@ -18,7 +18,8 @@ public class SwingFrame extends JFrame implements Frame
 
   private SwingPanel panel = null;
 
-  public SwingFrame() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
+  public SwingFrame(MediaInfo mediaInfo) throws UnsupportedAudioFileException, LineUnavailableException, IOException
+  { 
       this.setDefaultCloseOperation(EXIT_ON_CLOSE);
       this.setSize(Const.WORLDPART_WIDTH+2, Const.WORLDPART_HEIGHT+2);
 
@@ -27,7 +28,7 @@ public class SwingFrame extends JFrame implements Frame
 
       this.setResizable(false);
 
-      panel = new SwingPanel();
+      panel = new SwingPanel(mediaInfo);
 
       // needed for Keyboard input !!!
       panel.setFocusable(true);

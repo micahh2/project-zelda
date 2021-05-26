@@ -3,6 +3,7 @@ package projectzelda;
 import projectzelda.engine.*;
 import projectzelda.game.*;
 import projectzelda.gfx.*;
+import projectzelda.map.*;
 
 import java.io.IOException;
 import javax.sound.sampled.LineUnavailableException;
@@ -13,8 +14,12 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 final class Main {
     private World world = null;
 
-    public Main() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
-        Frame frame = new SwingFrame();
+    public Main() throws UnsupportedAudioFileException, LineUnavailableException, IOException 
+    {
+        Map map = new Map("world_map.tmx");
+        System.out.println(map);
+
+        Frame frame = new SwingFrame(map);
         frame.displayOnScreen();
 
         world = new RPGWorld();
@@ -30,11 +35,11 @@ final class Main {
         world.run();
     }
 
-    public static void main(String[] args) throws UnsupportedAudioFileException, LineUnavailableException, IOException {
+    public static void main(String[] args) throws UnsupportedAudioFileException, LineUnavailableException, IOException 
+    {
 
         Sound sound = new Sound("/music/Forest_Ventures.wav");
         sound.playBackgroundMusic();
         new Main();
-
     }
 }
