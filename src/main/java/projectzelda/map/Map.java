@@ -117,11 +117,11 @@ public class Map implements MediaInfo {
                 // Bitwise operators to remove the flags
                 val &= ~(FLIPPED_HORIZONTALLY_FLAG | FLIPPED_VERTICALLY_FLAG | FLIPPED_DIAGONALLY_FLAG);
 
-                int toX = (i % l.height) * tilesize;
-                int toY = (int)Math.floor(i / l.height)* tilesize;
-
                 Tileset t = getTilesetFromId(val);
                 ImageRef ir = getImageRef(val);
+
+                int toX = (i % l.height) * t.tilewidth;
+                int toY = (int)Math.floor(i / l.height)* t.tileheight;
                 //System.out.println("Val: " + val + ", x:y " + ir.x1 + ":" + ir.y1 + ", image: " + ir.name);
 
                 tiles.add(new ImageRefTo(ir, toX, toY, toX+t.tilewidth, toY+t.tileheight, horizontally, vertically, diagonally));

@@ -32,21 +32,19 @@ public class Background {
                 // Flip the image diagonally
                 if (tile.diagonallyFliped) { 
                     trans.rotate(Math.toRadians(180));
-                    trans.translate(-centerx, -centery);
                 }
 
                 // Flip the image vertically
                 if (tile.verticallyFliped) { 
                     trans.scale(1, -1);
-                    trans.translate(-centerx, -centery);
                 }
 
                 // Flip the image horizontally
                 if (tile.horizontallyFliped) {
                     trans.scale(-1, 1);
-                    trans.translate(-centerx, -centery);
                 }
 
+                trans.translate(-centerx, -centery);
                 graphics.transform(trans);
             }
 

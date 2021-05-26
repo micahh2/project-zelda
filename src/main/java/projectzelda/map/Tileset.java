@@ -61,8 +61,8 @@ public class Tileset implements Comparable<Tileset> {
         int index = gid-firstgid;
         int x = (index % columns);
         int y = (index / columns);
-        int xpixel = (x+spacing)*tilewidth+margin;
-        int ypixel = (y+spacing)*tileheight+margin;
+        int xpixel = x*(tilewidth+spacing)+margin;
+        int ypixel = y*(tileheight+spacing)+margin;
         return new ImageRef(imageSource, xpixel, ypixel, xpixel+tilewidth, ypixel+tileheight);
     }
 
