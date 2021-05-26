@@ -64,7 +64,7 @@ class SwingPanel extends JPanel implements GraphicSystem
             List<String> sources = mediaInfo.getImageSources();
             for (int i = 0; i < sources.size(); i++) {
                 String filename = sources.get(i);
-                Image img = ImageIO.read(new File(filename));
+                Image img = ImageIO.read(new File(mediaInfo.getMediaDir() + "/" +filename));
                 images.put(filename, img);
                 tracker.addImage(img, i);
             }

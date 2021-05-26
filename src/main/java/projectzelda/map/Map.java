@@ -23,9 +23,13 @@ public class Map implements MediaInfo {
     public static final int FLIPPED_VERTICALLY_FLAG = 0x40000000;
     public static final int FLIPPED_DIAGONALLY_FLAG = 0x20000000;
 
+    public static String mediaDir;
+
     public Map(String src) {
         try {
             File file = new File(src);
+            mediaDir = file.getParent();
+
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
             Document document = documentBuilder.parse(file);
@@ -69,7 +73,7 @@ public class Map implements MediaInfo {
                 int firstgid = Integer.parseInt(attrs.getNamedItem("firstgid").getTextContent());
                 String source = attrs.getNamedItem("source").getTextContent();
 
-                tilesets.add(new Tileset(firstgid, source));
+                tilesets.add(new Tileset(firstgid, file.getParent() + "/" + source));
             }
             Collections.sort(tilesets); // Important, sorts in desc order
 
@@ -98,6 +102,10 @@ public class Map implements MediaInfo {
             sources.add(t.imageSource);
         }
         return sources;
+    }
+
+    public String getMediaDir() {
+        return mediaDir;
     }
 
     public List<ImageRefTo> getBackgroundTiles() {
