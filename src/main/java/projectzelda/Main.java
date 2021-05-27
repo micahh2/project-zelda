@@ -37,9 +37,6 @@ final class Main {
 
     public static void main(String[] args) throws UnsupportedAudioFileException, LineUnavailableException, IOException 
     {
-
-        Sound sound = new Sound("/music/Forest_Ventures.wav");
-        sound.playBackgroundMusic();
         new Main();
     }
 }

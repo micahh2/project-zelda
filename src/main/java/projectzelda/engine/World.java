@@ -4,6 +4,7 @@
 package projectzelda.engine;
 
 import projectzelda.*;
+import projectzelda.game.Sound;
 
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
@@ -33,6 +34,11 @@ public abstract class World
     public GameObject            avatar;          
     public ArrayList<TextObject> textObjects = new ArrayList<TextObject>();
 
+    Sound sound = new Sound ("/music/Forest_Ventures.wav");
+
+    protected World() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
+    }
+
     //public World(PhysicsSystem ps)
     //{ 
     //    physicsSystem = ps;//new PhysicsSystem(this);
@@ -45,6 +51,9 @@ public abstract class World
     //
     public final void run() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
         long lastTick =  System.currentTimeMillis();
+
+        sound.playBackgroundMusic();
+        sound.setVolume(-20.0f);
 
         userInput = inputSystem.getUserInput();
         while(true)
@@ -114,7 +123,15 @@ public abstract class World
 
             if(pause){
                 graphicSystem.drawPauseMenu();
+                sound.setVolume(-40.0f);
+
             }
+            else {
+                sound.setVolume(-20.0f);
+
+            }
+
+
 
             // redraw everything
             graphicSystem.redraw();
