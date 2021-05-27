@@ -26,6 +26,7 @@ public class RPGWorld extends World {
 
 
 
+
     private double lifeHelpText = 10.0;
 
     public RPGWorld() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
@@ -40,6 +41,7 @@ public class RPGWorld extends World {
         // set WorldPart position
         worldPartX = 1500;
         worldPartY = 1500;
+
 
         // add a little forrest
 
@@ -113,14 +115,17 @@ public class RPGWorld extends World {
                 case ' ':
                     throwGrenade(userInput.mouseMovedX+worldPartX,userInput.mouseMovedY+worldPartY);
                     Sound sword = new Sound("/music/sword-sound-1_16bit.wav");
+                    sword.setVolume(-30.0f);
                     sword.playSound();
                     break;
                 case 'q':
                     System.exit(0);
+
                     break;
                 case (char) 27:
                     pause = !pause;
                     break;
+
                 case 'w':
                 case 'a':
                 case 's':
