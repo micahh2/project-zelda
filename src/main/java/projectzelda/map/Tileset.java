@@ -45,7 +45,7 @@ public class Tileset implements Comparable<Tileset> {
             // Get image attributes
             Node image = document.getElementsByTagName("image").item(0);
             NamedNodeMap imageAttrs = image.getAttributes();
-            imageSource = imageAttrs.getNamedItem("source").getTextContent();
+            imageSource = file.getParent() + "/" + imageAttrs.getNamedItem("source").getTextContent();
 
         } catch(Exception e) {
             System.out.println("Tileset Exception! " + e.getMessage());
