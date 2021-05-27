@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.LinkedList;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.net.URL;
 import java.io.File;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
@@ -23,12 +24,14 @@ public class Map implements MediaInfo {
     public static final int FLIPPED_VERTICALLY_FLAG = 0x40000000;
     public static final int FLIPPED_DIAGONALLY_FLAG = 0x20000000;
 
-    public static String mediaDir;
+    public static String mapsDir;
 
     public Map(String src) {
         try {
-            File file = new File(src);
-            mediaDir = file.getParent();
+
+            URL resourceUri = getClass().getResource(src);
+            File file = new File(resourceUri.getPath());
+            mapsDir = file.getParent();
 
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
@@ -61,9 +64,6 @@ public class Map implements MediaInfo {
                 // Create a new layer and add it to our collection
                 layers.add(new Layer(id, name, width, height, data));
             }
-            // java.lang.NullPointerException: 
-            // Cannot invoke "org.w3c.dom.Node.getTextContent()" 
-            // because the return value of "org.w3c.dom.NamedNodeMap.getNamedItem(String)" is null
 
             // Read the tilesets
             NodeList nodeTilesets = document.getElementsByTagName("tileset");
@@ -73,7 +73,7 @@ public class Map implements MediaInfo {
                 int firstgid = Integer.parseInt(attrs.getNamedItem("firstgid").getTextContent());
                 String source = attrs.getNamedItem("source").getTextContent();
 
-                tilesets.add(new Tileset(firstgid, file.getParent() + "/" + source));
+                tilesets.add(new Tileset(firstgid, mapsDir + "/" + source));
             }
             Collections.sort(tilesets); // Important, sorts in desc order
 
@@ -85,7 +85,7 @@ public class Map implements MediaInfo {
 
     Tileset getTilesetFromId(int id) {
         if (id == 0) { return null; }
-        // Assumes that tilesets are sorted by firstgid in desc order
+        // Tilesets must be sorted by firstgid in desc order
         for (Tileset t : tilesets) {
             if (t.firstgid <= id) { return t; }
         }
@@ -102,10 +102,6 @@ public class Map implements MediaInfo {
             sources.add(t.imageSource);
         }
         return sources;
-    }
-
-    public String getMediaDir() {
-        return mediaDir;
     }
 
     public List<ImageRefTo> getBackgroundTiles() {
