@@ -24,16 +24,13 @@ public class RPGWorld extends World {
     private double spawnGrenade = 0;
 
 
-
-
-
     private double lifeHelpText = 10.0;
 
     public RPGWorld() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
         physicsSystem = new RPGPhysicsSystem(this);
     }
 
-    public void init() {
+    public void init() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
         // add the Avatar
         avatar = new Avatar(2500, 2000);
         gameObjects.add(avatar);
@@ -72,6 +69,12 @@ public class RPGWorld extends World {
         textObjects.add(counterB);
         textObjects.add(counterG);
         textObjects.add(helpText);
+
+        // add the pause menu buttons
+        pauseMenuObjects.add(new UIButton(600, 200, 300, 100, "Resume"));
+        pauseMenuObjects.add(new UIButton(600, 500, 300, 100, "Quit"));
+
+        sound = new Sound("/music/Forest_Ventures.wav");
     }
 
     public void processUserInput(UserInput userInput, double diffSeconds) throws UnsupportedAudioFileException, LineUnavailableException, IOException {
@@ -93,17 +96,31 @@ public class RPGWorld extends World {
         // Mouse still pressed?
         //
         if (userInput.isMousePressed && button == 1) {
-            // only 1 shot every ... seconds:
+            if (this.gameState == GameState.PAUSE) {
+                UIButton resumeButton = (UIButton) pauseMenuObjects.get(0);
+                UIButton quitButton = (UIButton) pauseMenuObjects.get(1);
+
+                if (userInput.mouseMovedX >= resumeButton.x && userInput.mouseMovedX <= resumeButton.getMaxX()
+                        && (userInput.mouseMovedY >= resumeButton.y && userInput.mouseMovedY <= resumeButton.getMaxY())) {
+                    gameState = GameState.PLAY;
+                }
+
+                if (userInput.mouseMovedX >= quitButton.x && userInput.mouseMovedX <= quitButton.getMaxX()
+                        && (userInput.mouseMovedY >= quitButton.y && userInput.mouseMovedY <= quitButton.getMaxY())) {
+                    System.exit(0);
+                }
+
+            } else {
+                // only 1 shot every ... seconds:
+                timeSinceLastShot += diffSeconds;
+                if (timeSinceLastShot > 0.2) {
+                    timeSinceLastShot = 0;
 
 
-            timeSinceLastShot += diffSeconds;
-            if (timeSinceLastShot > 0.2) {
-                timeSinceLastShot = 0;
-
-
-                Shot shot = new Shot(
-                        avatar.x, avatar.y, userInput.mouseMovedX + worldPartX, userInput.mouseMovedY + worldPartY);
-                this.gameObjects.add(shot);
+                    Shot shot = new Shot(
+                            avatar.x, avatar.y, userInput.mouseMovedX + worldPartX, userInput.mouseMovedY + worldPartY);
+                    this.gameObjects.add(shot);
+                }
             }
         }
 
@@ -113,17 +130,13 @@ public class RPGWorld extends World {
         if (userInput.isKeyEvent) {
             switch (userInput.keyPressed) {
                 case ' ':
-                    throwGrenade(userInput.mouseMovedX+worldPartX,userInput.mouseMovedY+worldPartY);
+                    throwGrenade(userInput.mouseMovedX + worldPartX, userInput.mouseMovedY + worldPartY);
                     Sound sword = new Sound("/music/sword-sound-1_16bit.wav");
                     sword.setVolume(-30.0f);
                     sword.playSound();
                     break;
-                case 'q':
-                    System.exit(0);
-
-                    break;
                 case (char) 27:
-                    pause = !pause;
+                    this.gameState = this.gameState == GameState.PAUSE ? GameState.PLAY : GameState.PAUSE;
                     break;
 
                 case 'w':
