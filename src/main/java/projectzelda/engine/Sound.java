@@ -1,4 +1,4 @@
-package projectzelda.game;
+package projectzelda.engine;
 
 import javax.sound.sampled.*;
 import java.io.IOException;
