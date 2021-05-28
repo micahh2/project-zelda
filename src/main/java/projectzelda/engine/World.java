@@ -4,19 +4,17 @@
 package projectzelda.engine;
 
 import projectzelda.*;
-import projectzelda.game.Sound;
 
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public abstract class World
-{
-    private     GraphicSystem   graphicSystem;
-    public      PhysicsSystem   physicsSystem;
-    private     InputSystem     inputSystem;  
-    private     UserInput       userInput;
+public abstract class World {
+    private GraphicSystem graphicSystem;
+    public PhysicsSystem physicsSystem;
+    private InputSystem inputSystem;
+    private UserInput userInput;
 
     // top left corner of the displayed pane of the world
     public double worldPartX = 0;
@@ -27,14 +25,17 @@ public abstract class World
 
     // if game is over
     public boolean gameOver = false;
-    public boolean pause = false;
 
     // all objects in the game, including the Avatar
-    public GameObjectList        gameObjects = new GameObjectList();
-    public GameObject            avatar;          
+    public GameObjectList gameObjects = new GameObjectList();
+    public GameObject avatar;
     public ArrayList<TextObject> textObjects = new ArrayList<TextObject>();
 
-    Sound sound = new Sound ("/music/Forest_Ventures.wav");
+    public ArrayList<UIObject> pauseMenuObjects = new ArrayList<>();
+
+    public Sound sound = new Sound("/music/Forest_Ventures.wav");
+
+    public GameState gameState = GameState.PLAY;
 
     protected World() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
     }
@@ -45,159 +46,164 @@ public abstract class World
     //}
 
 
-
     //
     // the main GAME LOOP
     //
     public final void run() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
-        long lastTick =  System.currentTimeMillis();
+        long lastTick = System.currentTimeMillis();
 
         sound.playBackgroundMusic();
         sound.setVolume(-20.0f);
 
         userInput = inputSystem.getUserInput();
-        while(true)
-        {
+        while (true) {
             // calculate elapsed time
             //
             long currentTick = System.currentTimeMillis();
-            long millisDiff  = currentTick-lastTick;
+            long millisDiff = currentTick - lastTick;
 
             // don't run faster then MINIMUM_DIFF_SECONDS per frame
             //
-            if(millisDiff<FRAME_MINIMUM_MILLIS)
-            {
-                try{ Thread.sleep(FRAME_MINIMUM_MILLIS-millisDiff);} catch(Exception ex){}
+            if (millisDiff < FRAME_MINIMUM_MILLIS) {
+                try {
+                    Thread.sleep(FRAME_MINIMUM_MILLIS - millisDiff);
+                } catch (Exception ex) {
+                }
                 currentTick = System.currentTimeMillis();
-                millisDiff  = currentTick-lastTick;
+                millisDiff = currentTick - lastTick;
             }
 
             lastTick = currentTick;
 
 
             // process User Input
-            synchronized(userInput) {
-                processUserInput(userInput, millisDiff/1000.0);
+            synchronized (userInput) {
+                processUserInput(userInput, millisDiff / 1000.0);
                 userInput.clear();
             }
 
             // no actions if game is over
-            if(gameOver) { continue;}
-
-            // move all Objects, maybe collide them etc...
-            int gameSize = gameObjects.size();
-            for(int i=0; i<gameSize; i++)
-            { 
-                GameObject obj = gameObjects.get(i);
-                if(obj.isLiving) { obj.move(millisDiff/1000.0); }
+            if (gameOver) {
+                continue;
             }
 
-
-            // delete all Objects which are not living anymore
-            int num = 0;
-            while(num < gameSize)
-            {
-                if(gameObjects.get(num).isLiving==false) { 
-                    gameObjects.remove(num);
-                    gameSize--;
-                } else { 
-                    num++;
+            int gameSize = gameObjects.size();
+            if (gameState == GameState.PLAY) {
+                // move all Objects, maybe collide them etc...
+                for (int i = 0; i < gameSize; i++) {
+                    GameObject obj = gameObjects.get(i);
+                    if (obj.isLiving) {
+                        obj.move(millisDiff / 1000.0);
+                    }
                 }
-            }	  
 
 
-            // adjust displayed pane of the world
-            this.adjustWorldPart();
+                // delete all Objects which are not living anymore
+                int num = 0;
+                while (num < gameSize) {
+                    if (gameObjects.get(num).isLiving == false) {
+                        gameObjects.remove(num);
+                        gameSize--;
+                    } else {
+                        num++;
+                    }
+                }
+
+
+                // adjust displayed pane of the world
+                this.adjustWorldPart();
+            }
 
             // draw all Objects
             graphicSystem.clear();
-            for(int i=0; i<gameSize; i++)
-            { graphicSystem.draw(gameObjects.get(i));
+            for (int i = 0; i < gameSize; i++) {
+                graphicSystem.draw(gameObjects.get(i));
             }
 
 
             // draw all TextObjects
-            for(int i=0; i<textObjects.size(); i++)
-            { graphicSystem.draw(textObjects.get(i));
+            for (int i = 0; i < textObjects.size(); i++) {
+                graphicSystem.draw(textObjects.get(i));
             }
 
-            if(pause){
-                graphicSystem.drawPauseMenu();
+            if (gameState == GameState.PAUSE) {
+                for (int i = 0; i < pauseMenuObjects.size(); i++) {
+                    graphicSystem.draw(pauseMenuObjects.get(i));
+                }
                 sound.setVolume(-40.0f);
-
-            }
-            else {
+            } else {
                 sound.setVolume(-20.0f);
-
             }
-
-
 
             // redraw everything
             graphicSystem.redraw();
 
             // create new objects if needed
-            createNewObjects(millisDiff/1000.0);
+            createNewObjects(millisDiff / 1000.0);
         }
     }
 
 
     // adjust the displayed pane of the world according to Avatar and Bounds
     //
-    private final void adjustWorldPart()
-    {
-        final int RIGHT_END  = Const.WORLD_WIDTH-Const.WORLDPART_WIDTH;
-        final int BOTTOM_END = Const.WORLD_HEIGHT-Const.WORLDPART_HEIGHT;
+    private final void adjustWorldPart() {
+        final int RIGHT_END = Const.WORLD_WIDTH - Const.WORLDPART_WIDTH;
+        final int BOTTOM_END = Const.WORLD_HEIGHT - Const.WORLDPART_HEIGHT;
 
 
         // if avatar is too much right in display ...
-        if(avatar.x > worldPartX+Const.WORLDPART_WIDTH-Const.SCROLL_BOUNDS)
-        {
+        if (avatar.x > worldPartX + Const.WORLDPART_WIDTH - Const.SCROLL_BOUNDS) {
             // ... adjust display
-            worldPartX = avatar.x+Const.SCROLL_BOUNDS-Const.WORLDPART_WIDTH;
-            if(worldPartX >= RIGHT_END)
-            { worldPartX = RIGHT_END;
+            worldPartX = avatar.x + Const.SCROLL_BOUNDS - Const.WORLDPART_WIDTH;
+            if (worldPartX >= RIGHT_END) {
+                worldPartX = RIGHT_END;
             }
         }
 
         // same left
-        else if(avatar.x < worldPartX+Const.SCROLL_BOUNDS)
-        {
-            worldPartX = avatar.x-Const.SCROLL_BOUNDS;	
-            if(worldPartX <=0)
-            { worldPartX = 0;
+        else if (avatar.x < worldPartX + Const.SCROLL_BOUNDS) {
+            worldPartX = avatar.x - Const.SCROLL_BOUNDS;
+            if (worldPartX <= 0) {
+                worldPartX = 0;
             }
         }
 
         // same bottom
-        if(avatar.y > worldPartY+Const.WORLDPART_HEIGHT-Const.SCROLL_BOUNDS)
-        {
-            worldPartY = avatar.y+Const.SCROLL_BOUNDS-Const.WORLDPART_HEIGHT;
-            if(worldPartY >= BOTTOM_END)
-            { worldPartY = BOTTOM_END;
-            }   	
+        if (avatar.y > worldPartY + Const.WORLDPART_HEIGHT - Const.SCROLL_BOUNDS) {
+            worldPartY = avatar.y + Const.SCROLL_BOUNDS - Const.WORLDPART_HEIGHT;
+            if (worldPartY >= BOTTOM_END) {
+                worldPartY = BOTTOM_END;
+            }
         }
 
         // same top
-        else if(avatar.y < worldPartY+Const.SCROLL_BOUNDS)
-        {
-            worldPartY = avatar.y-Const.SCROLL_BOUNDS;
-            if(worldPartY <=0)
-            { worldPartY = 0;
+        else if (avatar.y < worldPartY + Const.SCROLL_BOUNDS) {
+            worldPartY = avatar.y - Const.SCROLL_BOUNDS;
+            if (worldPartY <= 0) {
+                worldPartY = 0;
             }
-        }    
+        }
 
     }
 
 
-    public void setGraphicSystem(GraphicSystem p) { graphicSystem = p; }
-    public void setInputSystem(InputSystem p)     { inputSystem   = p; }
+    public void setGraphicSystem(GraphicSystem p) {
+        graphicSystem = p;
+    }
 
-    public PhysicsSystem getPhysicsSystem()       { return physicsSystem; }
+    public void setInputSystem(InputSystem p) {
+        inputSystem = p;
+    }
+
+    public PhysicsSystem getPhysicsSystem() {
+        return physicsSystem;
+    }
 
 
-    public abstract void init();
+    public abstract void init() throws UnsupportedAudioFileException, LineUnavailableException, IOException;
+
     public abstract void processUserInput(UserInput input, double diffSec) throws UnsupportedAudioFileException, LineUnavailableException, IOException;
+
     public abstract void createNewObjects(double diffSeconds);
 
 }

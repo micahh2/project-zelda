@@ -5,6 +5,8 @@ package projectzelda.gfx;
 
 import projectzelda.*;
 import projectzelda.engine.*;
+import projectzelda.game.UIButton;
+
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.awt.*;
@@ -114,6 +116,28 @@ class SwingPanel extends JPanel implements GraphicSystem
         graphics.drawString(text.toString(), (int)text.x, (int)text.y);
     }
 
+    public final void draw(UIObject obj){
+        if(obj instanceof UIButton){
+            drawButton((UIButton) obj);
+        }
+    }
+
+    private final void drawButton(UIButton button){
+        graphics.setColor(button.outlineColor);
+        graphics.drawRect(button.x, button.y, button.width, button.height);
+        graphics.setColor(button.color);
+        graphics.fillRect(button.x, button.y, button.width, button.height);
+
+        graphics.setColor(button.textColor);
+        FontMetrics metrics = graphics.getFontMetrics(button.textFont);
+        int x = button.x + (button.width - metrics.stringWidth(button.text)) / 2;
+        int y = button.y + ((button.height - metrics.getHeight()) / 2) + metrics.getAscent();
+        graphics.setFont(button.textFont);
+        graphics.drawString(button.text, x, y);
+
+    }
+
+
     public final void drawImage(GameObject dot) {
         //System.out.println("Draw image not implemented!");
         //graphics.drawImage(images[0], 10, 10, this);
@@ -128,7 +152,7 @@ class SwingPanel extends JPanel implements GraphicSystem
                 dot.imageRef.x1, dot.imageRef.y1, dot.imageRef.x2, dot.imageRef.y2,
                 this);
     }
-    
+
     public final void drawPauseMenu(){
         graphics.setColor(Color.DARK_GRAY);
         graphics.fillRect(600, 200, 300, 100);

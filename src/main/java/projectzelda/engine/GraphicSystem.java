@@ -3,7 +3,9 @@
 package projectzelda.engine;
 
 
-public interface GraphicSystem 
+import projectzelda.game.UIButton;
+
+public interface GraphicSystem
 {
   // prepare to draw a new Screen
   void clear();
@@ -14,11 +16,11 @@ public interface GraphicSystem
   // draw ONE TextObject on the Screen
   void draw(TextObject obj);
 
-  void drawPauseMenu();
+  // draw ONE UIObject on the Screen
+  void draw(UIObject obj);
   
   // display the completed Screen
   void redraw();
-  
   
   // set world
   void setWorld(World world);  
