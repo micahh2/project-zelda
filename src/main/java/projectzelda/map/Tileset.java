@@ -2,6 +2,7 @@ package projectzelda.map;
 
 import java.util.List;
 import java.util.LinkedList;
+import java.net.URI;
 import java.io.File;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
@@ -24,7 +25,8 @@ public class Tileset implements Comparable<Tileset> {
         this.firstgid = firstgid;
         try {
             // Read file
-            File file = new File(source);
+            URI resourceUri = getClass().getResource(source).toURI();
+            File file = new File(resourceUri);
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
             Document document = documentBuilder.parse(file);
@@ -45,7 +47,8 @@ public class Tileset implements Comparable<Tileset> {
             // Get image attributes
             Node image = document.getElementsByTagName("image").item(0);
             NamedNodeMap imageAttrs = image.getAttributes();
-            imageSource = file.getParent() + "/" + imageAttrs.getNamedItem("source").getTextContent();
+            String xmlImageSource = imageAttrs.getNamedItem("source").getTextContent();
+            imageSource = source.replace(file.getName(), xmlImageSource);
 
         } catch(Exception e) {
             System.out.println("Tileset Exception! " + e.getMessage());

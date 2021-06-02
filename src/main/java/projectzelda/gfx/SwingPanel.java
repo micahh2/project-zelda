@@ -12,6 +12,7 @@ import java.io.File;
 import java.awt.*;
 import java.awt.image.*;
 import java.io.IOException;
+import java.net.URI;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
@@ -69,9 +70,10 @@ class SwingPanel extends JPanel implements GraphicSystem
         try {
             List<String> sources = mediaInfo.getImageSources();
             for (int i = 0; i < sources.size(); i++) {
-                String filename = sources.get(i);
-                Image img = ImageIO.read(new File(filename));
-                images.put(filename, img);
+                String filepath = sources.get(i);
+                URI resourceUri = getClass().getResource(filepath).toURI();
+                Image img = ImageIO.read(new File(resourceUri));
+                images.put(filepath, img);
                 tracker.addImage(img, i);
             }
             tracker.waitForAll();
