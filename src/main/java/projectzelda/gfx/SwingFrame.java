@@ -21,7 +21,7 @@ public class SwingFrame extends JFrame implements Frame
   public SwingFrame(MediaInfo mediaInfo, WorldInfo worldInfo) throws UnsupportedAudioFileException, LineUnavailableException, IOException
   { 
       this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-      this.setSize(Const.WORLDPART_WIDTH+2, Const.WORLDPART_HEIGHT+2);
+      this.setSize(worldInfo.getPartWidth()+2, worldInfo.getPartHeight()+2);
 
       this.setAlwaysOnTop(true);
       this.setUndecorated(true);

@@ -16,7 +16,8 @@ final class Main {
 
     public Main() throws UnsupportedAudioFileException, LineUnavailableException, IOException 
     {
-        Map map = new Map("/map/world_map.tmx");
+        SwingScreenInfo screenInfo = new SwingScreenInfo();
+        Map map = new Map("/map/world_map.tmx", screenInfo);
         System.out.println(map);
 
         // Map implements multiple interfaces

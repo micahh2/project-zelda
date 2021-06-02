@@ -14,6 +14,7 @@ import org.w3c.dom.*;
 import projectzelda.engine.ImageRef;
 import projectzelda.engine.ImageRefTo;
 import projectzelda.engine.WorldInfo;
+import projectzelda.engine.ScreenInfo;
 import projectzelda.gfx.MediaInfo;
 import projectzelda.Const;
 
@@ -37,7 +38,11 @@ public class Map implements MediaInfo, WorldInfo {
     public final HashMap<Integer, TileAnimation> animationFrames = new HashMap<Integer, TileAnimation>();
     public final HashMap<Integer, List<ImageRefTo>> animationTiles = new HashMap<Integer, List<ImageRefTo>>();
 
-    public Map(String src) {
+    public ScreenInfo screenInfo;
+
+    public Map(String src, ScreenInfo screenInfo) {
+
+        this.screenInfo = screenInfo;
 
         try {
 
@@ -225,13 +230,13 @@ public class Map implements MediaInfo, WorldInfo {
     }
 
     public int getPartWidth() {
-        return Math.min(pixelWidth, Const.WORLDPART_WIDTH);
+        return Math.min(pixelWidth, screenInfo.getWidth());
     }
     public int getPartHeight() {
-        return Math.min(pixelHeight, Const.WORLDPART_HEIGHT);
+        return Math.min(pixelHeight, screenInfo.getHeight());
     }
 
     public int getScrollBounds() {
-        return Const.SCROLL_BOUNDS;
+        return (int)(Math.min(getPartWidth(), getPartHeight())*2/5);
     }
 }

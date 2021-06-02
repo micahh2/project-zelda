@@ -24,7 +24,6 @@ public class RPGWorld extends World {
     private double spawnGrenade = 0;
     private projectzelda.map.Map map;
 
-
     private double lifeHelpText = 10.0;
 
     public RPGWorld(projectzelda.map.Map map) throws UnsupportedAudioFileException, LineUnavailableException, IOException {
@@ -57,10 +56,10 @@ public class RPGWorld extends World {
         }
 
 
-        // add some zombies
+        // add some goblins
         for (int i = 0; i < 10; i++) {
-            double x = worldPartX + Math.random() * Const.WORLDPART_WIDTH;
-            double y = worldPartY + Math.random() * Const.WORLDPART_HEIGHT;
+            double x = worldPartX + Math.random() * worldInfo.getPartWidth();
+            double y = worldPartY + Math.random() * worldInfo.getPartHeight();
             gameObjects.add(new GoblinAI(x, y, worldInfo));
         }
 
@@ -219,8 +218,8 @@ public class RPGWorld extends World {
             spawnGrenade -= INTERVAL;
 
             // create new Grenade
-            double x = worldPartX + Math.random() * Const.WORLDPART_WIDTH;
-            double y = worldPartY + Math.random() * Const.WORLDPART_HEIGHT;
+            double x = worldPartX + Math.random() * worldInfo.getPartWidth();
+            double y = worldPartY + Math.random() * worldInfo.getPartHeight();
 
             // if too close to Avatar, cancel
             double dx = x - avatar.x;
