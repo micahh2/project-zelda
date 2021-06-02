@@ -17,7 +17,7 @@ class Avatar extends GameObject
         super(x,y,0,200,15, new Color(96,96,255));
         this.isMoving = false;
 
-        imageRef = new ImageRef(getClass().getResource("/map/d84e826f657c017e95645fb800fafd6d.png").getPath(), 0, 0, 10, 10);
+        imageRef = new ImageRef("/map/d84e826f657c017e95645fb800fafd6d.png", 0, 0, 10, 10);
     }
 
     public void move(double diffSeconds)

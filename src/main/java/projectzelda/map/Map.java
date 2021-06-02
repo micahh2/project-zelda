@@ -24,14 +24,11 @@ public class Map implements MediaInfo {
     public static final int FLIPPED_VERTICALLY_FLAG = 0x40000000;
     public static final int FLIPPED_DIAGONALLY_FLAG = 0x20000000;
 
-    public static String mapsDir;
-
     public Map(String src) {
         try {
 
             URL resourceUri = getClass().getResource(src);
             File file = new File(resourceUri.getPath());
-            mapsDir = file.getParent();
 
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
@@ -73,7 +70,7 @@ public class Map implements MediaInfo {
                 int firstgid = Integer.parseInt(attrs.getNamedItem("firstgid").getTextContent());
                 String source = attrs.getNamedItem("source").getTextContent();
 
-                tilesets.add(new Tileset(firstgid, mapsDir + "/" + source));
+                tilesets.add(new Tileset(firstgid, src.replace(file.getName(), source)));
             }
             Collections.sort(tilesets); // Important, sorts in desc order
 
