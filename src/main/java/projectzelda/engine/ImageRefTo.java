@@ -1,9 +1,9 @@
 package projectzelda.engine;
 
 public class ImageRefTo extends ImageRef {
-    public boolean horizontallyFliped = false;
-    public boolean verticallyFliped = false;
-    public boolean diagonallyFliped = false;
+    public boolean horizontallyFlipped = false;
+    public boolean verticallyFlipped = false;
+    public boolean diagonallyFlipped = false;
 
     public int destx1;
     public int desty1;
@@ -23,9 +23,9 @@ public class ImageRefTo extends ImageRef {
         this.desty1 = desty;
         this.destx2 = destx2;
         this.desty2 = desty2;
-        horizontallyFliped = horz;
-        verticallyFliped = vert;
-        diagonallyFliped = diag;
+        horizontallyFlipped = horz;
+        verticallyFlipped = vert;
+        diagonallyFlipped = diag;
     }
     public ImageRefTo(ImageRef ir, int destx, int desty, int destx2, int desty2, boolean horz, boolean vert, boolean diag) {
         super(ir.name, ir.x1, ir.y1, ir.x2, ir.y2);
@@ -33,8 +33,8 @@ public class ImageRefTo extends ImageRef {
         this.desty1 = desty;
         this.destx2 = destx2;
         this.desty2 = desty2;
-        horizontallyFliped = horz;
-        verticallyFliped = vert;
-        diagonallyFliped = diag;
+        horizontallyFlipped = horz;
+        verticallyFlipped = vert;
+        diagonallyFlipped = diag;
     }
 }

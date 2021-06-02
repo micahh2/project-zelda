@@ -8,7 +8,7 @@ import projectzelda.game.UIButton;
 public interface GraphicSystem
 {
   // prepare to draw a new Screen
-  void clear();
+  void clear(long currentTick);
   
   // draw ONE GameObject on the Screen
   void draw(GameObject dot);

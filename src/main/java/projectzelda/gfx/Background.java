@@ -15,13 +15,17 @@ public class Background {
     public static BufferedImage drawBackground(List<ImageRefTo> tiles, int width, int height, Map<String, Image> images, ImageObserver ob) {
         BufferedImage imageBuffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D graphics = (Graphics2D)imageBuffer.getGraphics();
-        // int i = 0;
+        drawTiles(graphics, tiles, 0, 0, images, ob);
+        return imageBuffer;
+    }
+    public static void drawTiles(Graphics inGraphics, List<ImageRefTo> tiles, int offsetx, int offsety, Map<String, Image> images, ImageObserver ob) {
+        Graphics2D graphics = (Graphics2D)inGraphics;
         AffineTransform clearTransform = graphics.getTransform();
         for (ImageRefTo tile : tiles) {
             // if (i % 10 == 0) { System.out.println(""); }
             // System.out.print(tile.x1+":"+tile.y1+",");
 
-            if (tile.horizontallyFliped || tile.verticallyFliped || tile.diagonallyFliped) {
+            if (tile.horizontallyFlipped || tile.verticallyFlipped || tile.diagonallyFlipped) {
 
                 int tilewidth = tile.destx2 - tile.destx1;
                 int tileheight = tile.desty2 - tile.desty1;
@@ -30,17 +34,17 @@ public class Background {
                 AffineTransform trans = AffineTransform.getTranslateInstance(centerx, centery);
 
                 // Flip the image diagonally
-                if (tile.diagonallyFliped) { 
+                if (tile.diagonallyFlipped) { 
                     trans.rotate(Math.toRadians(180));
                 }
 
                 // Flip the image vertically
-                if (tile.verticallyFliped) { 
+                if (tile.verticallyFlipped) { 
                     trans.scale(1, -1);
                 }
 
                 // Flip the image horizontally
-                if (tile.horizontallyFliped) {
+                if (tile.horizontallyFlipped) {
                     trans.scale(-1, 1);
                 }
 
@@ -49,13 +53,11 @@ public class Background {
             }
 
             graphics.drawImage(images.get(tile.name), 
-                    tile.destx1, tile.desty1, tile.destx2, tile.desty2, 
+                    tile.destx1+offsetx, tile.desty1+offsety, tile.destx2+offsetx, tile.desty2+offsety, 
                     tile.x1, tile.y1, tile.x2, tile.y2, 
             ob);
             graphics.setTransform(clearTransform);
             // i++;
         }
-
-        return imageBuffer;
     }
 }

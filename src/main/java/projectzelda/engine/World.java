@@ -111,7 +111,7 @@ public abstract class World {
             }
 
             // draw all Objects
-            graphicSystem.clear();
+            graphicSystem.clear(currentTick);
             for (int i = 0; i < gameSize; i++) {
                 graphicSystem.draw(gameObjects.get(i));
             }

@@ -18,6 +18,7 @@ public class Tileset implements Comparable<Tileset> {
     public int margin;
     public int tilecount;
     public int columns;
+    public List<TileAnimation> animations;
 
     public String imageSource;
 
@@ -50,6 +51,35 @@ public class Tileset implements Comparable<Tileset> {
             String xmlImageSource = imageAttrs.getNamedItem("source").getTextContent();
             imageSource = source.replace(file.getName(), xmlImageSource);
 
+            // Get animations
+            animations = new LinkedList<TileAnimation>();
+            NodeList animationNodes = document.getElementsByTagName("animation");
+            for (int i = 0; i < animationNodes.getLength(); i++) {
+                Node animationNode = animationNodes.item(i);
+
+                // Get tile id
+                Node tileNode = animationNode.getParentNode();
+                NamedNodeMap tileAttrs = tileNode.getAttributes();
+                int tileId = Integer.parseInt(tileAttrs.getNamedItem("id").getTextContent());
+                int totalDuration = 0;
+
+                // Get frames
+                NodeList childNodes = animationNode.getChildNodes();
+                List<TileAnimationFrame> frames = new LinkedList<TileAnimationFrame>();
+                for (int j = 0; j < childNodes.getLength(); j++) {
+                    Node frameNode = childNodes.item(j);
+                    if (!frameNode.getNodeName().equals("frame")) { continue; }
+                    NamedNodeMap frameAttrs = frameNode.getAttributes();
+                    int frameTileId = Integer.parseInt(frameAttrs.getNamedItem("tileid").getTextContent());
+                    int duration = Integer.parseInt(frameAttrs.getNamedItem("duration").getTextContent());
+                    // Add firstgid to make it a global id for easier later processing
+                    frames.add(new TileAnimationFrame(frameTileId + firstgid, duration));
+                    totalDuration += duration;
+                }
+                // Add firstgid to make it a global id for easier later processing
+                animations.add(new TileAnimation(tileId + firstgid, frames, totalDuration));
+            }
+
         } catch(Exception e) {
             System.out.println("Tileset Exception! " + e.getMessage());
             e.printStackTrace();
@@ -80,6 +110,7 @@ public class Tileset implements Comparable<Tileset> {
         + "; margin=" + margin
         + "; tilecount=" + tilecount
         + "; columns=" + columns
+        + "; animations=" + animations.toString()
         + "; }";
     }
 
