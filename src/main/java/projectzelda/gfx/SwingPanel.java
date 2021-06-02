@@ -48,11 +48,14 @@ class SwingPanel extends JPanel implements GraphicSystem
     private WorldInfo worldInfo;
     private int width;
     private int height;
+    private long lastTick = 0; 
+    private List<ImageRefTo> animationTiles;
 
     public SwingPanel(MediaInfo mediaInfo, WorldInfo worldInfo) throws UnsupportedAudioFileException, LineUnavailableException, IOException 
     { 
         this.worldInfo = worldInfo;
         this.mediaInfo = mediaInfo;
+        animationTiles = mediaInfo.getAnimationTiles(0);
         width = worldInfo.getPartWidth();
         height = worldInfo.getPartHeight();
         this.setSize(width, height);
@@ -85,11 +88,16 @@ class SwingPanel extends JPanel implements GraphicSystem
         background = Background.drawBackground(mediaInfo.getBackgroundTiles(), worldInfo.getWidth(), worldInfo.getHeight(), images, this);
     }
 
-    public void clear()
+    public void clear(long tick)
     {
         graphics.setColor(Color.LIGHT_GRAY);
         graphics.fillRect(0, 0, width, height);
         graphics.drawImage(background, -(int)world.worldPartX, -(int)world.worldPartY, this);
+        if (tick - lastTick > 100) {
+            animationTiles = mediaInfo.getAnimationTiles(tick);
+            lastTick = tick;
+        }
+        Background.drawTiles(graphics, animationTiles, -(int)world.worldPartX, -(int)world.worldPartY, images, this);
     }                                  
 
 

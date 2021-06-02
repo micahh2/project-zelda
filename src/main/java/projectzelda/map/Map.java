@@ -2,8 +2,10 @@ package projectzelda.map;
 
 import java.util.List;
 import java.util.LinkedList;
+import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.net.URL;
 import java.io.File;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -32,7 +34,11 @@ public class Map implements MediaInfo, WorldInfo {
     public static final int FLIPPED_VERTICALLY_FLAG = 0x40000000;
     public static final int FLIPPED_DIAGONALLY_FLAG = 0x20000000;
 
+    public final HashMap<Integer, TileAnimation> animationFrames = new HashMap<Integer, TileAnimation>();
+    public final HashMap<Integer, List<ImageRefTo>> animationTiles = new HashMap<Integer, List<ImageRefTo>>();
+
     public Map(String src) {
+
         try {
 
             URL resourceUri = getClass().getResource(src);
@@ -67,7 +73,6 @@ public class Map implements MediaInfo, WorldInfo {
                 String[] strData = layer.getTextContent().split(",");
                 LinkedList<Integer> data = new LinkedList<Integer>();
                 for (String j : strData) {
-                    if (j.trim() == "") { continue; }
                     data.add(Integer.parseInt(j.trim()));
                 }
                 // Create a new layer and add it to our collection
@@ -85,6 +90,32 @@ public class Map implements MediaInfo, WorldInfo {
                 tilesets.add(new Tileset(firstgid, src.replace(file.getName(), source)));
             }
             Collections.sort(tilesets); // Important, sorts in desc order
+
+            // Setup animation map
+            for (Tileset t : tilesets) {
+                if (t.animations == null) { continue; }
+                for (TileAnimation ta : t.animations) {
+                    if (ta.totalDuration <= 0) { continue; }
+                    animationFrames.put(ta.tileId, ta);
+                }
+            }
+
+            // Setup animation tile map
+            for (Layer l : layers) {
+                // if (!l.name.equals("Lava")) { continue; }
+                // System.out.println("Layer: " + l.name);
+                for (int i = 0; i < l.data.size(); i++) {
+                    int gid = filterFlipFlags(l.data.get(i));
+                    // Filter out not animated
+                    if (gid == 0 || !animationFrames.containsKey(gid)) { continue; }
+                    List<ImageRefTo> gidTiles = animationTiles.get(gid);
+                    if (gidTiles == null) {
+                        gidTiles = new ArrayList<ImageRefTo>();
+                    }
+                    gidTiles.add(getTile(l, i, l.data.get(i)));
+                    animationTiles.put(gid, gidTiles);
+                }
+            }
 
         } catch(Exception e) {
             System.out.println("Map Exception! " + e);
@@ -115,37 +146,66 @@ public class Map implements MediaInfo, WorldInfo {
 
     public List<ImageRefTo> getBackgroundTiles() {
         ArrayList<ImageRefTo> tiles = new ArrayList<ImageRefTo>();
-        int tilesize = 16;
         for (Layer l : layers) {
             //if (!l.name.equals("Lava")) { continue; }
             //System.out.println("Layer: " + l.name);
             for (int i = 0; i < l.data.size(); i++) {
-                int val = l.data.get(i);
-                if (val <= 0) { continue; }
-
-                boolean horizontally = (val & FLIPPED_HORIZONTALLY_FLAG) == 0;
-                boolean vertically = (val & FLIPPED_VERTICALLY_FLAG) == 0;
-                boolean diagonally = (val & FLIPPED_DIAGONALLY_FLAG) == 0;
-                boolean hasFlip = horizontally || vertically || diagonally;
-                // Bitwise operators to remove the flags
-                val &= ~(FLIPPED_HORIZONTALLY_FLAG | FLIPPED_VERTICALLY_FLAG | FLIPPED_DIAGONALLY_FLAG);
-
-                Tileset t = getTilesetFromId(val);
-                ImageRef ir = getImageRef(val);
-
-                int toX = (i % l.height) * t.tilewidth;
-                int toY = (int)Math.floor(i / l.height)* t.tileheight;
-                //System.out.println("Val: " + val + ", x:y " + ir.x1 + ":" + ir.y1 + ", image: " + ir.name);
-
-                tiles.add(new ImageRefTo(ir, toX, toY, toX+t.tilewidth, toY+t.tileheight, horizontally, vertically, diagonally));
+                ImageRefTo imRef = getTile(l, i, l.data.get(i));
+                if (imRef == null) { continue; }
+                tiles.add(imRef);
             }
         }
         return tiles;
     }
 
-    public ImageRef getImageRef(int gid) {
-        Tileset t = getTilesetFromId(gid);
-        return t.getImageRef(gid);
+    public List<ImageRefTo> getAnimationTiles(long tick) {
+        ArrayList<ImageRefTo> animTiles = new ArrayList<ImageRefTo>();
+
+        for (java.util.Map.Entry<Integer, List<ImageRefTo>> gidImageRef : animationTiles.entrySet()) {
+            int gid = gidImageRef.getKey();
+            TileAnimation ta = animationFrames.get(gidImageRef.getKey());
+            Iterator<TileAnimationFrame> iter = ta.frames.iterator();
+            TileAnimationFrame currentFrame = null;
+            long relTime = tick % ta.totalDuration;
+            while(relTime >= 0) {
+                currentFrame = iter.next();
+                relTime -= currentFrame.duration;
+            }
+
+            Tileset t = getTilesetFromId(gid);
+            ImageRef ir = t.getImageRef(currentFrame.tileId);
+            for (ImageRefTo imageRefTo : gidImageRef.getValue()) {
+                imageRefTo.x1 = ir.x1;
+                imageRefTo.x2 = ir.x2;
+                imageRefTo.y1 = ir.y1;
+                imageRefTo.y2 = ir.y2;
+
+                animTiles.add(imageRefTo);
+            }
+        }
+        return animTiles;
+    }
+
+    public int filterFlipFlags(int val) {
+        return val & ~(FLIPPED_HORIZONTALLY_FLAG | FLIPPED_VERTICALLY_FLAG | FLIPPED_DIAGONALLY_FLAG);
+    }
+
+    public ImageRefTo getTile(Layer l, int i, int val) {
+        if (val <= 0) { return null; }
+
+        boolean horizontally = (val & FLIPPED_HORIZONTALLY_FLAG) == 0;
+        boolean vertically = (val & FLIPPED_VERTICALLY_FLAG) == 0;
+        boolean diagonally = (val & FLIPPED_DIAGONALLY_FLAG) == 0;
+        // Bitwise operators to remove the flags
+        val = filterFlipFlags(val);
+
+        Tileset t = getTilesetFromId(val);
+        ImageRef ir = t.getImageRef(val);
+
+        int toX = (i % l.height) * t.tilewidth;
+        int toY = (int)Math.floor(i / l.height)* t.tileheight;
+
+        return new ImageRefTo(ir, toX, toY, toX+t.tilewidth, toY+t.tileheight, horizontally, vertically, diagonally);
     }
 
     public String toString() {
