@@ -72,31 +72,6 @@ public abstract class GameObject
     }
 
 
-    // test and reflect on Window Borders
-    public void reflectOnBorders()
-    {
-        double rad = radius;
-        double PI  = Math.PI;
-
-        if(x<rad && (alfa>PI/2 && alfa<PI*3/2)) { 
-            alfa = Math.PI-alfa;
-        }
-        if(y<rad && alfa>PI) { 
-            alfa = PI*2-alfa; 
-        }
-        if(x > Const.WORLD_WIDTH-rad) { 
-            alfa = Math.PI-alfa;
-        }
-        if(y > Const.WORLD_HEIGHT-rad) { 
-            alfa = PI*2-alfa;
-        }
-
-
-        if(alfa<0)    alfa += PI*2;
-        if(alfa>PI*2) alfa -= PI*2;	
-    }
-
-
     // set a point in the world as destination
     public final void setDestination(double dx, double dy)
     {

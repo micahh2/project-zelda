@@ -17,12 +17,12 @@ final class Main {
     public Main() throws UnsupportedAudioFileException, LineUnavailableException, IOException 
     {
         Map map = new Map("/map/world_map.tmx");
-        System.out.println(map);
 
-        Frame frame = new SwingFrame(map);
+        // Map implements multiple interfaces
+        Frame frame = new SwingFrame(map, map); 
         frame.displayOnScreen();
 
-        world = new RPGWorld();
+        world = new RPGWorld(map);
 
         world.setGraphicSystem(frame.getGraphicSystem());
         world.setInputSystem(frame.getInputSystem());

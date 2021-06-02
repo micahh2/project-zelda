@@ -20,6 +20,8 @@ public abstract class World {
     public double worldPartX = 0;
     public double worldPartY = 0;
 
+    public WorldInfo worldInfo;
+
     // defines maximum frame rate
     private static final int FRAME_MINIMUM_MILLIS = 10;
 
@@ -39,12 +41,6 @@ public abstract class World {
 
     protected World() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
     }
-
-    //public World(PhysicsSystem ps)
-    //{ 
-    //    physicsSystem = ps;//new PhysicsSystem(this);
-    //}
-
 
     //
     // the main GAME LOOP
@@ -147,45 +143,47 @@ public abstract class World {
     // adjust the displayed pane of the world according to Avatar and Bounds
     //
     private final void adjustWorldPart() {
-        final int RIGHT_END = Const.WORLD_WIDTH - Const.WORLDPART_WIDTH;
-        final int BOTTOM_END = Const.WORLD_HEIGHT - Const.WORLDPART_HEIGHT;
+        final int partWidth = worldInfo.getPartWidth();
+        final int partHeight = worldInfo.getPartHeight();
+        final int scrollBounds = worldInfo.getScrollBounds();
+
+        final int rightEnd = worldInfo.getWidth() - partWidth;
+        final int bottomEnd = worldInfo.getHeight() - partHeight;
 
 
         // if avatar is too much right in display ...
-        if (avatar.x > worldPartX + Const.WORLDPART_WIDTH - Const.SCROLL_BOUNDS) {
+        if (avatar.x > worldPartX + partWidth - scrollBounds) {
             // ... adjust display
-            worldPartX = avatar.x + Const.SCROLL_BOUNDS - Const.WORLDPART_WIDTH;
-            if (worldPartX >= RIGHT_END) {
-                worldPartX = RIGHT_END;
+            worldPartX = avatar.x + scrollBounds - partWidth;
+            if (worldPartX >= rightEnd) {
+                worldPartX = rightEnd;
             }
         }
 
         // same left
-        else if (avatar.x < worldPartX + Const.SCROLL_BOUNDS) {
-            worldPartX = avatar.x - Const.SCROLL_BOUNDS;
+        else if (avatar.x < worldPartX + scrollBounds) {
+            worldPartX = avatar.x - worldInfo.getScrollBounds();
             if (worldPartX <= 0) {
                 worldPartX = 0;
             }
         }
 
         // same bottom
-        if (avatar.y > worldPartY + Const.WORLDPART_HEIGHT - Const.SCROLL_BOUNDS) {
-            worldPartY = avatar.y + Const.SCROLL_BOUNDS - Const.WORLDPART_HEIGHT;
-            if (worldPartY >= BOTTOM_END) {
-                worldPartY = BOTTOM_END;
+        if (avatar.y > worldPartY + partHeight - scrollBounds) {
+            worldPartY = avatar.y + scrollBounds - partHeight;
+            if (worldPartY >= bottomEnd) {
+                worldPartY = bottomEnd;
             }
         }
 
         // same top
-        else if (avatar.y < worldPartY + Const.SCROLL_BOUNDS) {
-            worldPartY = avatar.y - Const.SCROLL_BOUNDS;
+        else if (avatar.y < worldPartY + scrollBounds) {
+            worldPartY = avatar.y - scrollBounds;
             if (worldPartY <= 0) {
                 worldPartY = 0;
             }
         }
-
     }
-
 
     public void setGraphicSystem(GraphicSystem p) {
         graphicSystem = p;

@@ -5,10 +5,7 @@ package projectzelda;
 
 public final class Const 
 {
-  // size of the world
-  public static final int WORLD_WIDTH      = 5000;
-  public static final int WORLD_HEIGHT     = 4000;
-  // size of the displayed part of the world
+  // size of the displayed part of the world (Unless the map is smaller.. then it's the map size)
   public static final int WORLDPART_WIDTH  = 1920;
   public static final int WORLDPART_HEIGHT = 1080;
   // border: when to scroll
