@@ -22,22 +22,25 @@ public class RPGWorld extends World {
     private Counter counterB;
     private HelpText helpText;
     private double spawnGrenade = 0;
+    private projectzelda.map.Map map;
 
 
     private double lifeHelpText = 10.0;
 
-    public RPGWorld() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
+    public RPGWorld(projectzelda.map.Map map) throws UnsupportedAudioFileException, LineUnavailableException, IOException {
+        this.map = map;
+        worldInfo = map; // Implements world dim
         physicsSystem = new RPGPhysicsSystem(this);
     }
 
     public void init() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
         // add the Avatar
-        avatar = new Avatar(2500, 2000);
+        avatar = new Avatar(100, 50);
         gameObjects.add(avatar);
 
         // set WorldPart position
-        worldPartX = 1500;
-        worldPartY = 1500;
+        worldPartX = 0;
+        worldPartY = 0;
 
 
         // add a little forrest
@@ -58,7 +61,7 @@ public class RPGWorld extends World {
         for (int i = 0; i < 10; i++) {
             double x = worldPartX + Math.random() * Const.WORLDPART_WIDTH;
             double y = worldPartY + Math.random() * Const.WORLDPART_HEIGHT;
-            gameObjects.add(new GoblinAI(x, y));
+            gameObjects.add(new GoblinAI(x, y, worldInfo));
         }
 
         counterB = new Counter("Bones: ", 20, 40);
@@ -134,6 +137,9 @@ public class RPGWorld extends World {
                     Sound sword = new Sound("/music/sword-sound-1_16bit.wav");
                     sword.setVolume(-30.0f);
                     sword.playSound();
+                    break;
+                case 'q':
+                    System.exit(0);
                     break;
                 case (char) 27:
                     this.gameState = this.gameState == GameState.PAUSE ? GameState.PLAY : GameState.PAUSE;
@@ -239,51 +245,6 @@ public class RPGWorld extends World {
         }
 
     }
-
-
-    private void createZombie(double diffSeconds) {
-        final double INTERVAL = Const.SPAWN_INTERVAL;
-
-        timePassed += diffSeconds;
-        if (timePassed > INTERVAL) {
-            timePassed -= INTERVAL;
-
-            // create new Zombie; preference to current screen
-            double x, y;
-            if (Math.random() < 0.7) {
-                x = Math.random() * Const.WORLD_WIDTH;
-                y = Math.random() * Const.WORLD_HEIGHT;
-            } else {
-                x = worldPartX + Math.random() * Const.WORLDPART_WIDTH;
-                y = worldPartY + Math.random() * Const.WORLDPART_HEIGHT;
-            }
-
-
-            // if too close to Avatar, cancel
-            double dx = x - avatar.x;
-            double dy = y - avatar.y;
-            if (dx * dx + dy * dy < 400 * 400) {
-                timePassed = INTERVAL;
-                return;
-            }
-
-            // if collisions occur, cancel
-            ZombieAI zombie = new ZombieAI(x, y);
-            GameObjectList list = getPhysicsSystem().getCollisions(zombie);
-            if (list.size() != 0) {
-                timePassed = INTERVAL;
-                return;
-            }
-
-            // else add zombie to world
-            this.gameObjects.add(zombie);
-            zombie.setDestination(avatar);
-            Counter counter = (Counter) textObjects.get(0);
-            counter.increment();
-        }
-
-    }
-
 
     public void addGrenade() {
         if (grenades < 999) {

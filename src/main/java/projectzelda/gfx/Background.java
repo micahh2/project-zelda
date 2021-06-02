@@ -13,7 +13,7 @@ import java.awt.geom.AffineTransform;
 
 public class Background {
     public static BufferedImage drawBackground(List<ImageRefTo> tiles, int width, int height, Map<String, Image> images, ImageObserver ob) {
-        BufferedImage imageBuffer = new BufferedImage(16000, 16000, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage imageBuffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D graphics = (Graphics2D)imageBuffer.getGraphics();
         // int i = 0;
         AffineTransform clearTransform = graphics.getTransform();

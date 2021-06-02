@@ -44,13 +44,17 @@ class SwingPanel extends JPanel implements GraphicSystem
     private Map<String, Image> images = new HashMap<String, Image>();
     private BufferedImage background;
     private MediaInfo mediaInfo;
+    private WorldInfo worldInfo;
+    private int width;
+    private int height;
 
-    public SwingPanel(MediaInfo mediaInfo) throws UnsupportedAudioFileException, LineUnavailableException, IOException 
+    public SwingPanel(MediaInfo mediaInfo, WorldInfo worldInfo) throws UnsupportedAudioFileException, LineUnavailableException, IOException 
     { 
+        this.worldInfo = worldInfo;
         this.mediaInfo = mediaInfo;
-        int width = Const.WORLDPART_WIDTH;
-        int height = Const.WORLDPART_HEIGHT;
-        this.setSize(width, height);  
+        width = worldInfo.getPartWidth();
+        height = worldInfo.getPartHeight();
+        this.setSize(width, height);
         imageBuffer = graphicsConf.createCompatibleImage(
                 this.getWidth(), this.getHeight());	 
         graphics = imageBuffer.getGraphics();
@@ -76,17 +80,14 @@ class SwingPanel extends JPanel implements GraphicSystem
             e.printStackTrace();
         }
 
-        background = Background.drawBackground(mediaInfo.getBackgroundTiles(), width, height, images, this);
+        background = Background.drawBackground(mediaInfo.getBackgroundTiles(), worldInfo.getWidth(), worldInfo.getHeight(), images, this);
     }
 
     public void clear()
     {
-        int width = Const.WORLDPART_WIDTH;
-        int height = Const.WORLDPART_HEIGHT;
         graphics.setColor(Color.LIGHT_GRAY);
-        graphics.fillRect(0, 0, Const.WORLDPART_WIDTH, Const.WORLDPART_HEIGHT);
-        // graphics.drawImage(background, -(int)world.worldPartX, -(int)world.worldPartY, this);
-        graphics.drawImage(background, Const.WORLDPART_WIDTH-(int)world.worldPartX, Const.WORLDPART_HEIGHT-(int)world.worldPartY, this);
+        graphics.fillRect(0, 0, width, height);
+        graphics.drawImage(background, -(int)world.worldPartX, -(int)world.worldPartY, this);
     }                                  
 
 

@@ -14,6 +14,7 @@ class GoblinAI extends GameObject
     private static final Color REDDER = new Color(160, 40, 20);
     private static final double COLOR_COOLDOWN = 0.2;
     private double colorCooldown = 0;
+    private WorldInfo worldInfo;
 
     private enum State {
         STUCK,
@@ -21,9 +22,10 @@ class GoblinAI extends GameObject
     }
     private State state;
 
-    public GoblinAI(double x, double y)
+    public GoblinAI(double x, double y, WorldInfo worldInfo)
     {
         super(x, y, 0, 60, 15, new Color(160,80,40));
+        this.worldInfo = worldInfo;
         isMoving = true;
         state = State.FREE;
     }
@@ -43,8 +45,8 @@ class GoblinAI extends GameObject
 
         // Close to goal, pick a new one
         if(state == State.STUCK || dist < 8) { 
-            double x = Math.random() * Const.WORLD_WIDTH;
-            double y = Math.random() * Const.WORLD_HEIGHT;
+            double x = Math.random() * worldInfo.getWidth();
+            double y = Math.random() * worldInfo.getHeight();
             state = State.FREE;
             setDestination(x, y); 
         }

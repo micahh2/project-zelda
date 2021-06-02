@@ -11,14 +11,22 @@ import javax.xml.parsers.DocumentBuilder;
 import org.w3c.dom.*;
 import projectzelda.engine.ImageRef;
 import projectzelda.engine.ImageRefTo;
+import projectzelda.engine.WorldInfo;
 import projectzelda.gfx.MediaInfo;
+import projectzelda.Const;
 
-public class Map implements MediaInfo {
+public class Map implements MediaInfo, WorldInfo {
     public List<Layer> layers = new LinkedList<Layer>();
     public List<Tileset> tilesets = new LinkedList<Tileset>();
 
     public int width;
     public int height;
+
+    public int tileWidth;
+    public int tileHeight;
+
+    public int pixelWidth;
+    public int pixelHeight;
 
     public static final int FLIPPED_HORIZONTALLY_FLAG = 0x80000000;
     public static final int FLIPPED_VERTICALLY_FLAG = 0x40000000;
@@ -42,6 +50,10 @@ public class Map implements MediaInfo {
             NamedNodeMap mapAttrs = mapNode.getAttributes();
             width = Integer.parseInt(mapAttrs.getNamedItem("width").getTextContent());
             height = Integer.parseInt(mapAttrs.getNamedItem("height").getTextContent());
+            tileWidth = Integer.parseInt(mapAttrs.getNamedItem("tilewidth").getTextContent());
+            tileHeight = Integer.parseInt(mapAttrs.getNamedItem("tileheight").getTextContent());
+            pixelWidth = width * tileWidth;
+            pixelHeight = height * tileHeight;
 
             // Read the layers
             NodeList nodeLayers = document.getElementsByTagName("layer");
@@ -146,5 +158,23 @@ public class Map implements MediaInfo {
         + "\n\t layers=" + layers.toString()
         + "\n\t tilesets=" + tilesets.toString()
         + "\n}";
+    }
+
+    public int getWidth() {
+        return pixelWidth;
+    }
+    public int getHeight() {
+        return pixelHeight;
+    }
+
+    public int getPartWidth() {
+        return Math.min(pixelWidth, Const.WORLDPART_WIDTH);
+    }
+    public int getPartHeight() {
+        return Math.min(pixelHeight, Const.WORLDPART_HEIGHT);
+    }
+
+    public int getScrollBounds() {
+        return Const.SCROLL_BOUNDS;
     }
 }
