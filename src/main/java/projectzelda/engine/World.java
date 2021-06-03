@@ -35,9 +35,12 @@ public abstract class World {
 
     public ArrayList<UIObject> pauseMenuObjects = new ArrayList<>();
 
+    public ArrayList<UIObject> mainMenuObjects = new ArrayList<>();
+
     public Sound sound = new Sound("/music/Forest_Ventures.wav");
 
-    public GameState gameState = GameState.PLAY;
+    //public GameState gameState = GameState.PLAY;
+    public GameState gameState = GameState.MAIN_MENU;
 
     protected World() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
     }
@@ -125,6 +128,17 @@ public abstract class World {
             if (gameState == GameState.PAUSE) {
                 for (int i = 0; i < pauseMenuObjects.size(); i++) {
                     graphicSystem.draw(pauseMenuObjects.get(i));
+                }
+                sound.setVolume(-40.0f);
+            } else {
+                sound.setVolume(-20.0f);
+            }
+
+            
+            //draw play button of main_menu
+            if (gameState == GameState.MAIN_MENU) {
+                for (int i = 0; i < mainMenuObjects.size(); i++) {
+                    graphicSystem.draw(mainMenuObjects.get(i));
                 }
                 sound.setVolume(-40.0f);
             } else {
