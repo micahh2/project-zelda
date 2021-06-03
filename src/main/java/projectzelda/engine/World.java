@@ -134,6 +134,17 @@ public abstract class World {
                 sound.setVolume(-20.0f);
             }
 
+            
+            //draw play button of main_menu
+            if (gameState == GameState.MAIN_MENU) {
+                for (int i = 0; i < mainMenuObjects.size(); i++) {
+                    graphicSystem.draw(mainMenuObjects.get(i));
+                }
+                sound.setVolume(-40.0f);
+            } else {
+                sound.setVolume(-20.0f);
+            }
+
             // redraw everything
             graphicSystem.redraw();
 
