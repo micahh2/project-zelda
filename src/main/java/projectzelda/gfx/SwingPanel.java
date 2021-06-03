@@ -5,6 +5,8 @@ package projectzelda.gfx;
 
 import projectzelda.*;
 import projectzelda.engine.*;
+import projectzelda.game.GoblinAI;
+import projectzelda.game.HealthBar;
 import projectzelda.game.UIButton;
 
 import javax.imageio.ImageIO;
@@ -116,6 +118,10 @@ class SwingPanel extends JPanel implements GraphicSystem
         graphics.fillOval(x, y, d, d);
         graphics.setColor(Color.DARK_GRAY);
         graphics.drawOval(x,y,d,d);
+
+        if(dot instanceof GoblinAI){
+            draw(((GoblinAI) dot).healthBar);
+        }
     }
 
     public final void draw(TextObject text)
@@ -128,8 +134,10 @@ class SwingPanel extends JPanel implements GraphicSystem
     }
 
     public final void draw(UIObject obj){
-        if(obj instanceof UIButton){
+        if(obj instanceof UIButton) {
             drawButton((UIButton) obj);
+        }else if(obj instanceof  HealthBar){
+            drawHealthBar((HealthBar) obj);
         }
     }
 
@@ -146,6 +154,20 @@ class SwingPanel extends JPanel implements GraphicSystem
         graphics.setFont(button.textFont);
         graphics.drawString(button.text, x, y);
 
+    }
+
+    private final void drawHealthBar(HealthBar healthBar) {
+        int x = (int)(healthBar.x - world.worldPartX);
+        int y = (int)(healthBar.y - world.worldPartY);
+
+        graphics.setColor(healthBar.outlineColor);
+        graphics.drawRect(x, y, healthBar.width, healthBar.height);
+        graphics.setColor(healthBar.color);
+        graphics.fillRect(x, y, healthBar.width, healthBar.height);
+
+        graphics.setColor(healthBar.healthColor);
+        int healthWidth = (int) (healthBar.health * healthBar.width);
+        graphics.fillRect(x, y, healthWidth, healthBar.height);
     }
 
 
