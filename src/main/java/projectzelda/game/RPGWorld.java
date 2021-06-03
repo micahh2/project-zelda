@@ -76,6 +76,9 @@ public class RPGWorld extends World {
         pauseMenuObjects.add(new UIButton(600, 200, 300, 100, "Resume"));
         pauseMenuObjects.add(new UIButton(600, 500, 300, 100, "Quit"));
 
+        // add the main menu buttons
+        mainMenuObjects.add(new UIButton(600, 200, 300, 100, "Play"));
+
         sound = new Sound("/music/Forest_Ventures.wav");
     }
 
@@ -83,6 +86,8 @@ public class RPGWorld extends World {
         // distinguish if Avatar shall move or shoots	  
         int button = userInput.mouseButton;
 
+
+        
         //
         // Mouse events
         //
@@ -125,6 +130,17 @@ public class RPGWorld extends World {
                 }
             }
         }
+
+
+        UIButton playButton = (UIButton) mainMenuObjects.get(0);
+        
+        if (userInput.isMousePressed){
+            if (userInput.mouseMovedX >= playButton.x && userInput.mouseMovedX <= playButton.getMaxX()
+            && (userInput.mouseMovedY >= playButton.y && userInput.mouseMovedY <= playButton.getMaxY())) {
+                 gameState = GameState.PLAY;
+            }
+        }
+     
 
         //
         // Keyboard events
@@ -174,6 +190,8 @@ public class RPGWorld extends World {
         if (horz != 0 || vert != 0) {
             avatar.setDestination(avatar.x + horz, avatar.y + vert);
         }
+
+       
     }
 
 

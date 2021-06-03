@@ -35,9 +35,12 @@ public abstract class World {
 
     public ArrayList<UIObject> pauseMenuObjects = new ArrayList<>();
 
+    public ArrayList<UIObject> mainMenuObjects = new ArrayList<>();
+
     public Sound sound = new Sound("/music/Forest_Ventures.wav");
 
-    public GameState gameState = GameState.PLAY;
+    //public GameState gameState = GameState.PLAY;
+    public GameState gameState = GameState.MAIN_MENU;
 
     protected World() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
     }
