@@ -29,6 +29,8 @@ public class RPGWorld extends World {
     private double lifeHelpText = 10.0;
     private double lifeChatBox = 2.0;
 
+    private Sound sound = new Sound("/music/Forest_Ventures.wav");
+
     public RPGWorld(projectzelda.map.Map map) throws UnsupportedAudioFileException, LineUnavailableException, IOException {
         this.map = map;
         worldInfo = map; // Implements world dim
@@ -39,6 +41,10 @@ public class RPGWorld extends World {
         // add the Avatar
         avatar = new Avatar(100, 50);
         gameObjects.add(avatar);
+
+        //play the background music
+        sound.playBackgroundMusic();
+        sound.setVolume(-20.0F);
 
         // set WorldPart position
         worldPartX = 0;
@@ -162,7 +168,17 @@ public class RPGWorld extends World {
                     System.exit(0);
                     break;
                 case (char) 27:
-                    this.gameState = this.gameState == GameState.PAUSE ? GameState.PLAY : GameState.PAUSE;
+
+                    if (this.gameState != GameState.PAUSE) {
+                        this.gameState = GameState.PAUSE;
+                        sound.setVolume(-40.0f);
+                    } else {
+                        sound.setVolume(-20.0f);
+                        this.gameState = GameState.PLAY;
+
+                    }
+
+                    //this.gameState = this.gameState == GameState.PAUSE ? GameState.PLAY : GameState.PAUSE;
                     break;
 
                 case 'w':
