@@ -21,6 +21,9 @@ import projectzelda.Const;
 public class Map implements MediaInfo, WorldInfo {
     public List<Layer> layers = new LinkedList<Layer>();
     public List<Tileset> tilesets = new LinkedList<Tileset>();
+    public List<ObjectGroup> objectgroups = new LinkedList<ObjectGroup>();
+    public List<MapObject> mapobjects = new LinkedList<MapObject>();
+    public Polygon polygon;
 
     public int width;
     public int height;
@@ -95,6 +98,75 @@ public class Map implements MediaInfo, WorldInfo {
                 tilesets.add(new Tileset(firstgid, src.replace(file.getName(), source)));
             }
             Collections.sort(tilesets); // Important, sorts in desc order
+
+            // Read the objectgroup
+            NodeList nodeGroupObjects = document.getElementsByTagName("objectgroup");
+            for (int i = 0; i < nodeGroupObjects.getLength(); i++) {
+                Node objectgroup = nodeGroupObjects.item(i);
+                // Read attributes about the objectgroup
+                NamedNodeMap attrs = objectgroup.getAttributes();
+                String name = attrs.getNamedItem("name").getTextContent();
+                int id = Integer.parseInt(attrs.getNamedItem("id").getTextContent());
+                int visible = Integer.parseInt(attrs.getNamedItem("visible").getTextContent());
+
+                NodeList nodeObjects = document.getElementsByTagName("object");
+                for (int j = 0; j < nodeObjects.getLength(); j++) {
+
+                    Node object = nodeObjects.item(j);
+                    // Read attributes about the objects in objectgroups
+                    NamedNodeMap attrs_o = object.getAttributes();
+                    int id_o = Integer.parseInt(attrs_o.getNamedItem("id").getTextContent());
+                    float x = Float.parseFloat(attrs_o.getNamedItem("x").getTextContent());
+                    float y = Float.parseFloat(attrs_o.getNamedItem("y").getTextContent());
+
+                    /*NodeList nodePolygon = document.getElementsByTagName("polygon");
+                    for (int z = 0; z < nodePolygon.getLength(); z++) {
+                        Node pol = nodePolygon.item(z);
+                        NamedNodeMap attrs_p = pol.getAttributes();
+                        String points = attrs_p.getNamedItem("points").getTextContent();
+                        polygon = new Polygon(points);
+
+                    }*/
+                    if(id == 12){
+                        if(id_o == 3){
+                            mapobjects.add(new MapObject(id_o, x, y, polygon));
+                        }
+                    }
+                    else if(id == 6){
+                        if(id_o == 1){
+                            mapobjects.add(new MapObject(id_o, x, y, polygon));
+                        }
+                    }
+                    else if(id == 7){
+                        if(id_o == 2){
+                            mapobjects.add(new MapObject(id_o, x, y, polygon));
+                        }
+                    }
+                    else if(id == 17){
+                        if(id_o == 13 || id_o == 14 || id_o == 15 || id_o == 16 || id_o == 17 || id_o == 18){
+                            mapobjects.add(new MapObject(id_o, x, y, polygon));
+                        }
+                    }
+                    else if(id == 16){
+                        if(id_o == 6 || id_o == 7 || id_o == 8 || id_o == 9 || id_o == 10 || id_o == 12){
+                            mapobjects.add(new MapObject(id_o, x, y, polygon));
+                        }
+                    }
+                    else if(id == 15){
+                        if(id_o == 5){
+                            mapobjects.add(new MapObject(id_o, x, y, polygon));
+                        }
+                    }
+                    else if(id == 14){
+                        if(id_o == 4){
+                            mapobjects.add(new MapObject(id_o, x, y, polygon));
+                        }
+                    }
+                }
+                objectgroups.add(new ObjectGroup(id, name, visible, mapobjects));
+                mapobjects = new LinkedList<MapObject>();
+            }
+
 
             // Setup animation map
             for (Tileset t : tilesets) {
@@ -219,6 +291,7 @@ public class Map implements MediaInfo, WorldInfo {
         + "\n\t height=" + height
         + "\n\t layers=" + layers.toString()
         + "\n\t tilesets=" + tilesets.toString()
+        + "\n\t objectgroups=" + objectgroups.toString()
         + "\n}";
     }
 
