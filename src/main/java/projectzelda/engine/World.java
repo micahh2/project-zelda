@@ -37,7 +37,7 @@ public abstract class World {
 
     public ArrayList<UIObject> mainMenuObjects = new ArrayList<>();
 
-    public Sound sound = new Sound("/music/Forest_Ventures.wav");
+
 
     //public GameState gameState = GameState.PLAY;
     public GameState gameState = GameState.MAIN_MENU;
@@ -51,8 +51,7 @@ public abstract class World {
     public final void run() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
         long lastTick = System.currentTimeMillis();
 
-        sound.playBackgroundMusic();
-        sound.setVolume(-20.0f);
+
 
         userInput = inputSystem.getUserInput();
         while (true) {
@@ -129,9 +128,6 @@ public abstract class World {
                 for (int i = 0; i < pauseMenuObjects.size(); i++) {
                     graphicSystem.draw(pauseMenuObjects.get(i));
                 }
-                sound.setVolume(-40.0f);
-            } else {
-                sound.setVolume(-20.0f);
             }
 
             
@@ -140,9 +136,6 @@ public abstract class World {
                 for (int i = 0; i < mainMenuObjects.size(); i++) {
                     graphicSystem.draw(mainMenuObjects.get(i));
                 }
-                sound.setVolume(-40.0f);
-            } else {
-                sound.setVolume(-20.0f);
             }
 
             // redraw everything
