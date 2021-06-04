@@ -21,10 +21,13 @@ public class RPGWorld extends World {
     private Counter counterG;
     private Counter counterB;
     private HelpText helpText;
+
+
     private double spawnGrenade = 0;
     private projectzelda.map.Map map;
 
     private double lifeHelpText = 10.0;
+    private double lifeChatBox = 2.0;
 
     public RPGWorld(projectzelda.map.Map map) throws UnsupportedAudioFileException, LineUnavailableException, IOException {
         this.map = map;
@@ -42,7 +45,7 @@ public class RPGWorld extends World {
         worldPartY = 0;
 
 
-        // add a little forrest
+      /*  // add a little forrest
 
         for (int x = 0; x < 5000; x += 1000) {
             for (int y = 0; y < 4000; y += 800) {
@@ -53,7 +56,7 @@ public class RPGWorld extends World {
                 gameObjects.add(new Tree(x + 900, y + 500, 100));
                 gameObjects.add(new Tree(x + 760, y + 160, 40));
             }
-        }
+        } */
 
 
         // add some goblins
@@ -67,10 +70,12 @@ public class RPGWorld extends World {
         counterG = new Counter("Grenades: ", 770, 40);
         helpText = new HelpText(100, 400);
 
+
         counterG.setNumber(grenades);
         textObjects.add(counterB);
         textObjects.add(counterG);
         textObjects.add(helpText);
+
 
         // add the pause menu buttons
         pauseMenuObjects.add(new UIButton(600, 200, 300, 100, "Resume"));
@@ -225,6 +230,8 @@ public class RPGWorld extends World {
                 helpText = null;
             }
         }
+
+
     }
 
 
