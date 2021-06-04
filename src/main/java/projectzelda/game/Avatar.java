@@ -6,7 +6,6 @@ package projectzelda.game;
 import projectzelda.*;
 import projectzelda.engine.*;
 import java.awt.Color;
-import java.util.concurrent.TimeUnit;
 
 class Avatar extends GameObject
 {
@@ -14,8 +13,8 @@ class Avatar extends GameObject
     private double weaponTemp = 0;
     private double lifeBPickedUpText;
     private double lifeGPickedUpText;
-    private bonesPickedUpText bPickedUpText;
-    private grenadePickedUpText gPickedUpText;
+    private BonesPickedUpText bPickedUpText;
+    private GrenadePickedUpText gPickedUpText;
 
     public Avatar(double x, double y) 
     { 
@@ -60,7 +59,7 @@ class Avatar extends GameObject
                 // pick up Bones
                 case Const.TYPE_BONES:
                     ((RPGWorld)world).addBones();
-                    bPickedUpText =new bonesPickedUpText(750,1000);
+                    bPickedUpText =new BonesPickedUpText(750,1000);
                     world.textObjects.add(bPickedUpText);
                     lifeBPickedUpText = 2.0;
                     obj.isLiving = false;
@@ -69,7 +68,7 @@ class Avatar extends GameObject
                 // pick up Grenades
                 case Const.TYPE_GRENADE:
                     ((RPGWorld)world).addGrenade();
-                    gPickedUpText =new grenadePickedUpText(750,1000);
+                    gPickedUpText =new GrenadePickedUpText(750,1000);
                     world.textObjects.add(gPickedUpText);
                     lifeGPickedUpText = 2.0;
                     obj.isLiving = false;

@@ -3,9 +3,9 @@ package projectzelda.game;
 import projectzelda.engine.*;
 import java.awt.Color;
 
-class grenadePickedUpText extends TextObject
+class GrenadePickedUpText extends TextObject
 {
-    public grenadePickedUpText(int x, int y)
+    public GrenadePickedUpText(int x, int y)
     { super(x,y, new Color(255,255,0,210));
     }
 

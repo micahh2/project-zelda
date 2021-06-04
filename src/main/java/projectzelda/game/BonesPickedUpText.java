@@ -3,9 +3,9 @@ package projectzelda.game;
 import projectzelda.engine.*;
 import java.awt.Color;
 
-class bonesPickedUpText extends TextObject
+class BonesPickedUpText extends TextObject
 {
-    public bonesPickedUpText(int x, int y)
+    public BonesPickedUpText(int x, int y)
     { super(x,y, new Color(255,255,0,210));
     }
 
