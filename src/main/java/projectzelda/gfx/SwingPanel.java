@@ -87,7 +87,12 @@ class SwingPanel extends JPanel implements GraphicSystem
             e.printStackTrace();
         }
 
-        background = Background.drawBackground(mediaInfo.getBackgroundTiles(), worldInfo.getWidth(), worldInfo.getHeight(), images, this);
+        List<VirtualImage> virtualImages = mediaInfo.getVirtualImages();
+        for (VirtualImage vi : virtualImages) {
+            BufferedImage bi = ImageDrawer.drawVirtualImage(vi, images, this);
+            images.put(vi.name, bi);
+        }
+        background = ImageDrawer.drawBackground(mediaInfo.getBackgroundTiles(), worldInfo.getWidth(), worldInfo.getHeight(), images, this);
     }
 
     public void clear(long tick)
@@ -99,7 +104,7 @@ class SwingPanel extends JPanel implements GraphicSystem
             animationTiles = mediaInfo.getAnimationTiles(tick);
             lastTick = tick;
         }
-        Background.drawTiles(graphics, animationTiles, -(int)world.worldPartX, -(int)world.worldPartY, images, this);
+         ImageDrawer.drawTiles(graphics, animationTiles, -(int)world.worldPartX, -(int)world.worldPartY, images, this);
     }                                  
 
 
@@ -172,15 +177,11 @@ class SwingPanel extends JPanel implements GraphicSystem
 
 
     public final void drawImage(GameObject dot) {
-        //System.out.println("Draw image not implemented!");
-        //graphics.drawImage(images[0], 10, 10, this);
-        //int dstx1, int dsty1, int dstx2, int dsty2,
-        //int srcx1, int srcy1, int srcx2, int srcy2,
-
         int x = (int)(dot.x-dot.radius-world.worldPartX);
         int y = (int)(dot.y-dot.radius-world.worldPartY);
         int d = (int)(dot.radius*2);
-        graphics.drawImage(images.get(dot.imageRef.name),
+        Image img = images.get(dot.imageRef.name);
+        graphics.drawImage(img,
                 x, y, x+d, y+d,
                 dot.imageRef.x1, dot.imageRef.y1, dot.imageRef.x2, dot.imageRef.y2,
                 this);

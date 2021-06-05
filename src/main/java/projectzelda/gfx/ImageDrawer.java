@@ -11,19 +11,23 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.geom.AffineTransform;
 
-public class Background {
+public class ImageDrawer {
     public static BufferedImage drawBackground(List<ImageRefTo> tiles, int width, int height, Map<String, Image> images, ImageObserver ob) {
         BufferedImage imageBuffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D graphics = (Graphics2D)imageBuffer.getGraphics();
         drawTiles(graphics, tiles, 0, 0, images, ob);
         return imageBuffer;
     }
+    public static BufferedImage drawVirtualImage(VirtualImage vi, Map<String, Image> images, ImageObserver ob) {
+        BufferedImage imageBuffer = new BufferedImage(vi.width, vi.height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D graphics = (Graphics2D)imageBuffer.getGraphics();
+        drawTiles(graphics, vi.sources, 0, 0, images, ob);
+        return imageBuffer;
+    }
     public static void drawTiles(Graphics inGraphics, List<ImageRefTo> tiles, int offsetx, int offsety, Map<String, Image> images, ImageObserver ob) {
         Graphics2D graphics = (Graphics2D)inGraphics;
         AffineTransform clearTransform = graphics.getTransform();
         for (ImageRefTo tile : tiles) {
-            // if (i % 10 == 0) { System.out.println(""); }
-            // System.out.print(tile.x1+":"+tile.y1+",");
 
             if (tile.horizontallyFlipped || tile.verticallyFlipped || tile.diagonallyFlipped) {
 
@@ -57,7 +61,6 @@ public class Background {
                     tile.x1, tile.y1, tile.x2, tile.y2, 
             ob);
             graphics.setTransform(clearTransform);
-            // i++;
         }
     }
 }
