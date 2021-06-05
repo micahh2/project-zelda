@@ -90,7 +90,6 @@ public class RPGWorld extends World {
         // add the main menu buttons
         mainMenuObjects.add(new UIButton(600, 200, 300, 100, "Play"));
 
-        sound = new Sound("/music/Forest_Ventures.wav");
     }
 
     public void processUserInput(UserInput userInput, double diffSeconds) throws UnsupportedAudioFileException, LineUnavailableException, IOException {
@@ -173,8 +172,9 @@ public class RPGWorld extends World {
                         this.gameState = GameState.PAUSE;
                         sound.setVolume(-40.0f);
                     } else {
-                        sound.setVolume(-20.0f);
+                        //sound.setVolume(-20.0f);
                         this.gameState = GameState.PLAY;
+                        sound.setVolume(-20.0f);
 
                     }
 
