@@ -83,12 +83,12 @@ class SwingPanel extends JPanel implements GraphicSystem
             }
             tracker.waitForAll();
         } catch (Exception e) {
-            //throw new IOException(e.getMessage());
             e.printStackTrace();
         }
 
         List<VirtualImage> virtualImages = mediaInfo.getVirtualImages();
         for (VirtualImage vi : virtualImages) {
+            System.out.println("Loading virtual image: " + vi.name);
             BufferedImage bi = ImageDrawer.drawVirtualImage(vi, images, this);
             images.put(vi.name, bi);
         }
@@ -97,14 +97,12 @@ class SwingPanel extends JPanel implements GraphicSystem
 
     public void clear(long tick)
     {
-        graphics.setColor(Color.LIGHT_GRAY);
-        graphics.fillRect(0, 0, width, height);
         graphics.drawImage(background, -(int)world.worldPartX, -(int)world.worldPartY, this);
         if (tick - lastTick > 100) {
             animationTiles = mediaInfo.getAnimationTiles(tick);
             lastTick = tick;
         }
-         ImageDrawer.drawTiles(graphics, animationTiles, -(int)world.worldPartX, -(int)world.worldPartY, images, this);
+        ImageDrawer.drawTiles(graphics, animationTiles, -(int)world.worldPartX, -(int)world.worldPartY, images, this);
     }                                  
 
 

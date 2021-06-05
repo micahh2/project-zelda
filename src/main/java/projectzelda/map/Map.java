@@ -117,9 +117,9 @@ public class Map implements MediaInfo, WorldInfo {
                     float offsetx = Float.parseFloat(attrs_o.getNamedItem("x").getTextContent());
                     float offsety = Float.parseFloat(attrs_o.getNamedItem("y").getTextContent());
 
-                    // Assume polygon is the first child
                     NodeList objectChildren = object.getChildNodes();
                     Node objectPolygon = null;
+                    // Just interate through until you find a child with name "polygon"
                     for (int k = 0; k < objectChildren.getLength() && objectPolygon == null; k++) {
                         Node objChild = objectChildren.item(k);
                         if (!objChild.getNodeName().equals("polygon")) { continue; }
@@ -147,11 +147,11 @@ public class Map implements MediaInfo, WorldInfo {
 
                     // Because we only really draw square images, we can just use an image ref instead of a polygon
                     ImageRef imageRef = new ImageRef(
-                            name, // Object-Layer / Layer name
-                            (int)Math.round(x1+offsetx), 
-                            (int)Math.round(y1+offsety), 
-                            (int)Math.round(x2+offsetx), 
-                            (int)Math.round(y2+offsety)
+                            name + id_o, // Object-Layer / Layer name
+                            Math.round(x1+offsetx), 
+                            Math.round(y1+offsety), 
+                            Math.round(x2+offsetx), 
+                            Math.round(y2+offsety)
                     );
 
                     mapobjects.add(new MapObject(id_o, offsetx, offsety, imageRef));
@@ -214,26 +214,41 @@ public class Map implements MediaInfo, WorldInfo {
     public List<VirtualImage> getVirtualImages() {
         List<VirtualImage> vImages = new ArrayList<VirtualImage>();
         HashMap<String, List<ImageRefTo>> imageTiles = getTilesByLayer();
+        List<ImageRefTo> nonBackgroundTiles = getNonBackgroundTiles();
         for (ObjectGroup og : objectgroups) {
+            List<ImageRefTo> layer = imageTiles.get(og.name);
+            if (layer == null) { 
+                System.out.println("Warning: object-layer reference to tile-layer that doesn't exist: " + og.name);
+                // If there's no matching layer, just use the "non background tiles"
+                layer = nonBackgroundTiles;
+            }
+
             for (MapObject mo : og.objects) {
                 if (mo.imageRef == null) { continue; }
-                List<ImageRefTo> layer = imageTiles.get(og.name);
-                if (layer == null) { 
-                    System.out.println("Warning Object layer reference to layer that doesn't exist: " + og.name);
-                    continue;
-                }
-                // TODO: Filter layer so it only contains tiles within the object-group's bounds
-                vImages.add(VirtualImage.createFrom(og.name, layer));
+                vImages.add(VirtualImage.createFrom(mo.imageRef, layer));
             }
         }
         return vImages;
+    }
+
+    // These should be things that wont move
+    final List<String> backgroundLayerNames = List.of("Bottom", "Trees", "Furnitures", "Water", "Lava", "Rocks", "Houses");
+
+    public List<ImageRefTo> getNonBackgroundTiles() {
+        ArrayList<ImageRefTo> tiles = new ArrayList<ImageRefTo>();
+        java.util.Map<String, List<ImageRefTo>> tilesByLayer = getTilesByLayer();
+        for (Layer l : layers) {
+            if (backgroundLayerNames.contains(l.name)) { continue; }
+            tiles.addAll(tilesByLayer.get(l.name));
+        }
+        return tiles;
     }
 
     public List<ImageRefTo> getBackgroundTiles() {
         ArrayList<ImageRefTo> tiles = new ArrayList<ImageRefTo>();
         java.util.Map<String, List<ImageRefTo>> tilesByLayer = getTilesByLayer();
         for (Layer l : layers) {
-            // TODO: Filter layers by layer name (l.getKey())
+            if (!backgroundLayerNames.contains(l.name)) { continue; }
             tiles.addAll(tilesByLayer.get(l.name));
         }
         return tiles;

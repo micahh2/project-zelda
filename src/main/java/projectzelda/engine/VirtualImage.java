@@ -18,33 +18,39 @@ public class VirtualImage {
         this.sources = sources;
     }
 
-    public static VirtualImage createFrom(String name, List<ImageRefTo> sources) {
-        ImageRefTo first = sources.get(0);
-        int x1 = first.destx1;
-        int y1 = first.desty1;
-        int x2 = first.destx2;
-        int y2 = first.desty2;
-        // Get dimensions
-        for (ImageRefTo source : sources) {
-            // Set min
-            if (source.destx1 < x1) { x1 = source.destx1; }
-            if (source.desty1 < y1) { y1 = source.desty1; }
-
-            // Set max
-            if (source.destx2 > x2) { x2 = source.destx2; }
-            if (source.desty2 > y2) { y2 = source.desty2; }
-        }
-
+    public static VirtualImage createFrom(ImageRef bounds, List<ImageRefTo> sources) {
         // Convert ImageRefTo's to be relative
         List<ImageRefTo> newSources = new ArrayList<ImageRefTo>(sources.size());
         for (ImageRefTo source : sources) {
             // Make destination coordinates relative to image
+            int destx1 = bounds.x1; 
+            int desty1 = bounds.y1;
+            int destx2 = bounds.x1;
+            int desty2 = bounds.y1;
+
+            int firstx2 = bounds.x2;
+            int lastx1 = destx1;
+            if (bounds.x1 > destx1) {
+                firstx2 = destx2;
+                lastx1 = bounds.x1;
+            }
+            int firsty2 = bounds.y2;
+            int lasty1 = desty1;
+            if (bounds.y1 > desty1) {
+                firsty2 = desty2;
+                lasty1 = bounds.y1;
+            }
+
+            // Ignore tiles that don't overlap with the bounds
+            if (firstx2 < lastx1) { continue; }
+            if (firsty2 < lasty1) { continue; }
+
             ImageRefTo newSource = new ImageRefTo(
                     source, 
-                    source.destx1-x1, 
-                    source.desty1-y1,
-                    source.destx2-x1, 
-                    source.desty2-y1,
+                    source.destx1-bounds.x1, 
+                    source.desty1-bounds.y1,
+                    source.destx2-bounds.x1, 
+                    source.desty2-bounds.y1,
                     source.horizontallyFlipped,
                     source.verticallyFlipped,
                     source.diagonallyFlipped
@@ -52,9 +58,8 @@ public class VirtualImage {
             newSources.add(newSource);
         }
 
-        int width = x2 - x1;
-        int height = y2 - y1;
-        System.out.println("Found x1: " + x1 + ", y1: " + y1 + ", x2: " + x2 + ", y2: " + y2);
-        return new VirtualImage(name, width, height, newSources);
+        int width = bounds.x2 - bounds.x1;
+        int height = bounds.y2 - bounds.y1;
+        return new VirtualImage(bounds.name, width, height, newSources);
     }
 }
