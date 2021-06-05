@@ -39,6 +39,7 @@ local.properties
 .cproject
 .buildpath
 nbproject/
+*.iml
 .iml
 ############
 ## OSes

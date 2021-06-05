@@ -11,10 +11,7 @@ import java.io.File;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 import org.w3c.dom.*;
-import projectzelda.engine.ImageRef;
-import projectzelda.engine.ImageRefTo;
-import projectzelda.engine.WorldInfo;
-import projectzelda.engine.ScreenInfo;
+import projectzelda.engine.*;
 import projectzelda.gfx.MediaInfo;
 import projectzelda.Const;
 
@@ -22,7 +19,6 @@ public class Map implements MediaInfo, WorldInfo {
     public List<Layer> layers = new LinkedList<Layer>();
     public List<Tileset> tilesets = new LinkedList<Tileset>();
     public List<ObjectGroup> objectgroups = new LinkedList<ObjectGroup>();
-    public List<MapObject> mapobjects = new LinkedList<MapObject>();
     public Polygon polygon;
 
     public int width;
@@ -109,62 +105,58 @@ public class Map implements MediaInfo, WorldInfo {
                 int id = Integer.parseInt(attrs.getNamedItem("id").getTextContent());
                 int visible = Integer.parseInt(attrs.getNamedItem("visible").getTextContent());
 
-                NodeList nodeObjects = document.getElementsByTagName("object");
+                NodeList nodeObjects = objectgroup.getChildNodes();
+                List<MapObject> mapobjects = new LinkedList<MapObject>();
                 for (int j = 0; j < nodeObjects.getLength(); j++) {
-
                     Node object = nodeObjects.item(j);
+                    // Important to filter out empty text-nodes (or other childnodes that aren't objects)
+                    if (!object.getNodeName().equals("object")) { continue; }
                     // Read attributes about the objects in objectgroups
                     NamedNodeMap attrs_o = object.getAttributes();
                     int id_o = Integer.parseInt(attrs_o.getNamedItem("id").getTextContent());
-                    float x = Float.parseFloat(attrs_o.getNamedItem("x").getTextContent());
-                    float y = Float.parseFloat(attrs_o.getNamedItem("y").getTextContent());
+                    float offsetx = Float.parseFloat(attrs_o.getNamedItem("x").getTextContent());
+                    float offsety = Float.parseFloat(attrs_o.getNamedItem("y").getTextContent());
 
-                    /*NodeList nodePolygon = document.getElementsByTagName("polygon");
-                    for (int z = 0; z < nodePolygon.getLength(); z++) {
-                        Node pol = nodePolygon.item(z);
-                        NamedNodeMap attrs_p = pol.getAttributes();
-                        String points = attrs_p.getNamedItem("points").getTextContent();
-                        polygon = new Polygon(points);
+                    // Assume polygon is the first child
+                    NodeList objectChildren = object.getChildNodes();
+                    Node objectPolygon = null;
+                    for (int k = 0; k < objectChildren.getLength() && objectPolygon == null; k++) {
+                        Node objChild = objectChildren.item(k);
+                        if (!objChild.getNodeName().equals("polygon")) { continue; }
+                        objectPolygon = objectChildren.item(k);
+                    }
+                    if (objectPolygon == null) { continue; } // No valid children
+                    NamedNodeMap attrs_p = objectPolygon.getAttributes();
+                    String[] points = attrs_p.getNamedItem("points").getTextContent().split(" ");
 
-                    }*/
-                    if(id == 12){
-                        if(id_o == 3){
-                            mapobjects.add(new MapObject(id_o, x, y, polygon));
-                        }
+                    // Form a square out of the max and min coordinates 
+                    float x1 = 0; float y1 = 0; float x2 = 0; float y2 = 0;
+                    for (int z = 0; z < points.length; z++) {
+                        String[] coord = points[z].split(",");
+                        float x = Float.parseFloat(coord[0]);
+                        float y = Float.parseFloat(coord[1]);
+                        
+                        // Set min
+                        if (x < x1) { x1 = x; }
+                        if (y < y1) { y1 = y; }
+
+                        // Set max
+                        if (x > x2) { x2 = x; }
+                        if (y > y2) { y2 = y; }
                     }
-                    else if(id == 6){
-                        if(id_o == 1){
-                            mapobjects.add(new MapObject(id_o, x, y, polygon));
-                        }
-                    }
-                    else if(id == 7){
-                        if(id_o == 2){
-                            mapobjects.add(new MapObject(id_o, x, y, polygon));
-                        }
-                    }
-                    else if(id == 17){
-                        if(id_o == 13 || id_o == 14 || id_o == 15 || id_o == 16 || id_o == 17 || id_o == 18){
-                            mapobjects.add(new MapObject(id_o, x, y, polygon));
-                        }
-                    }
-                    else if(id == 16){
-                        if(id_o == 6 || id_o == 7 || id_o == 8 || id_o == 9 || id_o == 10 || id_o == 12){
-                            mapobjects.add(new MapObject(id_o, x, y, polygon));
-                        }
-                    }
-                    else if(id == 15){
-                        if(id_o == 5){
-                            mapobjects.add(new MapObject(id_o, x, y, polygon));
-                        }
-                    }
-                    else if(id == 14){
-                        if(id_o == 4){
-                            mapobjects.add(new MapObject(id_o, x, y, polygon));
-                        }
-                    }
+
+                    // Because we only really draw square images, we can just use an image ref instead of a polygon
+                    ImageRef imageRef = new ImageRef(
+                            name, // Object-Layer / Layer name
+                            (int)Math.round(x1+offsetx), 
+                            (int)Math.round(y1+offsety), 
+                            (int)Math.round(x2+offsetx), 
+                            (int)Math.round(y2+offsety)
+                    );
+
+                    mapobjects.add(new MapObject(id_o, offsetx, offsety, imageRef));
                 }
                 objectgroups.add(new ObjectGroup(id, name, visible, mapobjects));
-                mapobjects = new LinkedList<MapObject>();
             }
 
 
@@ -179,8 +171,6 @@ public class Map implements MediaInfo, WorldInfo {
 
             // Setup animation tile map
             for (Layer l : layers) {
-                // if (!l.name.equals("Lava")) { continue; }
-                // System.out.println("Layer: " + l.name);
                 for (int i = 0; i < l.data.size(); i++) {
                     int gid = filterFlipFlags(l.data.get(i));
                     // Filter out not animated
@@ -221,16 +211,44 @@ public class Map implements MediaInfo, WorldInfo {
         return sources;
     }
 
+    public List<VirtualImage> getVirtualImages() {
+        List<VirtualImage> vImages = new ArrayList<VirtualImage>();
+        HashMap<String, List<ImageRefTo>> imageTiles = getTilesByLayer();
+        for (ObjectGroup og : objectgroups) {
+            for (MapObject mo : og.objects) {
+                if (mo.imageRef == null) { continue; }
+                List<ImageRefTo> layer = imageTiles.get(og.name);
+                if (layer == null) { 
+                    System.out.println("Warning Object layer reference to layer that doesn't exist: " + og.name);
+                    continue;
+                }
+                // TODO: Filter layer so it only contains tiles within the object-group's bounds
+                vImages.add(VirtualImage.createFrom(og.name, layer));
+            }
+        }
+        return vImages;
+    }
+
     public List<ImageRefTo> getBackgroundTiles() {
         ArrayList<ImageRefTo> tiles = new ArrayList<ImageRefTo>();
+        java.util.Map<String, List<ImageRefTo>> tilesByLayer = getTilesByLayer();
         for (Layer l : layers) {
-            //if (!l.name.equals("Lava")) { continue; }
-            //System.out.println("Layer: " + l.name);
+            // TODO: Filter layers by layer name (l.getKey())
+            tiles.addAll(tilesByLayer.get(l.name));
+        }
+        return tiles;
+    }
+
+    public HashMap<String, List<ImageRefTo>> getTilesByLayer() {
+        HashMap<String, List<ImageRefTo>> tiles = new HashMap<String, List<ImageRefTo>>();
+        for (Layer l : layers) {
+            List<ImageRefTo> tileList = new ArrayList<ImageRefTo>();
             for (int i = 0; i < l.data.size(); i++) {
                 ImageRefTo imRef = getTile(l, i, l.data.get(i));
                 if (imRef == null) { continue; }
-                tiles.add(imRef);
+                tileList.add(imRef);
             }
+            tiles.put(l.name, tileList);
         }
         return tiles;
     }

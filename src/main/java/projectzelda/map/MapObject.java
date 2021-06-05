@@ -1,16 +1,18 @@
 package projectzelda.map;
 
+import projectzelda.engine.ImageRef;
+
 public class MapObject {
     public int id;
     public float x;
     public float y;
-    public Polygon polygon;
+    public ImageRef imageRef;
 
-    public MapObject(int id, float x, float y, Polygon polygon) {
+    public MapObject(int id, float x, float y, ImageRef imRef) {
         this.id = id;
         this.x = x;
         this.y = y;
-        this.polygon = polygon;
+        this.imageRef = imRef;
     }
 
     @Override
@@ -19,7 +21,7 @@ public class MapObject {
                 "id=" + id +
                 "; x=" + x +
                 "; y=" + y +
-                "; polygon=" + polygon +
+                "; imageRef=" + imageRef +
                 "; }";
     }
 }
