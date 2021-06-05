@@ -51,20 +51,6 @@ public class RPGWorld extends World {
         worldPartY = 0;
 
 
-      /*  // add a little forrest
-
-        for (int x = 0; x < 5000; x += 1000) {
-            for (int y = 0; y < 4000; y += 800) {
-                gameObjects.add(new Tree(x + 300, y + 200, 80));
-                gameObjects.add(new Tree(x + 600, y + 370, 50));
-                gameObjects.add(new Tree(x + 200, y + 600, 50));
-                gameObjects.add(new Tree(x + 500, y + 800, 40));
-                gameObjects.add(new Tree(x + 900, y + 500, 100));
-                gameObjects.add(new Tree(x + 760, y + 160, 40));
-            }
-        } */
-
-
         // add some goblins
         for (int i = 0; i < 10; i++) {
             double x = worldPartX + Math.random() * worldInfo.getPartWidth();

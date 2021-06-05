@@ -23,8 +23,7 @@ class Avatar extends GameObject
 
         this.isMoving = false;
 
-        int imX = 16*4;
-        imageRef = new ImageRef("Rocks", imX, 0, imX+32, 32);
+        imageRef = new ImageRef("Rocks2", 0, 0, 32, 32);
     }
 
     public void move(double diffSeconds)
