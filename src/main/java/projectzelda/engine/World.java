@@ -34,9 +34,8 @@ public abstract class World {
     public ArrayList<TextObject> textObjects = new ArrayList<TextObject>();
 
     public ArrayList<UIObject> pauseMenuObjects = new ArrayList<>();
-
     public ArrayList<UIObject> mainMenuObjects = new ArrayList<>();
-
+    public ArrayList<UIObject> hudObjects = new ArrayList<>();
 
 
     //public GameState gameState = GameState.PLAY;
@@ -50,7 +49,6 @@ public abstract class World {
     //
     public final void run() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
         long lastTick = System.currentTimeMillis();
-
 
 
         userInput = inputSystem.getUserInput();
@@ -130,13 +128,19 @@ public abstract class World {
                 }
             }
 
-            
-            //draw play button of main_menu
+
+            // draw play button of main_menu
             if (gameState == GameState.MAIN_MENU) {
                 for (int i = 0; i < mainMenuObjects.size(); i++) {
                     graphicSystem.draw(mainMenuObjects.get(i));
                 }
             }
+
+            // draw HUD
+            for (int i = 0; i < hudObjects.size(); i++) {
+                graphicSystem.draw(hudObjects.get(i));
+            }
+
 
             // redraw everything
             graphicSystem.redraw();

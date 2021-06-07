@@ -160,8 +160,8 @@ class SwingPanel extends JPanel implements GraphicSystem
     }
 
     private final void drawHealthBar(HealthBar healthBar) {
-        int x = (int)(healthBar.x - world.worldPartX);
-        int y = (int)(healthBar.y - world.worldPartY);
+        int x = healthBar.isHudElement? healthBar.x : (int)(healthBar.x - world.worldPartX);
+        int y = healthBar.isHudElement? healthBar.y :(int)(healthBar.y - world.worldPartY);
 
         graphics.setColor(healthBar.outlineColor);
         graphics.drawRect(x, y, healthBar.width, healthBar.height);
@@ -183,19 +183,6 @@ class SwingPanel extends JPanel implements GraphicSystem
                 x, y, x+d, y+d,
                 dot.imageRef.x1, dot.imageRef.y1, dot.imageRef.x2, dot.imageRef.y2,
                 this);
-    }
-
-    public final void drawPauseMenu(){
-        graphics.setColor(Color.DARK_GRAY);
-        graphics.fillRect(600, 200, 300, 100);
-        graphics.fillRect(600, 500, 300, 100);
-        graphics.setColor(Color.BLACK);
-        graphics.drawRect(600, 200, 300, 100);
-        graphics.drawRect(600, 500, 300, 100);
-
-        graphics.setFont(font);
-        graphics.drawString("Resume", 700, 250);
-        graphics.drawString("Quit", 700, 550);
     }
 
     public void redraw()
