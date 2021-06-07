@@ -5,6 +5,7 @@ package projectzelda.game;
 
 import projectzelda.*;
 import projectzelda.engine.*;
+import projectzelda.map.MapObject;
 
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
@@ -39,7 +40,9 @@ public class RPGWorld extends World {
 
     public void init() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
         // add the Avatar
-        avatar = new Avatar(100, 50);
+        //MapObject playerMO = map.getFirstObject("Player");
+        //avatar = new Avatar(playerMO.x, playerMO.y, playerMO.imageRef);
+        avatar = new Avatar(100, 50, new ImageRef("Rocks2", 0, 0, 32, 32));
         gameObjects.add(avatar);
 
         //play the background music
