@@ -146,7 +146,7 @@ public class Map implements MediaInfo, WorldInfo {
                     }
 
                     // Because we only really draw square images, we can just use an image ref instead of a polygon
-                    ImageRef imageRef = new ImageRef(
+                    ImageRef startingBounds = new ImageRef(
                             name + id_o, // Object-Layer / Layer name
                             Math.round(x1+offsetx), 
                             Math.round(y1+offsety), 
@@ -154,7 +154,16 @@ public class Map implements MediaInfo, WorldInfo {
                             Math.round(y2+offsety)
                     );
 
-                    mapobjects.add(new MapObject(id_o, offsetx, offsety, imageRef));
+                    // This is a normalized version of above because when we draw the virtual image, that's what we'll have
+                    ImageRef imageRef = new ImageRef(
+                            name + id_o, // Object-Layer / Layer name
+                            0,
+                            0,
+                            Math.round(startingBounds.x2 - startingBounds.x1), 
+                            Math.round(startingBounds.y2 - startingBounds.y1)
+                    );
+
+                    mapobjects.add(new MapObject(id_o, offsetx, offsety, startingBounds, imageRef));
                 }
                 objectgroups.add(new ObjectGroup(id, name, visible, mapobjects));
             }
@@ -224,8 +233,8 @@ public class Map implements MediaInfo, WorldInfo {
             }
 
             for (MapObject mo : og.objects) {
-                if (mo.imageRef == null) { continue; }
-                vImages.add(VirtualImage.createFrom(mo.imageRef, layer));
+                if (mo.startingBounds == null) { continue; }
+                vImages.add(VirtualImage.createFrom(mo.startingBounds, layer));
             }
         }
         return vImages;
@@ -344,5 +353,19 @@ public class Map implements MediaInfo, WorldInfo {
 
     public int getScrollBounds() {
         return (int)(Math.min(getPartWidth(), getPartHeight())*2/5);
+    }
+
+    public MapObject getFirstObject(String groupName) {
+        List<MapObject> mapObjects = getAllObjects(groupName);
+        if (mapObjects == null) { return null; }
+        return mapObjects.get(0);
+    }
+
+    public List<MapObject> getAllObjects(String groupName) {
+        for (ObjectGroup og : objectgroups) {
+            if (!og.name.equals(groupName)) { continue; }
+            return og.objects;
+        }
+        return null; // Not found
     }
 }

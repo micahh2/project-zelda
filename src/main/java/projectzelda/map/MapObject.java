@@ -6,13 +6,15 @@ public class MapObject {
     public int id;
     public float x;
     public float y;
+    public ImageRef startingBounds;
     public ImageRef imageRef;
 
-    public MapObject(int id, float x, float y, ImageRef imRef) {
+    public MapObject(int id, float x, float y, ImageRef startingBounds, ImageRef imRef) {
         this.id = id;
         this.x = x;
         this.y = y;
         this.imageRef = imRef;
+        this.startingBounds = startingBounds;
     }
 
     @Override
