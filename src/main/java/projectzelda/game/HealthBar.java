@@ -11,6 +11,7 @@ public class HealthBar extends UIObject {
     public Color healthColor;
 
     public double health = 1.0;
+    public boolean isHudElement = false;
 
     public HealthBar(int x_, int y_, int width_, int height_) {
         super(x_, y_);

@@ -7,7 +7,7 @@ import projectzelda.*;
 import projectzelda.engine.*;
 import java.awt.Color;
 
-class Avatar extends GameObject
+public class Avatar extends GameObject
 {
     private final double COOLDOWN = 0.5;
     private double weaponTemp = 0;
@@ -15,6 +15,9 @@ class Avatar extends GameObject
     private double lifeGPickedUpText;
     private BonesPickedUpText bPickedUpText;
     private GrenadePickedUpText gPickedUpText;
+
+    public double life = 1.0;
+    public HealthBar healthBar;
 
     public Avatar(double x, double y) 
     { 
@@ -24,6 +27,9 @@ class Avatar extends GameObject
         this.isMoving = false;
 
         imageRef = new ImageRef("Rocks2", 0, 0, 32, 32);
+
+        healthBar = new HealthBar(10, 10, 300, 25);
+        healthBar.isHudElement = true;
     }
 
     public void move(double diffSeconds)

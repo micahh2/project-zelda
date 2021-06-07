@@ -76,6 +76,9 @@ public class RPGWorld extends World {
         // add the main menu buttons
         mainMenuObjects.add(new UIButton(600, 200, 300, 100, "Play"));
 
+        // add the hud elements
+        hudObjects.add(((Avatar) avatar).healthBar);
+
     }
 
     public void processUserInput(UserInput userInput, double diffSeconds) throws UnsupportedAudioFileException, LineUnavailableException, IOException {
