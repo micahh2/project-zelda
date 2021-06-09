@@ -58,6 +58,13 @@ public abstract class World {
             long currentTick = System.currentTimeMillis();
             long millisDiff = currentTick - lastTick;
 
+            // Cap at 60 FPS
+            try {
+                if (millisDiff < 16) {
+                    Thread.sleep(16 - millisDiff);
+                }
+            } catch(Exception e) {}
+
             // don't run faster then MINIMUM_DIFF_SECONDS per frame
             //
             if (millisDiff < FRAME_MINIMUM_MILLIS) {
@@ -115,6 +122,7 @@ public abstract class World {
             for (int i = 0; i < gameSize; i++) {
                 graphicSystem.draw(gameObjects.get(i));
             }
+            graphicSystem.drawForeground(currentTick);
 
 
             // draw all TextObjects

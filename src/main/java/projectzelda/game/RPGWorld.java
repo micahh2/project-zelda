@@ -7,6 +7,7 @@ import projectzelda.*;
 import projectzelda.engine.*;
 import projectzelda.map.MapObject;
 
+import java.util.List;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.IOException;
