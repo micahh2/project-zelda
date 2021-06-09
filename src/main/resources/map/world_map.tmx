@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.6.0" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="16" tileheight="16" infinite="0" nextlayerid="18" nextobjectid="19">
+<map version="1.5" tiledversion="1.6.0" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="16" tileheight="16" infinite="0" nextlayerid="19" nextobjectid="97">
  <tileset firstgid="1" source="tile2.tsx"/>
  <tileset firstgid="2687" source="tile3.tsx"/>
  <tileset firstgid="3587" source="tile1.tsx"/>
@@ -887,6 +887,68 @@
   <object id="12" x="1202.67" y="259.333">
    <polygon points="0,0 42,-2 45.3333,56 1.33333,61.3333"/>
   </object>
+ </objectgroup>
+ <objectgroup id="18" name="Treebases">
+  <object id="19" x="31" y="70"/>
+  <object id="22" x="32" y="147"/>
+  <object id="23" x="31" y="227"/>
+  <object id="24" x="31" y="303"/>
+  <object id="25" x="32" y="383"/>
+  <object id="26" x="33" y="467"/>
+  <object id="27" x="34" y="544"/>
+  <object id="28" x="33" y="626"/>
+  <object id="29" x="32" y="702"/>
+  <object id="30" x="32" y="785"/>
+  <object id="31" x="223" y="786"/>
+  <object id="32" x="223" y="704"/>
+  <object id="33" x="224" y="628"/>
+  <object id="34" x="226" y="546"/>
+  <object id="35" x="289" y="548"/>
+  <object id="36" x="353" y="549"/>
+  <object id="37" x="290" y="628"/>
+  <object id="38" x="352" y="629"/>
+  <object id="39" x="415" y="626"/>
+  <object id="41" x="288" y="706"/>
+  <object id="42" x="288" y="785"/>
+  <object id="43" x="353" y="788"/>
+  <object id="44" x="415" y="789"/>
+  <object id="45" x="350" y="867"/>
+  <object id="46" x="352" y="954"/>
+  <object id="47" x="352" y="1028"/>
+  <object id="48" x="352" y="1108"/>
+  <object id="49" x="351" y="1187"/>
+  <object id="50" x="351" y="1267"/>
+  <object id="51" x="354" y="1345"/>
+  <object id="52" x="352" y="1429"/>
+  <object id="53" x="353" y="1505"/>
+  <object id="54" x="352" y="1584"/>
+  <object id="55" x="416" y="1588"/>
+  <object id="56" x="481" y="1587"/>
+  <object id="57" x="546" y="1587"/>
+  <object id="58" x="352" y="706"/>
+  <object id="59" x="416" y="702"/>
+  <object id="60" x="607" y="1585"/>
+  <object id="61" x="675" y="1587"/>
+  <object id="62" x="673" y="1505"/>
+  <object id="63" x="673" y="1423"/>
+  <object id="64" x="673" y="1348"/>
+  <object id="65" x="733" y="1345"/>
+  <object id="66" x="738" y="1267"/>
+  <object id="67" x="673" y="1267"/>
+  <object id="68" x="674" y="1188"/>
+  <object id="69" x="738" y="1187"/>
+  <object id="70" x="671" y="1107"/>
+  <object id="71" x="736" y="1105"/>
+  <object id="72" x="671" y="1029"/>
+  <object id="73" x="736" y="1028"/>
+  <object id="74" x="672" y="949"/>
+  <object id="75" x="734" y="948"/>
+  <object id="76" x="673" y="865"/>
+  <object id="77" x="738" y="867"/>
+  <object id="78" x="610" y="788"/>
+  <object id="79" x="674" y="786"/>
+  <object id="80" x="736" y="788"/>
+  <object id="81" x="801" y="786"/>
  </objectgroup>
  <objectgroup id="15" name="Player" visible="0">
   <object id="5" x="98" y="14.6667">

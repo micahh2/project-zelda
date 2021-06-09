@@ -9,6 +9,9 @@ public interface GraphicSystem
 {
   // prepare to draw a new Screen
   void clear(long currentTick);
+
+  // draw foreground on-top of game objects
+  void drawForeground(long currentTick);
   
   // draw ONE GameObject on the Screen
   void draw(GameObject dot);

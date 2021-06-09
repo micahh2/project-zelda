@@ -46,6 +46,7 @@ class SwingPanel extends JPanel implements GraphicSystem
     private MediaTracker tracker;
     private Map<String, Image> images = new HashMap<String, Image>();
     private BufferedImage background;
+    private BufferedImage foreground;
     private MediaInfo mediaInfo;
     private WorldInfo worldInfo;
     private int width;
@@ -92,17 +93,25 @@ class SwingPanel extends JPanel implements GraphicSystem
             BufferedImage bi = ImageDrawer.drawVirtualImage(vi, images, this);
             images.put(vi.name, bi);
         }
-        background = ImageDrawer.drawBackground(mediaInfo.getBackgroundTiles(), worldInfo.getWidth(), worldInfo.getHeight(), images, this);
+        background = ImageDrawer.createImage(mediaInfo.getBackgroundTiles(), worldInfo.getWidth(), worldInfo.getHeight(), images, this);
+        foreground = ImageDrawer.createImage(mediaInfo.getForegroundTiles(), worldInfo.getWidth(), worldInfo.getHeight(), images, this);
     }
 
     public void clear(long tick)
     {
         graphics.drawImage(background, -(int)world.worldPartX, -(int)world.worldPartY, this);
+        
+        // Draw animated tiles
         if (tick - lastTick > 100) {
             animationTiles = mediaInfo.getAnimationTiles(tick);
             lastTick = tick;
         }
         ImageDrawer.drawTiles(graphics, animationTiles, -(int)world.worldPartX, -(int)world.worldPartY, images, this);
+    }                                  
+
+    public void drawForeground(long tick)
+    {
+        graphics.drawImage(foreground, -(int)world.worldPartX, -(int)world.worldPartY, this);
     }                                  
 
 
