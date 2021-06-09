@@ -23,7 +23,7 @@ public abstract class World {
     public WorldInfo worldInfo;
 
     // defines maximum frame rate
-    private static final int FRAME_MINIMUM_MILLIS = 10;
+    private static final int FRAME_MINIMUM_MILLIS = 16;
 
     // if game is over
     public boolean gameOver = false;
@@ -57,13 +57,6 @@ public abstract class World {
             //
             long currentTick = System.currentTimeMillis();
             long millisDiff = currentTick - lastTick;
-
-            // Cap at 60 FPS
-            try {
-                if (millisDiff < 16) {
-                    Thread.sleep(16 - millisDiff);
-                }
-            } catch(Exception e) {}
 
             // don't run faster then MINIMUM_DIFF_SECONDS per frame
             //
