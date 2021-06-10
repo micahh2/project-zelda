@@ -12,7 +12,7 @@ import java.awt.Image;
 import java.awt.geom.AffineTransform;
 
 public class ImageDrawer {
-    public static BufferedImage drawBackground(List<ImageRefTo> tiles, int width, int height, Map<String, Image> images, ImageObserver ob) {
+    public static BufferedImage createImage(List<ImageRefTo> tiles, int width, int height, Map<String, Image> images, ImageObserver ob) {
         BufferedImage imageBuffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D graphics = (Graphics2D)imageBuffer.getGraphics();
         drawTiles(graphics, tiles, 0, 0, images, ob);

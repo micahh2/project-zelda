@@ -23,7 +23,7 @@ public abstract class World {
     public WorldInfo worldInfo;
 
     // defines maximum frame rate
-    private static final int FRAME_MINIMUM_MILLIS = 10;
+    private static final int FRAME_MINIMUM_MILLIS = 16;
 
     // if game is over
     public boolean gameOver = false;
@@ -115,6 +115,7 @@ public abstract class World {
             for (int i = 0; i < gameSize; i++) {
                 graphicSystem.draw(gameObjects.get(i));
             }
+            graphicSystem.drawForeground(currentTick);
 
 
             // draw all TextObjects

@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.LinkedList;
 import java.util.HashMap;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.net.URL;
 import java.io.File;
@@ -16,9 +15,9 @@ import projectzelda.gfx.MediaInfo;
 import projectzelda.Const;
 
 public class Map implements MediaInfo, WorldInfo {
-    public List<Layer> layers = new LinkedList<Layer>();
-    public List<Tileset> tilesets = new LinkedList<Tileset>();
-    public List<ObjectGroup> objectgroups = new LinkedList<ObjectGroup>();
+    public List<Layer> layers;
+    public List<Tileset> tilesets;
+    public List<ObjectGroup> objectgroups;
     public Polygon polygon;
 
     public int width;
@@ -55,109 +54,24 @@ public class Map implements MediaInfo, WorldInfo {
             // Read basic map info
             Node mapNode = document.getElementsByTagName("map").item(0);
             NamedNodeMap mapAttrs = mapNode.getAttributes();
-            width = Integer.parseInt(mapAttrs.getNamedItem("width").getTextContent());
-            height = Integer.parseInt(mapAttrs.getNamedItem("height").getTextContent());
-            tileWidth = Integer.parseInt(mapAttrs.getNamedItem("tilewidth").getTextContent());
-            tileHeight = Integer.parseInt(mapAttrs.getNamedItem("tileheight").getTextContent());
+            width = XMLDocument.getAsInt(mapAttrs, "width");
+            height = XMLDocument.getAsInt(mapAttrs, "height");
+            tileWidth = XMLDocument.getAsInt(mapAttrs, "tilewidth");
+            tileHeight = XMLDocument.getAsInt(mapAttrs, "tileheight");
             pixelWidth = width * tileWidth;
             pixelHeight = height * tileHeight;
 
             // Read the layers
             NodeList nodeLayers = document.getElementsByTagName("layer");
-            for (int i = 0; i < nodeLayers.getLength(); i++) {
-                Node layer = nodeLayers.item(i);
-
-                // Read attributes about the layer
-                NamedNodeMap attrs = layer.getAttributes();
-                String name = attrs.getNamedItem("name").getTextContent();
-                int id = Integer.parseInt(attrs.getNamedItem("id").getTextContent());
-                int width = Integer.parseInt(attrs.getNamedItem("width").getTextContent());
-                int height = Integer.parseInt(attrs.getNamedItem("height").getTextContent());
-                // Hacky - assumes that the data node is the only content
-                String[] strData = layer.getTextContent().split(",");
-                LinkedList<Integer> data = new LinkedList<Integer>();
-                for (String j : strData) {
-                    data.add(Integer.parseInt(j.trim()));
-                }
-                // Create a new layer and add it to our collection
-                layers.add(new Layer(id, name, width, height, data));
-            }
+            layers = XMLDocument.getLayers(nodeLayers);
 
             // Read the tilesets
             NodeList nodeTilesets = document.getElementsByTagName("tileset");
-            for (int i = 0; i < nodeTilesets.getLength(); i++) {
-                Node tileset = nodeTilesets.item(i);
-                NamedNodeMap attrs = tileset.getAttributes();
-                int firstgid = Integer.parseInt(attrs.getNamedItem("firstgid").getTextContent());
-                String source = attrs.getNamedItem("source").getTextContent();
-
-                tilesets.add(new Tileset(firstgid, src.replace(file.getName(), source)));
-            }
-            Collections.sort(tilesets); // Important, sorts in desc order
+            tilesets = XMLDocument.getTilesets(nodeTilesets, file.getName(), src);
 
             // Read the objectgroup
             NodeList nodeGroupObjects = document.getElementsByTagName("objectgroup");
-            for (int i = 0; i < nodeGroupObjects.getLength(); i++) {
-                Node objectgroup = nodeGroupObjects.item(i);
-                // Read attributes about the objectgroup
-                NamedNodeMap attrs = objectgroup.getAttributes();
-                String name = attrs.getNamedItem("name").getTextContent();
-                int id = Integer.parseInt(attrs.getNamedItem("id").getTextContent());
-                int visible = Integer.parseInt(attrs.getNamedItem("visible").getTextContent());
-
-                NodeList nodeObjects = objectgroup.getChildNodes();
-                List<MapObject> mapobjects = new LinkedList<MapObject>();
-                for (int j = 0; j < nodeObjects.getLength(); j++) {
-                    Node object = nodeObjects.item(j);
-                    // Important to filter out empty text-nodes (or other childnodes that aren't objects)
-                    if (!object.getNodeName().equals("object")) { continue; }
-                    // Read attributes about the objects in objectgroups
-                    NamedNodeMap attrs_o = object.getAttributes();
-                    int id_o = Integer.parseInt(attrs_o.getNamedItem("id").getTextContent());
-                    float offsetx = Float.parseFloat(attrs_o.getNamedItem("x").getTextContent());
-                    float offsety = Float.parseFloat(attrs_o.getNamedItem("y").getTextContent());
-
-                    NodeList objectChildren = object.getChildNodes();
-                    Node objectPolygon = null;
-                    // Just interate through until you find a child with name "polygon"
-                    for (int k = 0; k < objectChildren.getLength() && objectPolygon == null; k++) {
-                        Node objChild = objectChildren.item(k);
-                        if (!objChild.getNodeName().equals("polygon")) { continue; }
-                        objectPolygon = objectChildren.item(k);
-                    }
-                    if (objectPolygon == null) { continue; } // No valid children
-                    NamedNodeMap attrs_p = objectPolygon.getAttributes();
-                    String[] points = attrs_p.getNamedItem("points").getTextContent().split(" ");
-
-                    // Form a square out of the max and min coordinates 
-                    float x1 = 0; float y1 = 0; float x2 = 0; float y2 = 0;
-                    for (int z = 0; z < points.length; z++) {
-                        String[] coord = points[z].split(",");
-                        float x = Float.parseFloat(coord[0]);
-                        float y = Float.parseFloat(coord[1]);
-                        
-                        // Set min
-                        if (x < x1) { x1 = x; }
-                        if (y < y1) { y1 = y; }
-
-                        // Set max
-                        if (x > x2) { x2 = x; }
-                        if (y > y2) { y2 = y; }
-                    }
-
-                    // Because we only really draw square images, we can just use an image ref instead of a polygon
-                    ImageRef imageRef = new ImageRef(
-                            name + id_o, // Object-Layer / Layer name
-                            Math.round(x1+offsetx), 
-                            Math.round(y1+offsety), 
-                            Math.round(x2+offsetx), 
-                            Math.round(y2+offsety)
-                    );
-
-                    mapobjects.add(new MapObject(id_o, offsetx, offsety, imageRef));
-                }
-                objectgroups.add(new ObjectGroup(id, name, visible, mapobjects));
-            }
+            objectgroups = XMLDocument.getObjectGroups(nodeGroupObjects, tileWidth, tileHeight);
 
 
             // Setup animation map
@@ -212,27 +126,32 @@ public class Map implements MediaInfo, WorldInfo {
     }
 
     public List<VirtualImage> getVirtualImages() {
+        // These are the objectgroups that should be drawn regardless if they have a matching (We just use non-background tiles to draw from)
+        final List<String> drawableExceptions = List.of("Player", "Npcs", "Monsters", "Boss");
         List<VirtualImage> vImages = new ArrayList<VirtualImage>();
         HashMap<String, List<ImageRefTo>> imageTiles = getTilesByLayer();
         List<ImageRefTo> nonBackgroundTiles = getNonBackgroundTiles();
         for (ObjectGroup og : objectgroups) {
             List<ImageRefTo> layer = imageTiles.get(og.name);
             if (layer == null) { 
-                System.out.println("Warning: object-layer reference to tile-layer that doesn't exist: " + og.name);
+                if (!drawableExceptions.contains(og.name)) {
+                    System.out.println("Warning: object-layer reference to tile-layer that doesn't exist: " + og.name);
+                    continue;
+                }
                 // If there's no matching layer, just use the "non background tiles"
                 layer = nonBackgroundTiles;
             }
 
             for (MapObject mo : og.objects) {
-                if (mo.imageRef == null) { continue; }
-                vImages.add(VirtualImage.createFrom(mo.imageRef, layer));
+                if (mo.startingBounds == null) { continue; }
+                vImages.add(VirtualImage.createFrom(mo.startingBounds, layer));
             }
         }
         return vImages;
     }
 
     // These should be things that wont move
-    final List<String> backgroundLayerNames = List.of("Bottom", "Trees", "Furnitures", "Water", "Lava", "Rocks", "Houses");
+    final List<String> backgroundLayerNames = List.of("Bottom", "Furnitures");
 
     public List<ImageRefTo> getNonBackgroundTiles() {
         ArrayList<ImageRefTo> tiles = new ArrayList<ImageRefTo>();
@@ -249,6 +168,19 @@ public class Map implements MediaInfo, WorldInfo {
         java.util.Map<String, List<ImageRefTo>> tilesByLayer = getTilesByLayer();
         for (Layer l : layers) {
             if (!backgroundLayerNames.contains(l.name)) { continue; }
+            tiles.addAll(tilesByLayer.get(l.name));
+        }
+        return tiles;
+    }
+
+    // These things shouldn't move and should never be under a character
+    final List<String> foregroundLayerNames = List.of("Trees", "Water", "Rocks", "Houses");
+
+    public List<ImageRefTo> getForegroundTiles() {
+        ArrayList<ImageRefTo> tiles = new ArrayList<ImageRefTo>();
+        java.util.Map<String, List<ImageRefTo>> tilesByLayer = getTilesByLayer();
+        for (Layer l : layers) {
+            if (!foregroundLayerNames.contains(l.name)) { continue; }
             tiles.addAll(tilesByLayer.get(l.name));
         }
         return tiles;
@@ -344,5 +276,19 @@ public class Map implements MediaInfo, WorldInfo {
 
     public int getScrollBounds() {
         return (int)(Math.min(getPartWidth(), getPartHeight())*2/5);
+    }
+
+    public MapObject getFirstObject(String groupName) {
+        List<MapObject> mapObjects = getAllObjects(groupName);
+        if (mapObjects == null) { return null; }
+        return mapObjects.get(0);
+    }
+
+    public List<MapObject> getAllObjects(String groupName) {
+        for (ObjectGroup og : objectgroups) {
+            if (!og.name.equals(groupName)) { continue; }
+            return og.objects;
+        }
+        return null; // Not found
     }
 }

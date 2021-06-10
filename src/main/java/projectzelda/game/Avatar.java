@@ -15,14 +15,14 @@ public class Avatar extends GameObject
     private double lifeGPickedUpText;
     private BonesPickedUpText bPickedUpText;
     private GrenadePickedUpText gPickedUpText;
+    private boolean flippedX = false;
 
     public double life = 1.0;
     public HealthBar healthBar;
 
-    public Avatar(double x, double y) 
+    public Avatar(double x, double y, ImageRef imageRef) 
     { 
         super(x,y,0,200,15, new Color(96,96,255));
-
 
         this.isMoving = false;
 
@@ -34,6 +34,7 @@ public class Avatar extends GameObject
         int healthBarY = (int)(0.01 * world.worldInfo.getPartHeight());
         healthBar = new HealthBar(healthBarX, healthBarY, healthBarWidth, healthBarHeight);
         healthBar.isHudElement = true;
+        this.imageRef = imageRef;
     }
 
     public void move(double diffSeconds)
@@ -41,11 +42,12 @@ public class Avatar extends GameObject
         if (weaponTemp > 0) {
             weaponTemp -= diffSeconds;
         }
+
+        // Save starting x-pos for calculating orientation
+        int startx = (int)x;
+
         // move Avatar one step forward
         super.move(diffSeconds);
-
-
-
 
         // calculate all collisions with other Objects 
         GameObjectList collisions = world.getPhysicsSystem().getCollisions(this);
@@ -85,6 +87,16 @@ public class Avatar extends GameObject
                     break;
             }
         }
+
+        // Hacky, but we can flip the orientation of the avatar by switching the image coordinates to draw from
+        int endx = (int)x;
+        if ((startx < endx && !flippedX) || (startx > endx && flippedX)) {
+            int tempx = imageRef.x1;
+            imageRef.x1 = imageRef.x2;
+            imageRef.x2 = tempx;
+            flippedX = !flippedX;
+        }
+
         if (bPickedUpText != null) {
             lifeBPickedUpText -= diffSeconds;
             if (lifeBPickedUpText < 0) {
