@@ -26,20 +26,11 @@ class RPGPhysicsSystem extends PhysicsSystem
       GameObject obj2 = world.gameObjects.get(i);
       
       // an object doesn't collide with itself
-      if(obj2==object) continue;
+      if(obj2 == object) continue;
       
-      // check if they touch each other
-      double dist = object.radius+obj2.radius;
-      double dx   = object.x-obj2.x;
-      double dy   = object.y-obj2.y;
-      
-      if(dx*dx+dy*dy < dist*dist)
-      { result.add(obj2);
-      }
+      if(object.hasCollision(obj2)) { result.add(obj2); }
     }
     
     return result;
   }
- 
-  
 }

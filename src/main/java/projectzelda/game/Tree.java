@@ -7,7 +7,7 @@ import projectzelda.*;
 import projectzelda.engine.*;
 import java.awt.Color;
 
-class Tree extends GameObject
+class Tree extends CircularGameObject
 {
   public Tree(double x, double y, int r)
   {

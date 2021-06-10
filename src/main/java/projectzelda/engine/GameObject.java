@@ -14,7 +14,6 @@ public abstract class GameObject
     public double  x,y;
     public double  alfa  = 0;
     public double  speed = 0;
-    public int     radius = 7;
     public Color   color;
     public ImageRef imageRef;
 
@@ -34,14 +33,11 @@ public abstract class GameObject
 
 
     // construct GameObject
-    public GameObject(double x_, double y_, 
-            double a_, double s_, 
-            int radius_, Color color_)
+    public GameObject(double x_, double y_, double a_, double s_, Color color_)
     { 
         x=x_;    y=y_; 
         xOld=x;  yOld=y;
         alfa=a_; speed=s_;
-        radius=radius_;
         color = color_;
     }
 
@@ -97,4 +93,8 @@ public abstract class GameObject
     public abstract int type();
     public static void setWorld(World w) {world=w;}
 
+    public abstract boolean hasCollision(GameObject b);
+    public abstract boolean hasCollision(RectangularGameObject b);
+    public abstract boolean hasCollision(CircularGameObject b);
+    public abstract void draw(GraphicSystem gs);
 }

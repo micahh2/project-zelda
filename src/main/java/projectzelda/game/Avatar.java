@@ -7,7 +7,7 @@ import projectzelda.*;
 import projectzelda.engine.*;
 import java.awt.Color;
 
-public class Avatar extends GameObject
+public class Avatar extends CircularGameObject
 {
     private final double COOLDOWN = 0.5;
     private double weaponTemp = 0;

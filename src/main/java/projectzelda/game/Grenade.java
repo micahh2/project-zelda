@@ -8,7 +8,7 @@ import projectzelda.*;
 import projectzelda.engine.*;
 import java.awt.Color;
 
-class Grenade extends GameObject
+class Grenade extends CircularGameObject
 {
     double life = Const.LIFE_GRENADE;
 
