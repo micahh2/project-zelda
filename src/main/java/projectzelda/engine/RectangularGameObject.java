@@ -14,6 +14,7 @@ public abstract class RectangularGameObject extends GameObject {
         this.height = height;
     }
 
+
     @Override
     public void draw(GraphicSystem gs) {
         gs.draw(this);
