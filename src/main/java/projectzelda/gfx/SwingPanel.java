@@ -3,10 +3,10 @@
 
 package projectzelda.gfx;
 
-import projectzelda.*;
 import projectzelda.engine.*;
 import projectzelda.game.GoblinAI;
 import projectzelda.game.HealthBar;
+import projectzelda.game.ItemSlot;
 import projectzelda.game.UIButton;
 
 import javax.imageio.ImageIO;
@@ -22,25 +22,24 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
 
-class SwingPanel extends JPanel implements GraphicSystem
-{
-  // constants
-  private static final long serialVersionUID = 1L;
-  private static final Font font = new Font("Arial",Font.PLAIN,24);
+class SwingPanel extends JPanel implements GraphicSystem {
+    // constants
+    private static final long serialVersionUID = 1L;
+    private static final Font font = new Font("Arial", Font.PLAIN, 24);
 
-  
-  // InputSystem is an external instance
-  private AWTInputSystem inputSystem = new AWTInputSystem();
-  private World       world       = null;
 
-	
-  // GraphicsSystem variables
-  //
-  private GraphicsConfiguration graphicsConf = 
-    GraphicsEnvironment.getLocalGraphicsEnvironment().
-    getDefaultScreenDevice().getDefaultConfiguration();
-  private BufferedImage imageBuffer;
-  private Graphics      graphics;
+    // InputSystem is an external instance
+    private AWTInputSystem inputSystem = new AWTInputSystem();
+    private World world = null;
+
+
+    // GraphicsSystem variables
+    //
+    private GraphicsConfiguration graphicsConf =
+            GraphicsEnvironment.getLocalGraphicsEnvironment().
+                    getDefaultScreenDevice().getDefaultConfiguration();
+    private BufferedImage imageBuffer;
+    private Graphics graphics;
 
     // Images
     private MediaTracker tracker;
@@ -51,11 +50,10 @@ class SwingPanel extends JPanel implements GraphicSystem
     private WorldInfo worldInfo;
     private int width;
     private int height;
-    private long lastTick = 0; 
+    private long lastTick = 0;
     private List<ImageRefTo> animationTiles;
 
-    public SwingPanel(MediaInfo mediaInfo, WorldInfo worldInfo) throws UnsupportedAudioFileException, LineUnavailableException, IOException 
-    { 
+    public SwingPanel(MediaInfo mediaInfo, WorldInfo worldInfo) throws UnsupportedAudioFileException, LineUnavailableException, IOException {
         this.worldInfo = worldInfo;
         this.mediaInfo = mediaInfo;
         animationTiles = mediaInfo.getAnimationTiles(0);
@@ -63,7 +61,7 @@ class SwingPanel extends JPanel implements GraphicSystem
         height = worldInfo.getPartHeight();
         this.setSize(width, height);
         imageBuffer = graphicsConf.createCompatibleImage(
-                this.getWidth(), this.getHeight());	 
+                this.getWidth(), this.getHeight());
         graphics = imageBuffer.getGraphics();
 
         // initialize Listeners
@@ -97,30 +95,27 @@ class SwingPanel extends JPanel implements GraphicSystem
         foreground = ImageDrawer.createImage(mediaInfo.getForegroundTiles(), worldInfo.getWidth(), worldInfo.getHeight(), images, this);
     }
 
-    public void clear(long tick)
-    {
-        graphics.drawImage(background, -(int)world.worldPartX, -(int)world.worldPartY, this);
-        
+    public void clear(long tick) {
+        graphics.drawImage(background, -(int) world.worldPartX, -(int) world.worldPartY, this);
+
         // Draw animated tiles
         if (tick - lastTick > 100) {
             animationTiles = mediaInfo.getAnimationTiles(tick);
             lastTick = tick;
         }
-        ImageDrawer.drawTiles(graphics, animationTiles, -(int)world.worldPartX, -(int)world.worldPartY, images, this);
-    }                                  
+        ImageDrawer.drawTiles(graphics, animationTiles, -(int) world.worldPartX, -(int) world.worldPartY, images, this);
+    }
 
-    public void drawForeground(long tick)
-    {
-        graphics.drawImage(foreground, -(int)world.worldPartX, -(int)world.worldPartY, this);
-    }                                  
+    public void drawForeground(long tick) {
+        graphics.drawImage(foreground, -(int) world.worldPartX, -(int) world.worldPartY, this);
+    }
 
 
-    public final void draw(RectangularGameObject dot)
-    {	  
-        int x1 = (int)(dot.x-world.worldPartX);
-        int y1 = (int)(dot.y-world.worldPartY);
-        int x2 = x1+dot.width;
-        int y2 = y1+dot.height;
+    public final void draw(RectangularGameObject dot) {
+        int x1 = (int) (dot.x - world.worldPartX);
+        int y1 = (int) (dot.y - world.worldPartY);
+        int x2 = x1 + dot.width;
+        int y2 = y1 + dot.height;
         if (dot.imageRef != null) {
             drawImage(dot.imageRef, x1, y1, x2, y2);
             return;
@@ -132,15 +127,14 @@ class SwingPanel extends JPanel implements GraphicSystem
         graphics.drawRect(x1, y1, dot.width, dot.height);
     }
 
-    public final void draw(CircularGameObject dot)
-    {	  
+    public final void draw(CircularGameObject dot) {
 
-        int x = (int)(dot.x-dot.radius-world.worldPartX);
-        int y = (int)(dot.y-dot.radius-world.worldPartY);
-        int d = (dot.radius*2);
+        int x = (int) (dot.x - dot.radius - world.worldPartX);
+        int y = (int) (dot.y - dot.radius - world.worldPartY);
+        int d = (dot.radius * 2);
 
         if (dot.imageRef != null) {
-            drawImage(dot.imageRef, x, y, x+d, y+d);
+            drawImage(dot.imageRef, x, y, x + d, y + d);
             return;
         }
 
@@ -148,35 +142,36 @@ class SwingPanel extends JPanel implements GraphicSystem
         graphics.setColor(dot.color);
         graphics.fillOval(x, y, d, d);
         graphics.setColor(Color.DARK_GRAY);
-        graphics.drawOval(x,y,d,d);
+        graphics.drawOval(x, y, d, d);
 
-        if(dot instanceof GoblinAI){
+        if (dot instanceof GoblinAI) {
             draw(((GoblinAI) dot).healthBar);
         }
     }
 
-    public final void draw(TextObject text)
-    {	  
+    public final void draw(TextObject text) {
         graphics.setFont(font);
         graphics.setColor(Color.DARK_GRAY);
-        graphics.drawString(text.toString(), (int)text.x+1, (int)text.y+1);    
+        graphics.drawString(text.toString(), (int) text.x + 1, (int) text.y + 1);
         graphics.setColor(text.color);
-        graphics.drawString(text.toString(), (int)text.x, (int)text.y);
+        graphics.drawString(text.toString(), (int) text.x, (int) text.y);
     }
 
-    public final void draw(UIObject obj){
-        if(obj instanceof UIButton) {
+    public final void draw(UIObject obj) {
+        if (obj instanceof UIButton) {
             drawButton((UIButton) obj);
-        } else if(obj instanceof  HealthBar){
+        } else if (obj instanceof HealthBar) {
             drawHealthBar((HealthBar) obj);
+        } else if (obj instanceof ItemSlot) {
+            drawItemBox((ItemSlot) obj);
         }
     }
 
-    private final void drawButton(UIButton button){
-        graphics.setColor(button.outlineColor);
-        graphics.drawRect(button.x, button.y, button.width, button.height);
+    private final void drawButton(UIButton button) {
         graphics.setColor(button.color);
         graphics.fillRect(button.x, button.y, button.width, button.height);
+        graphics.setColor(button.outlineColor);
+        graphics.drawRect(button.x, button.y, button.width, button.height);
 
         graphics.setColor(button.textColor);
         FontMetrics metrics = graphics.getFontMetrics(button.textFont);
@@ -188,17 +183,28 @@ class SwingPanel extends JPanel implements GraphicSystem
     }
 
     private final void drawHealthBar(HealthBar healthBar) {
-        int x = healthBar.isHudElement? healthBar.x : (int)(healthBar.x - world.worldPartX);
-        int y = healthBar.isHudElement? healthBar.y :(int)(healthBar.y - world.worldPartY);
+        int x = healthBar.isHudElement ? healthBar.x : (int) (healthBar.x - world.worldPartX);
+        int y = healthBar.isHudElement ? healthBar.y : (int) (healthBar.y - world.worldPartY);
 
-        graphics.setColor(healthBar.outlineColor);
-        graphics.drawRect(x, y, healthBar.width, healthBar.height);
         graphics.setColor(healthBar.color);
         graphics.fillRect(x, y, healthBar.width, healthBar.height);
+        graphics.setColor(healthBar.outlineColor);
+        graphics.drawRect(x, y, healthBar.width, healthBar.height);
 
         graphics.setColor(healthBar.healthColor);
         int healthWidth = (int) (healthBar.health * healthBar.width);
         graphics.fillRect(x, y, healthWidth, healthBar.height);
+    }
+
+    private final void drawItemBox(ItemSlot itemSlot) {
+        int x = (int) (itemSlot.x - itemSlot.radius);
+        int y = (int) (itemSlot.y - itemSlot.radius);
+        int d = (itemSlot.radius * 2);
+
+        graphics.setColor(itemSlot.color);
+        graphics.fillOval(x, y, d, d);
+        graphics.setColor(Color.DARK_GRAY);
+        graphics.drawOval(x, y, d, d);
     }
 
 
@@ -210,11 +216,16 @@ class SwingPanel extends JPanel implements GraphicSystem
                 this);
     }
 
-    public void redraw()
-    { this.getGraphics().drawImage(imageBuffer, 0, 0, this);
+    public void redraw() {
+        this.getGraphics().drawImage(imageBuffer, 0, 0, this);
     }
 
-    public final InputSystem getInputSystem() { return inputSystem; }
-    public final void setWorld(World world_)  {this.world = world_;}
+    public final InputSystem getInputSystem() {
+        return inputSystem;
+    }
+
+    public final void setWorld(World world_) {
+        this.world = world_;
+    }
 }
 

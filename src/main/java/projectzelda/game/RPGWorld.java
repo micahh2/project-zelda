@@ -103,6 +103,13 @@ public class RPGWorld extends World {
         // add the hud elements
         hudObjects.add(((Avatar) avatar).healthBar);
 
+        int itemSlotX = (int)(0.95 * worldInfo.getPartWidth());
+        int itemSlotY = (int)(0.045 * worldInfo.getPartHeight());
+        int itemSlotRadius = (int)(0.02 * worldInfo.getPartWidth());
+        hudObjects.add(new ItemSlot(itemSlotX,itemSlotY, itemSlotRadius));
+        itemSlotX = (int)(0.9 * worldInfo.getPartWidth());
+        hudObjects.add(new ItemSlot(itemSlotX,itemSlotY, itemSlotRadius));
+
     }
 
     public void processUserInput(UserInput userInput, double diffSeconds) throws UnsupportedAudioFileException, LineUnavailableException, IOException {
