@@ -26,7 +26,7 @@ public class Avatar extends CircularGameObject
 
         this.isMoving = false;
 
-        imageRef = new ImageRef("Rocks2", 0, 0, 32, 32);
+        //imageRef = new ImageRef("Rocks2", 0, 0, 32, 32);
 
         int healthBarWidth = (int)(0.3 * world.worldInfo.getPartWidth());
         int healthBarHeight = (int)(0.03 * world.worldInfo.getPartHeight());

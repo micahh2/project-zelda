@@ -41,9 +41,9 @@ public class RPGWorld extends World {
 
     public void init() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
         // add the Avatar
-        //MapObject playerMO = map.getFirstObject("Player");
-        //avatar = new Avatar(playerMO.x, playerMO.y, playerMO.imageRef);
-        avatar = new Avatar(100, 50, new ImageRef("Rocks2", 0, 0, 32, 32));
+        MapObject playerMO = map.getFirstObject("Player");
+        avatar = new Avatar(playerMO.x, playerMO.y, playerMO.imageRef);
+       // avatar = new Avatar(100, 50, new ImageRef("Rocks2", 0, 0, 32, 32));
         gameObjects.add(avatar);
 
         //play the background music
@@ -60,6 +60,18 @@ public class RPGWorld extends World {
             double x = worldPartX + Math.random() * worldInfo.getPartWidth();
             double y = worldPartY + Math.random() * worldInfo.getPartHeight();
             gameObjects.add(new GoblinAI(x, y, worldInfo));
+        }
+        List<MapObject> houses = map.getAllObjects("Housebases");
+
+        for(MapObject house : houses){
+            gameObjects.add( new House(house.startingBounds.x1, house.startingBounds.y1, 42, 33) );
+        }
+
+        List<MapObject> trees = map.getAllObjects("Treebases");
+
+        for(MapObject tree : trees){
+            int radius = Math.round((tree.startingBounds.x2 - tree.startingBounds.x1)/2);
+            gameObjects.add(new Tree(tree.startingBounds.x1, tree.startingBounds.y1, radius));
         }
 
         counterB = new Counter("Bones: ", 20, 40);
