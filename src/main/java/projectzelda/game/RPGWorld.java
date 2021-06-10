@@ -61,18 +61,21 @@ public class RPGWorld extends World {
             double y = worldPartY + Math.random() * worldInfo.getPartHeight();
             gameObjects.add(new GoblinAI(x, y, worldInfo));
         }
-        List<MapObject> houses = map.getAllObjects("Housebases");
 
+        List<MapObject> houses = map.getAllObjects("Housebases");
         for(MapObject house : houses){
-            gameObjects.add( new House(house.startingBounds.x1, house.startingBounds.y1, 42, 33) );
+            int width = house.startingBounds.x2 - house.startingBounds.x1;
+            int height = house.startingBounds.y2 - house.startingBounds.y1;
+            gameObjects.add(new House(house.startingBounds.x1, house.startingBounds.y1, width, height));
         }
 
-        List<MapObject> trees = map.getAllObjects("Treebases");
 
+        List<MapObject> trees = map.getAllObjects("Treebases");
         for(MapObject tree : trees){
             int radius = Math.round((tree.startingBounds.x2 - tree.startingBounds.x1)/2);
             gameObjects.add(new Tree(tree.startingBounds.x1, tree.startingBounds.y1, radius));
         }
+
 
         counterB = new Counter("Bones: ", 20, 40);
         counterG = new Counter("Grenades: ", 770, 40);
