@@ -28,7 +28,11 @@ public class Avatar extends GameObject
 
         imageRef = new ImageRef("Rocks2", 0, 0, 32, 32);
 
-        healthBar = new HealthBar(10, 10, 300, 25);
+        int healthBarWidth = (int)(0.3 * world.worldInfo.getPartWidth());
+        int healthBarHeight = (int)(0.03 * world.worldInfo.getPartHeight());
+        int healthBarX = (int)(0.005 * world.worldInfo.getPartWidth());
+        int healthBarY = (int)(0.01 * world.worldInfo.getPartHeight());
+        healthBar = new HealthBar(healthBarX, healthBarY, healthBarWidth, healthBarHeight);
         healthBar.isHudElement = true;
     }
 

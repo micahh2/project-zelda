@@ -68,13 +68,21 @@ public class RPGWorld extends World {
         textObjects.add(counterG);
         textObjects.add(helpText);
 
+        // calculate relative ui button width and height
+        int buttonWidth = (int) (0.2 * worldInfo.getPartWidth());
+        int buttonHeight = (int) (0.1 * worldInfo.getPartHeight());
 
         // add the pause menu buttons
-        pauseMenuObjects.add(new UIButton(600, 200, 300, 100, "Resume"));
-        pauseMenuObjects.add(new UIButton(600, 500, 300, 100, "Quit"));
+        int relX = (int)(0.4 * worldInfo.getPartWidth());
+        int relY = (int)(0.3 * worldInfo.getPartHeight());
+
+        pauseMenuObjects.add(new UIButton(relX, relY, buttonWidth, buttonHeight, "Resume"));
+        relY = (int)(0.6 * worldInfo.getPartHeight());
+        pauseMenuObjects.add(new UIButton(relX, relY, buttonWidth, buttonHeight, "Quit"));
 
         // add the main menu buttons
-        mainMenuObjects.add(new UIButton(600, 200, 300, 100, "Play"));
+        relY = (int)(0.45 * worldInfo.getPartHeight());
+        mainMenuObjects.add(new UIButton(relX, relY, buttonWidth, buttonHeight, "Play"));
 
         // add the hud elements
         hudObjects.add(((Avatar) avatar).healthBar);
@@ -86,7 +94,6 @@ public class RPGWorld extends World {
         int button = userInput.mouseButton;
 
 
-        
         //
         // Mouse events
         //
@@ -132,14 +139,14 @@ public class RPGWorld extends World {
 
 
         UIButton playButton = (UIButton) mainMenuObjects.get(0);
-        
-        if (userInput.isMousePressed){
+
+        if (userInput.isMousePressed) {
             if (userInput.mouseMovedX >= playButton.x && userInput.mouseMovedX <= playButton.getMaxX()
-            && (userInput.mouseMovedY >= playButton.y && userInput.mouseMovedY <= playButton.getMaxY())) {
-                 gameState = GameState.PLAY;
+                    && (userInput.mouseMovedY >= playButton.y && userInput.mouseMovedY <= playButton.getMaxY())) {
+                gameState = GameState.PLAY;
             }
         }
-     
+
 
         //
         // Keyboard events
@@ -201,7 +208,7 @@ public class RPGWorld extends World {
             avatar.setDestination(avatar.x + horz, avatar.y + vert);
         }
 
-       
+
     }
 
 
