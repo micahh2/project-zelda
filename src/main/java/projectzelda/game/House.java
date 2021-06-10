@@ -1,18 +1,20 @@
+
 package projectzelda.game;
 
-import projectzelda.Const;
-import projectzelda.engine.RectangularGameObject;
-import java.awt.Color;
-import java.awt.*;
+import projectzelda.*;
+import projectzelda.engine.*;
 
 class House extends RectangularGameObject
 {
-    public House(double x, double y, int width, int height){
-        super(x,y,0,0, width, height, new Color(64,160,64));
-        this.isMoving = false;
-    }
+  public House(double x, double y, int width, int height)
+  {
+    super(x, y, 0, 0, width, height, null);
+    this.isMoving = false;
+  }
 
-    public int type() { return 0; }
+  // Invisible
+  @Override
+  public void draw(GraphicSystem gs) { return; }
+  
+  public int type() { return Const.TYPE_TREE; }
 }
-// (c) Thorsten Hasbargen
-

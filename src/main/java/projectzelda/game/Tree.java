@@ -14,6 +14,10 @@ class Tree extends CircularGameObject
     super(x,y,0,0,r,new Color(64,160,64));
     this.isMoving = false;
   }
+
+  // Invisible
+  @Override
+  public void draw(GraphicSystem gs) { return; }
   
   public int type() { return Const.TYPE_TREE; }
 }
