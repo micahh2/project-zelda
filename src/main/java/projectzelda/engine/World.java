@@ -31,6 +31,7 @@ public abstract class World {
     // all objects in the game, including the Avatar
     public GameObjectList gameObjects = new GameObjectList();
     public GameObject avatar;
+    public GameObject boss ;
     public ArrayList<TextObject> textObjects = new ArrayList<TextObject>();
 
     public ArrayList<UIObject> pauseMenuObjects = new ArrayList<>();
