@@ -9,7 +9,7 @@ import projectzelda.engine.*;
 import java.awt.Color;
 
 
-class ZombieAI extends GameObject
+class ZombieAI extends CircularGameObject
 {
     private static final int HUNTING  = 1;
     private static final int STUCK    = 2;

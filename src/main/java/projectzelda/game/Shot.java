@@ -5,7 +5,7 @@ import projectzelda.*;
 import projectzelda.engine.*;
 import java.awt.Color;
 
-class Shot extends GameObject
+class Shot extends CircularGameObject
 { 
   private double lifeTime = 1.2;
 

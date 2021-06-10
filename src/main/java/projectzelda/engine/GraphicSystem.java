@@ -14,7 +14,8 @@ public interface GraphicSystem
   void drawForeground(long currentTick);
   
   // draw ONE GameObject on the Screen
-  void draw(GameObject dot);
+  void draw(CircularGameObject dot);
+  void draw(RectangularGameObject dot);
  
   // draw ONE TextObject on the Screen
   void draw(TextObject obj);

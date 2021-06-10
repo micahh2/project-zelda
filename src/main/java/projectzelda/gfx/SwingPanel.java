@@ -115,16 +115,35 @@ class SwingPanel extends JPanel implements GraphicSystem
     }                                  
 
 
-    public final void draw(GameObject dot)
+    public final void draw(RectangularGameObject dot)
     {	  
+        int x1 = (int)(dot.x-world.worldPartX);
+        int y1 = (int)(dot.y-world.worldPartY);
+        int x2 = x1+dot.width;
+        int y2 = y1+dot.height;
         if (dot.imageRef != null) {
-            drawImage(dot);
+            drawImage(dot.imageRef, x1, y1, x2, y2);
             return;
         }
 
+        graphics.setColor(dot.color);
+        graphics.fillRect(x1, y1, dot.width, dot.height);
+        graphics.setColor(Color.DARK_GRAY);
+        graphics.drawRect(x1, y1, dot.width, dot.height);
+    }
+
+    public final void draw(CircularGameObject dot)
+    {	  
+
         int x = (int)(dot.x-dot.radius-world.worldPartX);
         int y = (int)(dot.y-dot.radius-world.worldPartY);
-        int d = (int)(dot.radius*2);
+        int d = (dot.radius*2);
+
+        if (dot.imageRef != null) {
+            drawImage(dot.imageRef, x, y, x+d, y+d);
+            return;
+        }
+
 
         graphics.setColor(dot.color);
         graphics.fillOval(x, y, d, d);
@@ -148,7 +167,7 @@ class SwingPanel extends JPanel implements GraphicSystem
     public final void draw(UIObject obj){
         if(obj instanceof UIButton) {
             drawButton((UIButton) obj);
-        }else if(obj instanceof  HealthBar){
+        } else if(obj instanceof  HealthBar){
             drawHealthBar((HealthBar) obj);
         }
     }
@@ -183,14 +202,11 @@ class SwingPanel extends JPanel implements GraphicSystem
     }
 
 
-    public final void drawImage(GameObject dot) {
-        int x = (int)(dot.x-dot.radius-world.worldPartX);
-        int y = (int)(dot.y-dot.radius-world.worldPartY);
-        int d = (int)(dot.radius*2);
-        Image img = images.get(dot.imageRef.name);
+    public final void drawImage(ImageRef imageRef, int x1, int y1, int x2, int y2) {
+        Image img = images.get(imageRef.name);
         graphics.drawImage(img,
-                x, y, x+d, y+d,
-                dot.imageRef.x1, dot.imageRef.y1, dot.imageRef.x2, dot.imageRef.y2,
+                x1, y1, x2, y2,
+                imageRef.x1, imageRef.y1, imageRef.x2, imageRef.y2,
                 this);
     }
 

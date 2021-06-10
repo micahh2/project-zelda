@@ -6,7 +6,7 @@ import projectzelda.engine.*;
 import java.awt.Color;
 
 
-public class GoblinAI extends GameObject {
+public class GoblinAI extends CircularGameObject {
     // hit points
     private double life = 1.0;
 

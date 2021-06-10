@@ -5,7 +5,7 @@ import projectzelda.*;
 import projectzelda.engine.*;
 import java.awt.Color;
 
-class Bones extends GameObject
+class Bones extends CircularGameObject
 {
     double life = 10;
 
