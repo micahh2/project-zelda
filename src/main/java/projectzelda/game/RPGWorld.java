@@ -46,6 +46,13 @@ public class RPGWorld extends World {
        // avatar = new Avatar(100, 50, new ImageRef("Rocks2", 0, 0, 32, 32));
         gameObjects.add(avatar);
 
+        MapObject bossMo = map.getFirstObject("Boss");
+        int width_b = bossMo.startingBounds.x2 - bossMo.startingBounds.x1;
+        int height_b = bossMo.startingBounds.y2 - bossMo.startingBounds.y1;
+        boss = new BossNMonster(bossMo.x, bossMo.y, width_b, height_b, bossMo.imageRef);
+        gameObjects.add(boss);
+
+
         //play the background music
         sound.playBackgroundMusic();
         sound.setVolume(-20.0F);
@@ -69,12 +76,21 @@ public class RPGWorld extends World {
             gameObjects.add(new House(house.startingBounds.x1, house.startingBounds.y1, width, height));
         }
 
-
         List<MapObject> trees = map.getAllObjects("Treebases");
         for(MapObject tree : trees){
             int radius = Math.round((tree.startingBounds.x2 - tree.startingBounds.x1)/2);
             gameObjects.add(new Tree(tree.startingBounds.x1, tree.startingBounds.y1, radius));
         }
+
+        List<MapObject> monsters = map.getAllObjects("Monsters");
+        for(MapObject monster : monsters){
+            int width = monster.startingBounds.x2 - monster.startingBounds.x1;
+            int height = monster.startingBounds.y2 - monster.startingBounds.y1;
+            gameObjects.add(new BossNMonster(monster.startingBounds.x1, monster.startingBounds.y1, width, height, monster.imageRef));
+        }
+
+        MapObject rocks = map.getFirstObject("Rocks");
+        gameObjects.add(new Rock(rocks.startingBounds.x1, rocks.startingBounds.y1));
 
 
         counterB = new Counter("Bones: ", 20, 40);
