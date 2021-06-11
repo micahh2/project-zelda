@@ -8,11 +8,11 @@ public abstract class UIObject {
     public int x;
     public int y;
     public Color color;
+    public Color outlineColor;
 
     public UIObject(int x_, int y_) {
         x = x_;
         y = y_;
-        color = Color.DARK_GRAY;
     }
 
     public static void setWorld(World w) {
