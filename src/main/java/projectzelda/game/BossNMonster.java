@@ -3,30 +3,20 @@ package projectzelda.game;
 import projectzelda.Const;
 import projectzelda.engine.GraphicSystem;
 import projectzelda.engine.ImageRef;
-import projectzelda.engine.RectangularGameObject;
+import projectzelda.engine.WorldInfo;
+import projectzelda.engine.UIObject;
 
-public class BossNMonster extends RectangularGameObject
+public class BossNMonster extends GoblinAI
 {
-    public HealthBar healthBar;
-    public BossNMonster(double x, double y, int width, int height, ImageRef imageRef)
+    public BossNMonster(double x, double y, ImageRef imageRef, WorldInfo worldInfo)
     {
-        super(x, y, 0, 0, width, height, null);
-        this.isMoving = false;
-        healthBar = new HealthBar(0, 0, 50, 5);
-        adjustHealthBarPosition();
+        super(x, y, worldInfo);
         this.imageRef = imageRef;
     }
 
-    // Invisible
-    @Override
-    //public void draw(GraphicSystem gs) { return; }
-
-    public int type() { return Const.TYPE_TREE; }
-
-    private void adjustHealthBarPosition() {
-        int healthBarX = (int) (x - healthBar.width / 2);
-        int healthBarY = (int) (y - 2 * healthBar.height);
-        healthBar.x = healthBarX;
-        healthBar.y = healthBarY;
+    @Override 
+    public void draw(GraphicSystem gs) {
+        gs.draw(this);
+        healthBar.draw(gs);
     }
 }

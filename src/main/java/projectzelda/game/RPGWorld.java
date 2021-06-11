@@ -47,9 +47,7 @@ public class RPGWorld extends World {
         gameObjects.add(avatar);
 
         MapObject bossMo = map.getFirstObject("Boss");
-        int width_b = bossMo.startingBounds.x2 - bossMo.startingBounds.x1;
-        int height_b = bossMo.startingBounds.y2 - bossMo.startingBounds.y1;
-        boss = new BossNMonster(bossMo.x, bossMo.y, width_b, height_b, bossMo.imageRef);
+        boss = new BossNMonster(bossMo.x, bossMo.y, bossMo.imageRef, worldInfo);
         gameObjects.add(boss);
 
 
@@ -62,13 +60,8 @@ public class RPGWorld extends World {
         worldPartY = 0;
 
 
-        // add some goblins
-        for (int i = 0; i < 10; i++) {
-            double x = worldPartX + Math.random() * worldInfo.getPartWidth();
-            double y = worldPartY + Math.random() * worldInfo.getPartHeight();
-            gameObjects.add(new GoblinAI(x, y, worldInfo));
-        }
 
+        // create houses and trees
         List<MapObject> houses = map.getAllObjects("Housebases");
         for(MapObject house : houses){
             int width = house.startingBounds.x2 - house.startingBounds.x1;
@@ -82,13 +75,13 @@ public class RPGWorld extends World {
             gameObjects.add(new Tree(tree.startingBounds.x1, tree.startingBounds.y1, radius));
         }
 
+        // create some monsters!
         List<MapObject> monsters = map.getAllObjects("Monsters");
         for(MapObject monster : monsters){
-            int width = monster.startingBounds.x2 - monster.startingBounds.x1;
-            int height = monster.startingBounds.y2 - monster.startingBounds.y1;
-            gameObjects.add(new BossNMonster(monster.startingBounds.x1, monster.startingBounds.y1, width, height, monster.imageRef));
+            gameObjects.add(new BossNMonster(monster.startingBounds.x1, monster.startingBounds.y1, monster.imageRef, worldInfo));
         }
 
+        // got have rock
         MapObject rocks = map.getFirstObject("Rocks");
         gameObjects.add(new Rock(rocks.startingBounds.x1, rocks.startingBounds.y1));
 

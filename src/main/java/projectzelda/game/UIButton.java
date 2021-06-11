@@ -1,7 +1,7 @@
 package projectzelda.game;
 
 import projectzelda.engine.UIObject;
-
+import projectzelda.engine.GraphicSystem;
 import java.awt.*;
 
 public class UIButton extends UIObject {
@@ -28,5 +28,13 @@ public class UIButton extends UIObject {
 
     public int getMaxY(){
         return y + height;
+    }
+
+    @Override
+    public void draw(GraphicSystem gs) {
+        gs.fillRectScreen(x, y, width, height, color);
+        gs.drawRectScreen(x, y, width, height, outlineColor);
+
+        gs.drawCenteredTextScreen(x, y, width, height, textColor, textFont, text);
     }
 }

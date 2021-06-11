@@ -18,4 +18,6 @@ public abstract class UIObject {
     public static void setWorld(World w) {
         world = w;
     }
+
+    public abstract void draw(GraphicSystem gs);
 }

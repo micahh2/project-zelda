@@ -26,6 +26,7 @@ public class GoblinAI extends CircularGameObject {
 
     public GoblinAI(double x, double y, WorldInfo worldInfo) {
         super(x, y, 0, 60, 15, new Color(160, 80, 40));
+        this.imageRef = imageRef;
         this.worldInfo = worldInfo;
         isMoving = true;
         state = State.FREE;
@@ -102,7 +103,7 @@ public class GoblinAI extends CircularGameObject {
         return Const.TYPE_GOBLIN;
     }
 
-    private void adjustHealthBarPosition() {
+    protected void adjustHealthBarPosition() {
         int healthBarX = (int) (x - healthBar.width / 2);
         int healthBarY = (int) (y - radius - 2 * healthBar.height);
         healthBar.x = healthBarX;
