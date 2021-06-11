@@ -4,10 +4,6 @@
 package projectzelda.gfx;
 
 import projectzelda.engine.*;
-import projectzelda.game.GoblinAI;
-import projectzelda.game.HealthBar;
-import projectzelda.game.ItemSlot;
-import projectzelda.game.UIButton;
 
 import javax.imageio.ImageIO;
 import java.io.File;
@@ -117,7 +113,7 @@ class SwingPanel extends JPanel implements GraphicSystem {
         int x2 = x1 + dot.width;
         int y2 = y1 + dot.height;
         if (dot.imageRef != null) {
-            drawImage(dot.imageRef, x1, y1, x2, y2);
+            drawImageScreen(dot.imageRef, x1, y1, x2, y2);
             return;
         }
 
@@ -134,7 +130,7 @@ class SwingPanel extends JPanel implements GraphicSystem {
         int d = (dot.radius * 2);
 
         if (dot.imageRef != null) {
-            drawImage(dot.imageRef, x, y, x + d, y + d);
+            drawImageScreen(dot.imageRef, x, y, x + d, y + d);
             return;
         }
 
@@ -143,10 +139,6 @@ class SwingPanel extends JPanel implements GraphicSystem {
         graphics.fillOval(x, y, d, d);
         graphics.setColor(Color.DARK_GRAY);
         graphics.drawOval(x, y, d, d);
-
-        if (dot instanceof GoblinAI) {
-            draw(((GoblinAI) dot).healthBar);
-        }
     }
 
     public final void draw(TextObject text) {
@@ -157,58 +149,76 @@ class SwingPanel extends JPanel implements GraphicSystem {
         graphics.drawString(text.toString(), (int) text.x, (int) text.y);
     }
 
-    public final void draw(UIObject obj) {
-        if (obj instanceof UIButton) {
-            drawButton((UIButton) obj);
-        } else if (obj instanceof HealthBar) {
-            drawHealthBar((HealthBar) obj);
-        } else if (obj instanceof ItemSlot) {
-            drawItemBox((ItemSlot) obj);
-        }
+    // For drawing with absolute world coordinates
+    public void drawRect(int xAbs, int yAbs, int width, int height, Color color) {
+        int x = (int)(xAbs - world.worldPartX);
+        int y = (int)(yAbs - world.worldPartY);
+        drawRectScreen(x, y, width, height, color);
     }
 
-    private final void drawButton(UIButton button) {
-        graphics.setColor(button.color);
-        graphics.fillRect(button.x, button.y, button.width, button.height);
-        graphics.setColor(button.outlineColor);
-        graphics.drawRect(button.x, button.y, button.width, button.height);
-
-        graphics.setColor(button.textColor);
-        FontMetrics metrics = graphics.getFontMetrics(button.textFont);
-        int x = button.x + (button.width - metrics.stringWidth(button.text)) / 2;
-        int y = button.y + ((button.height - metrics.getHeight()) / 2) + metrics.getAscent();
-        graphics.setFont(button.textFont);
-        graphics.drawString(button.text, x, y);
-
+    public void fillRect(int xAbs, int yAbs, int width, int height, Color color) {
+        int x = (int)(xAbs - world.worldPartX);
+        int y = (int)(yAbs - world.worldPartY);
+        fillRectScreen(x, y, width, height, color);
     }
 
-    private final void drawHealthBar(HealthBar healthBar) {
-        int x = healthBar.isHudElement ? healthBar.x : (int) (healthBar.x - world.worldPartX);
-        int y = healthBar.isHudElement ? healthBar.y : (int) (healthBar.y - world.worldPartY);
-
-        graphics.setColor(healthBar.color);
-        graphics.fillRect(x, y, healthBar.width, healthBar.height);
-        graphics.setColor(healthBar.outlineColor);
-        graphics.drawRect(x, y, healthBar.width, healthBar.height);
-
-        graphics.setColor(healthBar.healthColor);
-        int healthWidth = (int) (healthBar.health * healthBar.width);
-        graphics.fillRect(x, y, healthWidth, healthBar.height);
+    public void drawOval(int xAbs, int yAbs, int r1, int r2, Color color) {
+        int x = (int)(xAbs - world.worldPartX);
+        int y = (int)(yAbs - world.worldPartY);
+        drawOvalScreen(x, y, r1, r2, color);
     }
 
-    private final void drawItemBox(ItemSlot itemSlot) {
-        int x = (int) (itemSlot.x - itemSlot.radius);
-        int y = (int) (itemSlot.y - itemSlot.radius);
-        int d = (itemSlot.radius * 2);
-
-        graphics.setColor(itemSlot.color);
-        graphics.fillOval(x, y, d, d);
-        graphics.setColor(Color.DARK_GRAY);
-        graphics.drawOval(x, y, d, d);
+    public void fillOval(int xAbs, int yAbs, int r1, int r2, Color color) {
+        int x = (int)(xAbs - world.worldPartX);
+        int y = (int)(yAbs - world.worldPartY);
+        fillOvalScreen(x, y, r1, r2, color);
     }
 
+    public void drawCenteredText(int xAbs, int yAbs, int width, int height, Color color, Font font, String text) {
+        int x = (int)(xAbs - world.worldPartX);
+        int y = (int)(yAbs - world.worldPartY);
+        drawCenteredTextScreen(x, y, width, height, color, font, text);
+    }
 
-    public final void drawImage(ImageRef imageRef, int x1, int y1, int x2, int y2) {
+    public void drawImage(ImageRef imageRef, int x1Abs, int y1Abs, int x2Abs, int y2Abs) {
+        int x1 = (int)(x1Abs - world.worldPartX);
+        int y1 = (int)(y1Abs - world.worldPartY);
+        int x2 = (int)(x2Abs - world.worldPartX);
+        int y2 = (int)(y2Abs - world.worldPartY);
+        drawImageScreen(imageRef, x1, y1, x2, y2);
+    }
+
+    // For drawing with relative screen coordinates
+    public void drawRectScreen(int x, int y, int width, int height, Color color) {
+        graphics.setColor(color);
+        graphics.drawRect(x, y, width, height);
+    }
+
+    public void fillRectScreen(int x, int y, int width, int height, Color color) {
+        graphics.setColor(color);
+        graphics.fillRect(x, y, width, height);
+    }
+
+    public void drawOvalScreen(int x, int y, int r1, int r2, Color color) {
+        graphics.setColor(color);
+        graphics.drawOval(x, y, r1, r2);
+    }
+
+    public void fillOvalScreen(int x, int y, int r1, int r2, Color color) {
+        graphics.setColor(color);
+        graphics.fillOval(x, y, r1, r2);
+    }
+
+    public void drawCenteredTextScreen(int x, int y, int width, int height, Color color, Font font, String text) {
+        graphics.setColor(color);
+        FontMetrics metrics = graphics.getFontMetrics(font);
+        x = x + (width - metrics.stringWidth(text)) / 2;
+        y = y + ((height - metrics.getHeight()) / 2) + metrics.getAscent();
+        graphics.setFont(font);
+        graphics.drawString(text, x, y);
+    }
+
+    public final void drawImageScreen(ImageRef imageRef, int x1, int y1, int x2, int y2) {
         Image img = images.get(imageRef.name);
         graphics.drawImage(img,
                 x1, y1, x2, y2,

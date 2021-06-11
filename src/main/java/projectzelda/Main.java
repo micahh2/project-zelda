@@ -1,4 +1,4 @@
-          package projectzelda;
+package projectzelda;
 
 import projectzelda.engine.*;
 import projectzelda.game.*;

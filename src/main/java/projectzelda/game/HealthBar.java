@@ -1,6 +1,7 @@
 package projectzelda.game;
 
 import projectzelda.engine.UIObject;
+import projectzelda.engine.GraphicSystem;
 
 import java.awt.*;
 
@@ -20,5 +21,20 @@ public class HealthBar extends UIObject {
         color = Color.LIGHT_GRAY;
         outlineColor = Color.BLACK;
         healthColor = Color.RED;
+    }
+
+    @Override
+    public void draw(GraphicSystem gs) {
+        int healthWidth = (int) (health * width);
+        if (isHudElement) {
+            gs.fillRectScreen(x, y, width, height, color);
+            gs.drawRectScreen(x, y, width, height, color);
+            gs.fillRectScreen(x, y, healthWidth, height, healthColor);
+            return;
+        }
+
+        gs.fillRect(x, y, width, height, color);
+        gs.drawRect(x, y, width, height, outlineColor);
+        gs.fillRect(x, y, healthWidth, height, healthColor);
     }
 }

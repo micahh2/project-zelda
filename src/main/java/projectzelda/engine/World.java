@@ -126,7 +126,7 @@ public abstract class World {
 
             if (gameState == GameState.PAUSE) {
                 for (int i = 0; i < pauseMenuObjects.size(); i++) {
-                    graphicSystem.draw(pauseMenuObjects.get(i));
+                    pauseMenuObjects.get(i).draw(graphicSystem);
                 }
             }
 
@@ -134,13 +134,13 @@ public abstract class World {
             // draw play button of main_menu
             if (gameState == GameState.MAIN_MENU) {
                 for (int i = 0; i < mainMenuObjects.size(); i++) {
-                    graphicSystem.draw(mainMenuObjects.get(i));
+                    mainMenuObjects.get(i).draw(graphicSystem);
                 }
             }
 
             // draw HUD
             for (int i = 0; i < hudObjects.size(); i++) {
-                graphicSystem.draw(hudObjects.get(i));
+                hudObjects.get(i).draw(graphicSystem);
             }
 
 
