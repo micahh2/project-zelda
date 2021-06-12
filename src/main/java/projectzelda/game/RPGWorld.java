@@ -88,7 +88,7 @@ public class RPGWorld extends World {
 
         counterB = new Counter("Bones: ", 20, 40);
         counterG = new Counter("Grenades: ", 770, 40);
-        helpText = new HelpText(100, 400);
+        helpText = new HelpText(400, 450);
 
 
         counterG.setNumber(grenades);

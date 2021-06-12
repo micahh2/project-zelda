@@ -9,6 +9,8 @@ public abstract class UIObject {
     public int y;
     public Color color;
     public Color outlineColor;
+    public Shape shape;
+    
 
     public UIObject(int x_, int y_) {
         x = x_;

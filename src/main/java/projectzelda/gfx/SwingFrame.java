@@ -13,6 +13,8 @@ import java.io.IOException;
 
 public class SwingFrame extends JFrame implements Frame
 {
+
+  ImageIcon icon;
   // ...ok...
   private static final long serialVersionUID = 2L;
 
@@ -35,6 +37,10 @@ public class SwingFrame extends JFrame implements Frame
       panel.requestFocusInWindow();
 
       this.setContentPane(panel);
+      this.setTitle("Zelda");
+
+      icon = new ImageIcon("src/main/resources/images/icon.png");
+      setIconImage(icon.getImage());
   }
 
   public void displayOnScreen() { validate(); setVisible(true); }
