@@ -10,17 +10,22 @@ public class UIButton extends UIObject {
     public String text;
     public Font textFont;
     public Color textColor;
+    
 
     public UIButton(int x_, int y_, int width_, int height_, String text_) {
         super(x_, y_);
         width = width_;
         height = height_;
         text = text_;
-        textFont = new Font("BUTTON FONT", Font.PLAIN, 23);
-        color = Color.DARK_GRAY;
+        textFont = new Font("BUTTON FONT", Font.ROMAN_BASELINE, 23);
+        color = Color.WHITE;
         outlineColor = Color.BLACK;
-        textColor = Color.WHITE;
+        textColor = Color.BLACK;
+        
+        
     }
+
+    
 
     public int getMaxX(){
         return x + width;

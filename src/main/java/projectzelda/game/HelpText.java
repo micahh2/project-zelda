@@ -10,12 +10,12 @@ import java.awt.Color;
 class HelpText extends TextObject
 {
   public HelpText(int x, int y)
-  { super(x,y, new Color(0,120,255,60));
+  { super(x,y, new Color(255,255,255,255));
   }
   
   public String toString()
-  { String display = "MOVE:WASD      SHOOT:Mouse left      "+
-                     "Grenade:Space bar     END: q";
+  { String display = "Move: WASD      Shoot: Mouse Left      "+
+                     "Grenade: Space Bar    Pause: Esc   End: q";
     return display;
   }
   
