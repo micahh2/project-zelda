@@ -7,20 +7,20 @@ import java.awt.Color;
 
 public class GoblinAI extends CircularGameObject {
     // hit points
-    private double life = 1.0;
+    protected double life = 1.0;
 
-    private static final Color NORMAL_COLOR = new Color(160, 80, 40);
-    private static final Color REDDER = new Color(160, 40, 20);
-    private static final double COLOR_COOLDOWN = 0.2;
-    private double colorCooldown = 0;
-    private WorldInfo worldInfo;
+    protected static final Color NORMAL_COLOR = new Color(160, 80, 40);
+    protected static final Color REDDER = new Color(160, 40, 20);
+    protected static final double COLOR_COOLDOWN = 0.2;
+    protected double colorCooldown = 0;
+    protected WorldInfo worldInfo;
 
-    private enum State {
+    protected enum State {
         STUCK,
         FREE
     }
 
-    private State state;
+    protected State state;
 
     public HealthBar healthBar;
 
@@ -32,6 +32,20 @@ public class GoblinAI extends CircularGameObject {
         state = State.FREE;
         healthBar = new HealthBar(0, 0, 50, 5);
         adjustHealthBarPosition();
+        setDestination(x, y); // Start still
+    }
+
+    public Point newDestination() {
+        double x = Math.random() * worldInfo.getWidth();
+        double y = Math.random() * worldInfo.getHeight();
+        return new Point<Double>(x, y);
+    }
+
+    public boolean readyForNewDestination() {
+        double dist = world
+                .getPhysicsSystem()
+                .distance(x, y, destX, destY);
+        return state == State.STUCK || dist < 8;
     }
 
     public void move(double diffSeconds) {
@@ -41,16 +55,11 @@ public class GoblinAI extends CircularGameObject {
             color = NORMAL_COLOR;
         }
 
-        double dist = world
-                .getPhysicsSystem()
-                .distance(x, y, destX, destY);
-
         // Close to goal, pick a new one
-        if (state == State.STUCK || dist < 8) {
-            double x = Math.random() * worldInfo.getWidth();
-            double y = Math.random() * worldInfo.getHeight();
+        if (readyForNewDestination()) {
+            Point<Double> newDest = newDestination();
             state = State.FREE;
-            setDestination(x, y);
+            setDestination(newDest.x, newDest.y);
         }
 
         super.move(diffSeconds);

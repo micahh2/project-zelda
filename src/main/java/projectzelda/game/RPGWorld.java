@@ -47,7 +47,7 @@ public class RPGWorld extends World {
         gameObjects.add(avatar);
 
         MapObject bossMo = map.getFirstObject("Boss");
-        boss = new BossNMonster(bossMo.x, bossMo.y, bossMo.imageRef, worldInfo);
+        boss = new BossNMonster(bossMo.x, bossMo.y, bossMo.imageRef, (Avatar)avatar);
         gameObjects.add(boss);
 
 
@@ -78,7 +78,7 @@ public class RPGWorld extends World {
         // create some monsters!
         List<MapObject> monsters = map.getAllObjects("Monsters");
         for(MapObject monster : monsters){
-            gameObjects.add(new BossNMonster(monster.startingBounds.x1, monster.startingBounds.y1, monster.imageRef, worldInfo));
+            gameObjects.add(new BossNMonster(monster.startingBounds.x1, monster.startingBounds.y1, monster.imageRef, (Avatar)avatar));
         }
 
         // got have rock

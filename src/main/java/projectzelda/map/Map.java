@@ -151,7 +151,7 @@ public class Map implements MediaInfo, WorldInfo {
     }
 
     // These should be things that wont move
-    final List<String> backgroundLayerNames = List.of("Bottom", "Furnitures");
+    final List<String> backgroundLayerNames = List.of("Bottom", "Furnitures", "Water");
 
     public List<ImageRefTo> getNonBackgroundTiles() {
         ArrayList<ImageRefTo> tiles = new ArrayList<ImageRefTo>();
@@ -174,7 +174,7 @@ public class Map implements MediaInfo, WorldInfo {
     }
 
     // These things shouldn't move and should never be under a character
-    final List<String> foregroundLayerNames = List.of("Trees", "Water", "Rocks", "Houses");
+    final List<String> foregroundLayerNames = List.of("Trees", "Rocks", "Houses");
 
     public List<ImageRefTo> getForegroundTiles() {
         ArrayList<ImageRefTo> tiles = new ArrayList<ImageRefTo>();
