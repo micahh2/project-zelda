@@ -42,8 +42,9 @@ public class RPGWorld extends World {
     public void init() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
         // add the Avatar
         MapObject playerMO = map.getFirstObject("Player");
-        avatar = new Avatar(playerMO.x, playerMO.y, playerMO.imageRef);
-       // avatar = new Avatar(100, 50, new ImageRef("Rocks2", 0, 0, 32, 32));
+        MapObject sword = map.getFirstObject("Swords");
+        avatar = new Avatar(playerMO.x, playerMO.y, playerMO.imageRef, sword.imageRef);
+        // avatar = new Avatar(100, 50, new ImageRef("Rocks2", 0, 0, 32, 32));
         gameObjects.add(avatar);
 
         MapObject bossMo = map.getFirstObject("Boss");
@@ -60,10 +61,9 @@ public class RPGWorld extends World {
         worldPartY = 0;
 
 
-
         // create houses and trees
         List<MapObject> houses = map.getAllObjects("Housebases");
-        for(MapObject house : houses){
+        for(MapObject house : houses) {
             int width = house.startingBounds.x2 - house.startingBounds.x1;
             int height = house.startingBounds.y2 - house.startingBounds.y1;
             gameObjects.add(new House(house.startingBounds.x1, house.startingBounds.y1, width, height));
