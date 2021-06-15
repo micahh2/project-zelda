@@ -32,6 +32,8 @@ public abstract class World {
     public GameObjectList gameObjects = new GameObjectList();
     public GameObject avatar;
     public GameObject boss ;
+    public GameObject chest ;
+    public GameObject pumpkin ;
     public ArrayList<TextObject> textObjects = new ArrayList<TextObject>();
 
     public ArrayList<UIObject> pauseMenuObjects = new ArrayList<>();
