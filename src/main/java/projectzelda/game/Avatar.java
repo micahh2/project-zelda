@@ -65,7 +65,7 @@ public class Avatar extends CircularGameObject
                 case Const.TYPE_GOBLIN:
                     this.moveBack(); 
                     if (weaponTemp <= 0) {
-                        ((GoblinAI)obj).hit();
+                        ((EnemyAI)obj).hit();
                         weaponTemp = COOLDOWN;
                     }
                     break;
