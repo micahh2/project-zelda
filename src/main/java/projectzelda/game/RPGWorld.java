@@ -115,12 +115,12 @@ public class RPGWorld extends World {
         // add the hud elements
         hudObjects.add(((Avatar) avatar).healthBar);
 
-        int itemSlotX = (int)(0.95 * worldInfo.getPartWidth());
+        int itemSlotX = (int)(0.9 * worldInfo.getPartWidth());
         int itemSlotY = (int)(0.045 * worldInfo.getPartHeight());
         int itemSlotRadius = (int)(0.02 * worldInfo.getPartWidth());
-        hudObjects.add(new ItemSlot(itemSlotX,itemSlotY, itemSlotRadius));
-        itemSlotX = (int)(0.9 * worldInfo.getPartWidth());
-        hudObjects.add(new ItemSlot(itemSlotX,itemSlotY, itemSlotRadius));
+        hudObjects.add(new ItemSlot(itemSlotX,itemSlotY, itemSlotRadius, (Avatar) avatar, "GRENADE"));
+        itemSlotX = (int)(0.95 * worldInfo.getPartWidth());
+        hudObjects.add(new ItemSlot(itemSlotX,itemSlotY, itemSlotRadius, (Avatar) avatar, "BONES"));
 
     }
 
@@ -190,6 +190,7 @@ public class RPGWorld extends World {
             switch (userInput.keyPressed) {
                 case ' ':
                     throwGrenade(userInput.mouseMovedX + worldPartX, userInput.mouseMovedY + worldPartY);
+                    ((Avatar) avatar).removeItem("GRENADE");
                     Sound sword = new Sound("/music/sword-sound-1_16bit.wav");
                     sword.setVolume(-30.0f);
                     sword.playSound();

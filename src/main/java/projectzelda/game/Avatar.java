@@ -6,6 +6,9 @@ package projectzelda.game;
 import projectzelda.*;
 import projectzelda.engine.*;
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class Avatar extends CircularGameObject
 {
@@ -16,6 +19,7 @@ public class Avatar extends CircularGameObject
     private BonesPickedUpText bPickedUpText;
     private GrenadePickedUpText gPickedUpText;
     private boolean flippedX = false;
+    private HashMap<String, List<GameObject>> items;
 
     public double life = 1.0;
     public HealthBar healthBar;
@@ -25,6 +29,8 @@ public class Avatar extends CircularGameObject
         super(x,y,0,200,15, new Color(96,96,255));
 
         this.isMoving = false;
+
+        items = new HashMap<>();
 
         //imageRef = new ImageRef("Rocks2", 0, 0, 32, 32);
 
@@ -70,6 +76,11 @@ public class Avatar extends CircularGameObject
 
                 // pick up Bones
                 case Const.TYPE_BONES:
+                    if(!items.containsKey("BONES")){
+                        items.put("BONES", new ArrayList<>());
+                    }
+                    items.get("BONES").add(obj);
+
                     ((RPGWorld)world).addBones();
                     bPickedUpText =new BonesPickedUpText(750,1000);
                     world.textObjects.add(bPickedUpText);
@@ -79,6 +90,11 @@ public class Avatar extends CircularGameObject
 
                 // pick up Grenades
                 case Const.TYPE_GRENADE:
+                    if(!items.containsKey("GRENADE")){
+                        items.put("GRENADE", new ArrayList<>());
+                    }
+                    items.get("GRENADE").add(obj);
+
                     ((RPGWorld)world).addGrenade();
                     gPickedUpText =new GrenadePickedUpText(750,1000);
                     world.textObjects.add(gPickedUpText);
@@ -113,6 +129,16 @@ public class Avatar extends CircularGameObject
             }
         }
 
+    }
+
+    public boolean containsItem(String itemType){
+        return items.containsKey(itemType) && !items.get(itemType).isEmpty();
+    }
+
+    public void removeItem(String itemType){
+        if(items.containsKey(itemType)){
+            items.get(itemType).remove(items.get(itemType).size() - 1);
+        }
     }
 
 
