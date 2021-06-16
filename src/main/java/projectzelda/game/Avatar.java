@@ -6,6 +6,7 @@ package projectzelda.game;
 import projectzelda.*;
 import projectzelda.engine.*;
 import java.awt.Color;
+import java.util.Arrays;
 
 public class Avatar extends CircularGameObject
 {
@@ -17,6 +18,9 @@ public class Avatar extends CircularGameObject
     private GrenadePickedUpText gPickedUpText;
     private boolean flippedX = false;
     private ImageRef sword;
+
+    private UIButton gChatBox;
+    private UIButton bChatBox;
 
     public double life = 1.0;
     public HealthBar healthBar;
@@ -73,18 +77,23 @@ public class Avatar extends CircularGameObject
                 // pick up Bones
                 case Const.TYPE_BONES:
                     ((RPGWorld)world).addBones();
-                    bPickedUpText =new BonesPickedUpText(750,1000);
-                    world.textObjects.add(bPickedUpText);
-                    lifeBPickedUpText = 2.0;
+                    // trying to stack chatboxes ontop of eachother but 2nd one simply replaces the first
+                    world.gameState = GameState.DIALOG;
+                    gChatBox = new UIButton(world.worldInfo.getPartWidth()/2-300, world.worldInfo.getPartHeight()-100, 600, 100, "Grenade picked up");
+                    world.chatBoxObjects.add(gChatBox);
+
+                    world.gameState = GameState.DIALOG;
+                    bChatBox = new UIButton( world.worldInfo.getPartWidth()/2-300, world.worldInfo.getPartHeight()-100, 600, 100, "Bones picked up");
+                    world.chatBoxObjects.add(bChatBox);
                     obj.isLiving = false;
                     break;
 
                 // pick up Grenades
                 case Const.TYPE_GRENADE:
                     ((RPGWorld)world).addGrenade();
-                    gPickedUpText =new GrenadePickedUpText(750,1000);
-                    world.textObjects.add(gPickedUpText);
-                    lifeGPickedUpText = 2.0;
+                    world.gameState = GameState.DIALOG;
+                    gChatBox = new UIButton(world.worldInfo.getPartWidth()/2-300, world.worldInfo.getPartHeight()-100, 600, 100, "Grenade picked up");
+                    world.chatBoxObjects.add(gChatBox);
                     obj.isLiving = false;
                     break;
             }
@@ -104,14 +113,6 @@ public class Avatar extends CircularGameObject
             if (lifeBPickedUpText < 0) {
                 world.textObjects.remove(bPickedUpText);
                 bPickedUpText = null;
-            }
-        }
-
-        if (gPickedUpText != null) {
-            lifeGPickedUpText -= diffSeconds;
-            if (lifeGPickedUpText < 0) {
-                world.textObjects.remove(gPickedUpText);
-                gPickedUpText = null;
             }
         }
 

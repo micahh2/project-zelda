@@ -3,6 +3,7 @@ package projectzelda.game;
 import projectzelda.engine.*;
 import java.awt.Color;
 
+// not in use
 class GrenadePickedUpText extends TextObject
 {
     public GrenadePickedUpText(int x, int y)
