@@ -18,6 +18,8 @@ public class RPGWorld extends World {
     private double timePassed = 0;
     private double timeSinceLastShot = 0;
 
+    private boolean isMusicPlaying = true;
+
     // for grenades
     private int grenades = 5;
     private Counter counterG;
@@ -40,6 +42,11 @@ public class RPGWorld extends World {
     }
 
     public void init() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
+
+        //play the background music
+        sound.playBackgroundMusic();
+        sound.setVolume(-20.0F);
+
         // add the Avatar
         MapObject playerMO = map.getFirstObject("Player");
         MapObject sword = map.getFirstObject("Swords");
@@ -48,7 +55,7 @@ public class RPGWorld extends World {
         gameObjects.add(avatar);
 
         MapObject bossMo = map.getFirstObject("Boss");
-        boss = new BossNMonster(bossMo.x, bossMo.y, bossMo.imageRef, (Avatar)avatar);
+        Boss boss = new Boss(bossMo.x, bossMo.y, bossMo.imageRef, (Avatar)avatar);
         gameObjects.add(boss);
 
         MapObject chestMo = map.getFirstObject("Chests");
@@ -64,9 +71,9 @@ public class RPGWorld extends World {
         gameObjects.add(pumpkin);
 
 
-        //play the background music
-        sound.playBackgroundMusic();
-        sound.setVolume(-20.0F);
+
+
+
 
         // set WorldPart position
         worldPartX = 0;
@@ -118,7 +125,7 @@ public class RPGWorld extends World {
         // create some monsters!
         List<MapObject> monsters = map.getAllObjects("Monsters");
         for(MapObject monster : monsters){
-            gameObjects.add(new BossNMonster(monster.startingBounds.x1, monster.startingBounds.y1, monster.imageRef, (Avatar)avatar));
+            gameObjects.add(new Monster(monster.startingBounds.x1, monster.startingBounds.y1, monster.imageRef, (Avatar)avatar));
         }
 
         // got have rock
@@ -161,6 +168,8 @@ public class RPGWorld extends World {
         hudObjects.add(new ItemSlot(itemSlotX,itemSlotY, itemSlotRadius));
         itemSlotX = (int)(0.9 * worldInfo.getPartWidth());
         hudObjects.add(new ItemSlot(itemSlotX,itemSlotY, itemSlotRadius));
+
+
 
     }
 
