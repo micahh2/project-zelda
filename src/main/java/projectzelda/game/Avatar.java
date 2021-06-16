@@ -20,11 +20,12 @@ public class Avatar extends CircularGameObject
     private GrenadePickedUpText gPickedUpText;
     private boolean flippedX = false;
     private HashMap<String, List<GameObject>> items;
+    private ImageRef sword;
 
     public double life = 1.0;
     public HealthBar healthBar;
 
-    public Avatar(double x, double y, ImageRef imageRef) 
+    public Avatar(double x, double y, ImageRef imageRef, ImageRef sword) 
     { 
         super(x,y,0,200,15, new Color(96,96,255));
 
@@ -41,6 +42,7 @@ public class Avatar extends CircularGameObject
         healthBar = new HealthBar(healthBarX, healthBarY, healthBarWidth, healthBarHeight);
         healthBar.isHudElement = true;
         this.imageRef = imageRef;
+        this.sword = sword;
     }
 
     public void move(double diffSeconds)
@@ -139,6 +141,17 @@ public class Avatar extends CircularGameObject
         if(items.containsKey(itemType)){
             items.get(itemType).remove(items.get(itemType).size() - 1);
         }
+    }
+        
+    @Override
+    public void draw(GraphicSystem gs) {
+        int swordx = (int)Math.round(flippedX ? x : (x-radius)); //-radius*1.5;
+        int swordy = (int)Math.round(y - radius * 1.2);
+        int width = (int)Math.round((sword.x2 - sword.x1)*0.8);
+        int height = (int)Math.round((sword.y2 - sword.y1)*0.8);
+
+        gs.drawImage(sword, swordx, swordy, swordx+width, swordy+height);
+        gs.draw(this);
     }
 
 
