@@ -42,9 +42,8 @@ public class RPGWorld extends World {
     public void init() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
         // add the Avatar
         MapObject playerMO = map.getFirstObject("Player");
-        //MapObject sword = map.getFirstObject("Swords");
-        //avatar = new Avatar(playerMO.x, playerMO.y, playerMO.imageRef, sword.imageRef);
-        avatar = new Avatar(playerMO.x, playerMO.y, playerMO.imageRef, playerMO.imageRef);
+        MapObject sword = map.getFirstObject("Swords");
+        avatar = new Avatar(playerMO.x, playerMO.y, playerMO.imageRef, sword.imageRef);
         // avatar = new Avatar(100, 50, new ImageRef("Rocks2", 0, 0, 32, 32));
         gameObjects.add(avatar);
 
