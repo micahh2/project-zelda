@@ -37,6 +37,7 @@ public abstract class World {
     public ArrayList<TextObject> textObjects = new ArrayList<TextObject>();
 
     public ArrayList<UIObject> pauseMenuObjects = new ArrayList<>();
+    public ArrayList<UIObject> chatBoxObjects = new ArrayList<>();
     public ArrayList<UIObject> mainMenuObjects = new ArrayList<>();
     public ArrayList<UIObject> hudObjects = new ArrayList<>();
 
@@ -120,6 +121,12 @@ public abstract class World {
             }
             graphicSystem.drawForeground(currentTick);
 
+            // draw all Chatboxes
+            if (gameState == GameState.DIALOG)  {
+                for (int i = 0; i < chatBoxObjects.size(); i++) {
+                    chatBoxObjects.get(i).draw(graphicSystem);
+                }
+            }
 
             // draw all TextObjects
             for (int i = 0; i < textObjects.size(); i++) {

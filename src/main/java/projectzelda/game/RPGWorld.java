@@ -29,7 +29,8 @@ public class RPGWorld extends World {
     private projectzelda.map.Map map;
 
     private double lifeHelpText = 10.0;
-    private double lifeChatBox = 2.0;
+
+
 
     private Sound sound = new Sound("/music/Forest_Ventures.wav");
 
@@ -222,6 +223,21 @@ public class RPGWorld extends World {
             }
         }
 
+        // clicking chatbox
+        if (!chatBoxObjects.isEmpty()) {
+
+            UIButton chatBox = (UIButton) chatBoxObjects.get(0);
+            if (userInput.isMousePressed) {
+                if (userInput.mouseMovedX >= chatBox.x && userInput.mouseMovedX <= chatBox.getMaxX()
+                        && (userInput.mouseMovedY >= chatBox.y && userInput.mouseMovedY <= chatBox.getMaxY())) {
+                    chatBoxObjects.remove(0);
+                    gameState = GameState.PLAY;
+                }
+
+            }
+
+        }
+
 
         //
         // Keyboard events
@@ -256,6 +272,12 @@ public class RPGWorld extends World {
                 case 'a':
                 case 's':
                 case 'd':
+                      //remove chatbox by moving
+
+                       if (!chatBoxObjects.isEmpty()) {
+                            chatBoxObjects.remove(0);
+                            gameState = GameState.PLAY;
+                        }
                     break;
                 default:
                     System.out.println("Unknown key code " + userInput.keyPressed);
