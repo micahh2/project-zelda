@@ -77,10 +77,6 @@ public class RPGWorld extends World {
         gameObjects.add(pumpkin);
 
 
-
-
-
-
         // set WorldPart position
         worldPartX = 0;
         worldPartY = 0;
@@ -115,12 +111,44 @@ public class RPGWorld extends World {
             gameObjects.add(new Lava(lava.startingBounds.x1, lava.startingBounds.y1, width, height));
         }
 
-        List<MapObject> npcs = map.getAllObjects("Npcs");
-        for(MapObject npc : npcs) {
-            int width = npc.startingBounds.x2 - npc.startingBounds.x1;
-            int height = npc.startingBounds.y2 - npc.startingBounds.y1;
-            gameObjects.add(new Npc(npc.startingBounds.x1, npc.startingBounds.y1, width, height, npc.imageRef));
-        }
+        // Get a list of NPCs
+       List<MapObject> npcs = map.getAllObjects("Npcs");
+
+        MapObject npc0Mo = npcs.get(0);
+        int widthNPCO = npc0Mo.startingBounds.x2 - npc0Mo.startingBounds.x1;
+        int heightNPC0 = npc0Mo.startingBounds.y2 - npc0Mo.startingBounds.y1;
+        Npc npc0 = new Npc(npc0Mo.x, npc0Mo.y, widthNPCO, heightNPC0, npc0Mo.imageRef);
+        gameObjects.add(npc0);
+
+        MapObject npc1Mo = npcs.get(1);
+        int widthNPC1 = npc1Mo.startingBounds.x2 - npc1Mo.startingBounds.x1;
+        int heightNPC1 = npc1Mo.startingBounds.y2 - npc1Mo.startingBounds.y1;
+        Npc npc1 = new Npc(npc1Mo.x, npc1Mo.y, widthNPC1, heightNPC1, npc1Mo.imageRef);
+        gameObjects.add(npc1);
+
+        MapObject npc2Mo = npcs.get(2);
+        int widthNPC2 = npc2Mo.startingBounds.x2 - npc2Mo.startingBounds.x1;
+        int heightNPC2 = npc2Mo.startingBounds.y2 - npc2Mo.startingBounds.y1;
+        Npc npc2 = new Npc(npc2Mo.x, npc2Mo.y, widthNPC2, heightNPC2, npc2Mo.imageRef);
+        gameObjects.add(npc2);
+
+        MapObject npc3Mo = npcs.get(3);
+        int widthNPC3 = npc3Mo.startingBounds.x2 - npc3Mo.startingBounds.x1;
+        int heightNPC3 = npc3Mo.startingBounds.y2 - npc3Mo.startingBounds.y1;
+        Npc npc3 = new Npc(npc3Mo.x, npc3Mo.y, widthNPC3, heightNPC3, npc3Mo.imageRef);
+        gameObjects.add(npc3);
+
+        MapObject npc4Mo = npcs.get(4);
+        int widthNPC4 = npc4Mo.startingBounds.x2 - npc4Mo.startingBounds.x1;
+        int heightNPC4 = npc4Mo.startingBounds.y2 - npc4Mo.startingBounds.y1;
+        Npc npc4 = new Npc(npc4Mo.x, npc4Mo.y, widthNPC4, heightNPC4, npc4Mo.imageRef);
+        gameObjects.add(npc4);
+
+        MapObject npc5Mo = npcs.get(5);
+        int widthNPC5 = npc5Mo.startingBounds.x2 - npc5Mo.startingBounds.x1;
+        int heightNPC5 = npc5Mo.startingBounds.y2 - npc5Mo.startingBounds.y1;
+        Npc npc5 = new Npc(npc5Mo.x, npc5Mo.y, widthNPC5, heightNPC5, npc5Mo.imageRef);
+        gameObjects.add(npc5);
 
         List<MapObject> trees = map.getAllObjects("Treebases");
         for(MapObject tree : trees){
