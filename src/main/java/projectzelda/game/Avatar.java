@@ -5,6 +5,8 @@ package projectzelda.game;
 
 import projectzelda.*;
 import projectzelda.engine.*;
+import projectzelda.map.MapObject;
+
 import java.awt.Color;
 import java.util.Arrays;
 
@@ -12,18 +14,29 @@ public class Avatar extends CircularGameObject
 {
     private final double COOLDOWN = 0.5;
     private double weaponTemp = 0;
-    private double lifeBPickedUpText;
-    private double lifeGPickedUpText;
-    private BonesPickedUpText bPickedUpText;
-    private GrenadePickedUpText gPickedUpText;
+
     private boolean flippedX = false;
     private ImageRef sword;
 
-    private UIButton gChatBox;
-    private UIButton bChatBox;
+
+    private ChatBoxButton chatBox;
+    private String chatBoxText;
+
+    // place of chatbox
+    private int posXChatBox = world.worldInfo.getPartWidth()/2-300;
+    private int posYChatBox = world.worldInfo.getPartHeight()-100;
+
+    private boolean talkedToNPC = false;
+
+
+
+
 
     public double life = 1.0;
     public HealthBar healthBar;
+
+
+
 
     public Avatar(double x, double y, ImageRef imageRef, ImageRef sword) 
     { 
@@ -63,9 +76,27 @@ public class Avatar extends CircularGameObject
             switch (obj.type()) {
                 // if Object is a tree, move back one step
                 case Const.TYPE_TREE:
-                    this.moveBack(); 
+                    this.moveBack();
                     break;
-                
+
+                case Const.TYPE_CHEST:
+                    this.moveBack();
+                    world.gameState = GameState.DIALOG;
+                    Chest chest = (Chest)((RPGWorld)world).chest;
+                    chatBoxText= chest.chestTexts[0];
+                    ((RPGWorld)world).addChatBox(chatBoxText, chest);
+                    obj.isLiving = false;
+                    break;
+
+                case Const.TYPE_PUMPKIN:
+                    this.moveBack();
+                    world.gameState = GameState.DIALOG;
+                    Pumpkin pumpkin = (Pumpkin)((RPGWorld)world).pumpkin;
+                    chatBoxText = pumpkin.chestTexts[0];
+                    ((RPGWorld)world).addChatBox(chatBoxText, pumpkin);
+                    obj.isLiving = false;
+                    break;
+
                 case Const.TYPE_GOBLIN:
                     this.moveBack(); 
                     if (weaponTemp <= 0) {
@@ -74,17 +105,30 @@ public class Avatar extends CircularGameObject
                     }
                     break;
 
+                 case Const.TYPE_NPC:
+                    this.moveBack();
+                    if (!talkedToNPC) {
+                        world.gameState = GameState.DIALOG;
+                        chatBoxText = ((RPGWorld)world).npcDialog[0];
+                        chatBox = new ChatBoxButton( posXChatBox, posYChatBox, 600, 100, chatBoxText, Const.TYPE_NPC);
+                        world.chatBoxObjects.add(chatBox);
+
+                        talkedToNPC = true;
+
+                    } else {
+
+                    //  world.gameState = GameState.DIALOG;
+                    //  chatBox = new ChatBoxButton( posXChatBox, posYChatBox, 600, 100, "You again?", Const.TYPE_NPC);
+                    //  world.chatBoxObjects.add(chatBox);
+                    }
+
+                    break;
                 // pick up Bones
                 case Const.TYPE_BONES:
                     ((RPGWorld)world).addBones();
-                    // trying to stack chatboxes ontop of eachother but 2nd one simply replaces the first
                     world.gameState = GameState.DIALOG;
-                    gChatBox = new UIButton(world.worldInfo.getPartWidth()/2-300, world.worldInfo.getPartHeight()-100, 600, 100, "Grenade picked up");
-                    world.chatBoxObjects.add(gChatBox);
-
-                    world.gameState = GameState.DIALOG;
-                    bChatBox = new UIButton( world.worldInfo.getPartWidth()/2-300, world.worldInfo.getPartHeight()-100, 600, 100, "Bones picked up");
-                    world.chatBoxObjects.add(bChatBox);
+                    chatBox = new ChatBoxButton( posXChatBox, posYChatBox, 600, 100, "Bones picked up", Const.TYPE_BONES);
+                    world.chatBoxObjects.add(chatBox);
                     obj.isLiving = false;
                     break;
 
@@ -92,10 +136,11 @@ public class Avatar extends CircularGameObject
                 case Const.TYPE_GRENADE:
                     ((RPGWorld)world).addGrenade();
                     world.gameState = GameState.DIALOG;
-                    gChatBox = new UIButton(world.worldInfo.getPartWidth()/2-300, world.worldInfo.getPartHeight()-100, 600, 100, "Grenade picked up");
-                    world.chatBoxObjects.add(gChatBox);
+                    chatBox = new ChatBoxButton(posXChatBox, posYChatBox, 600, 100, "Grenade picked up", Const.TYPE_GRENADE);
+                    world.chatBoxObjects.add(chatBox);
                     obj.isLiving = false;
                     break;
+
             }
         }
 
@@ -108,13 +153,6 @@ public class Avatar extends CircularGameObject
             flippedX = !flippedX;
         }
 
-        if (bPickedUpText != null) {
-            lifeBPickedUpText -= diffSeconds;
-            if (lifeBPickedUpText < 0) {
-                world.textObjects.remove(bPickedUpText);
-                bPickedUpText = null;
-            }
-        }
 
     }
 
@@ -128,6 +166,7 @@ public class Avatar extends CircularGameObject
         gs.drawImage(sword, swordx, swordy, swordx+width, swordy+height);
         gs.draw(this);
     }
+
 
 
     public int type() { return Const.TYPE_AVATAR; }

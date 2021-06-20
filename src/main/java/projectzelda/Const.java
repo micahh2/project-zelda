@@ -17,4 +17,10 @@ public final class Const
   public static final int TYPE_SHOT    = 6;
   public static final int TYPE_GRENADE = 7;
   public static final int TYPE_BONES   = 8;
+  public static final int TYPE_CHEST   = 9;
+  public static final int TYPE_PUMPKIN   = 10;
+  public static final int TYPE_NPC   = 11;
+
+
+
 }

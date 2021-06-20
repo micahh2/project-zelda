@@ -33,8 +33,13 @@ public class RPGWorld extends World {
     private double lifeHelpText = 10.0;
 
 
-
     private Sound sound = new Sound("/music/Forest_Ventures.wav");
+
+
+
+    private int chatTrack = 1;
+    // placeholder npcDialog, moved later?
+    String[] npcDialog = {"Hi there", "Can I help you?", "No, thank you.", "OK bye!"};
 
     public RPGWorld(projectzelda.map.Map map) throws UnsupportedAudioFileException, LineUnavailableException, IOException {
         this.map = map;
@@ -174,6 +179,7 @@ public class RPGWorld extends World {
 
     }
 
+
     public void processUserInput(UserInput userInput, double diffSeconds) throws UnsupportedAudioFileException, LineUnavailableException, IOException {
         // distinguish if Avatar shall move or shoots	  
         int button = userInput.mouseButton;
@@ -232,20 +238,26 @@ public class RPGWorld extends World {
             }
         }
 
-        // clicking chatbox
-        if (!chatBoxObjects.isEmpty()) {
-
-            UIButton chatBox = (UIButton) chatBoxObjects.get(0);
+        // clicking chatbox (mouse press goes through all the dialog instantly)
+      /*  if (!chatBoxObjects.isEmpty()) {
+            ChatBoxButton chatBox = (ChatBoxButton) chatBoxObjects.get(0);
             if (userInput.isMousePressed) {
                 if (userInput.mouseMovedX >= chatBox.x && userInput.mouseMovedX <= chatBox.getMaxX()
                         && (userInput.mouseMovedY >= chatBox.y && userInput.mouseMovedY <= chatBox.getMaxY())) {
-                    chatBoxObjects.remove(0);
-                    gameState = GameState.PLAY;
+                    if (chestTexts.length > chatTrack){
+                        chatBox.setText(chestTexts[chatTrack]);
+                        chatTrack++;
+
+                    } else {
+                        chatTrack = 1;
+                        chatBoxObjects.remove(0);
+                        gameState = GameState.PLAY;
+                    }
                 }
 
             }
 
-        }
+        } */
 
 
         //
@@ -254,10 +266,18 @@ public class RPGWorld extends World {
         if (userInput.isKeyEvent) {
             switch (userInput.keyPressed) {
                 case ' ':
-                    throwGrenade(userInput.mouseMovedX + worldPartX, userInput.mouseMovedY + worldPartY);
-                    Sound sword = new Sound("/music/sword-sound-1_16bit.wav");
-                    sword.setVolume(-30.0f);
-                    sword.playSound();
+                    // go through dialog via spacebar
+                   if (!chatBoxObjects.isEmpty()) {
+                       ChatBoxButton chatBox = (ChatBoxButton) chatBoxObjects.get(0);
+                       handleDialog(chatBox);
+
+                    } else {
+                        throwGrenade(userInput.mouseMovedX + worldPartX, userInput.mouseMovedY + worldPartY);
+                        Sound sword = new Sound("/music/sword-sound-1_16bit.wav");
+                        sword.setVolume(-30.0f);
+                        sword.playSound();
+                    }
+
                     break;
                 case 'q':
                     System.exit(0);
@@ -281,12 +301,16 @@ public class RPGWorld extends World {
                 case 'a':
                 case 's':
                 case 'd':
-                      //remove chatbox by moving
 
-                       if (!chatBoxObjects.isEmpty()) {
-                            chatBoxObjects.remove(0);
-                            gameState = GameState.PLAY;
-                        }
+                    /*
+                    * exit dialog via movement > problem if moved accidentally on object that gets deleted on collision dialog is lost
+                    *                          > if left out accidental dialog is forced upon user upon collision
+                    * */
+                   /* if (!chatBoxObjects.isEmpty()) {
+                        chatBoxObjects.remove(0);
+                        gameState = GameState.PLAY;
+                    } */
+
                     break;
                 default:
                     System.out.println("Unknown key code " + userInput.keyPressed);
@@ -398,4 +422,72 @@ public class RPGWorld extends World {
     public void addBones() {
         counterB.increment();
     }
+
+    public void addChatBox(String text, GameObject obj) {
+        int posXChatBox = worldInfo.getPartWidth()/2-300;
+        int posYChatBox = worldInfo.getPartHeight()-100;
+        ChatBoxButton chatBox = new ChatBoxButton(posXChatBox, posYChatBox,600,100, text, obj);
+        chatBoxObjects.add(chatBox);
+    }
+    public void handleDialog(ChatBoxButton chatBox) {
+
+        // not ideal
+
+      if (chatBox.obj != null) {
+            switch (chatBox.obj.type()) {
+                case Const.TYPE_CHEST:
+                    Chest chestForText = (Chest) chest;
+                    if (chestForText.getText().length > chatTrack) {
+                        chatBox.setText(chestForText.getText()[chatTrack]);
+                        chatTrack++;
+
+                    } else {
+                        chatTrack = 1;
+                        chatBoxObjects.remove(0);
+                        gameState = GameState.PLAY;
+                    }
+                    break;
+                case Const.TYPE_PUMPKIN:
+                    Pumpkin pumpkinForText = (Pumpkin) pumpkin;
+                    if (pumpkinForText.getText().length > chatTrack) {
+                        chatBox.setText(pumpkinForText.getText()[chatTrack]);
+                        chatTrack++;
+
+                    } else {
+                        chatTrack = 1;
+                        chatBoxObjects.remove(0);
+                        gameState = GameState.PLAY;
+                    }
+                    break;
+            }
+        } else {
+            switch (chatBox.objID) {
+                case Const.TYPE_GRENADE:
+                case Const.TYPE_BONES:
+                    chatBoxObjects.remove(0);
+                    gameState = GameState.PLAY;
+                    break;
+                case Const.TYPE_NPC:
+
+                    if (npcDialog.length > chatTrack) {
+                        chatBox.setText(npcDialog[chatTrack]);
+                        chatTrack++;
+
+                    } else {
+
+                        chatTrack = 1;
+                        chatBoxObjects.remove(0);
+                        gameState = GameState.PLAY;
+                    }
+                    break;
+                    }
+
+
+
+
+        }
+
+
+    }
+
 }
