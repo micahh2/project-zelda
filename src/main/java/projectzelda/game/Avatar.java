@@ -5,10 +5,8 @@ package projectzelda.game;
 
 import projectzelda.*;
 import projectzelda.engine.*;
-import projectzelda.map.MapObject;
 
 import java.awt.Color;
-import java.util.Arrays;
 
 public class Avatar extends CircularGameObject
 {
@@ -92,10 +90,59 @@ public class Avatar extends CircularGameObject
                     this.moveBack();
                     world.gameState = GameState.DIALOG;
                     Pumpkin pumpkin = (Pumpkin)((RPGWorld)world).pumpkin;
-                    chatBoxText = pumpkin.chestTexts[0];
+                    chatBoxText = pumpkin.pumpkinTexts[0];
                     ((RPGWorld)world).addChatBox(chatBoxText, pumpkin);
                     obj.isLiving = false;
                     break;
+
+                case Const.TYPE_STEVE:
+                    this.moveBack();
+                    world.gameState = GameState.DIALOG;
+                    SteveNpc steveNpc = (SteveNpc) ((RPGWorld)world).steve;
+                    chatBoxText = steveNpc.steveNpcTexts[0];
+                    ((RPGWorld)world).addChatBox(chatBoxText, steveNpc);
+                    break;
+
+                case Const.TYPE_DOG:
+                    this.moveBack();
+                    world.gameState = GameState.DIALOG;
+                    DogNpc dogNpc = (DogNpc)((RPGWorld)world).dog;
+                    chatBoxText = dogNpc.dogNpcTexts[0];
+                    ((RPGWorld)world).addChatBox(chatBoxText, dogNpc);
+                    break;
+
+                case Const.TYPE_CAT:
+                    this.moveBack();
+                    world.gameState = GameState.DIALOG;
+                    CatNpc catNpc = (CatNpc)((RPGWorld)world).cat;
+                    chatBoxText = catNpc.catNpcTexts[0];
+                    ((RPGWorld)world).addChatBox(chatBoxText, catNpc);
+                    break;
+
+                case Const.TYPE_BRUTUS:
+                    this.moveBack();
+                    world.gameState = GameState.DIALOG;
+                    BrutusNpc brutusNpc = (BrutusNpc) ((RPGWorld)world).brutus;
+                    chatBoxText = brutusNpc.brutusNpcTexts[0];
+                    ((RPGWorld)world).addChatBox(chatBoxText, brutusNpc);
+                    break;
+
+                case Const.TYPE_OLGA:
+                    this.moveBack();
+                    world.gameState = GameState.DIALOG;
+                    OlgaNpc olgaNpc = (OlgaNpc) ((RPGWorld)world).olga;
+                    chatBoxText = olgaNpc.olgaNpcTexts[0];
+                    ((RPGWorld)world).addChatBox(chatBoxText, olgaNpc);
+                    break;
+
+                case Const.TYPE_BOB:
+                    this.moveBack();
+                    world.gameState = GameState.DIALOG;
+                    BobNpc bobNpc = (BobNpc) ((RPGWorld)world).bob;
+                    chatBoxText = bobNpc.bobNpcTexts[0];
+                    ((RPGWorld)world).addChatBox(chatBoxText, bobNpc);
+                    break;
+
 
                 case Const.TYPE_GOBLIN:
                     this.moveBack(); 
@@ -105,24 +152,6 @@ public class Avatar extends CircularGameObject
                     }
                     break;
 
-                 case Const.TYPE_NPC:
-                    this.moveBack();
-                    if (!talkedToNPC) {
-                        world.gameState = GameState.DIALOG;
-                        chatBoxText = ((RPGWorld)world).npcDialog[0];
-                        chatBox = new ChatBoxButton( posXChatBox, posYChatBox, 600, 100, chatBoxText, Const.TYPE_NPC);
-                        world.chatBoxObjects.add(chatBox);
-
-                        talkedToNPC = true;
-
-                    } else {
-
-                    //  world.gameState = GameState.DIALOG;
-                    //  chatBox = new ChatBoxButton( posXChatBox, posYChatBox, 600, 100, "You again?", Const.TYPE_NPC);
-                    //  world.chatBoxObjects.add(chatBox);
-                    }
-
-                    break;
                 // pick up Bones
                 case Const.TYPE_BONES:
                     ((RPGWorld)world).addBones();

@@ -38,8 +38,6 @@ public class RPGWorld extends World {
 
 
     private int chatTrack = 1;
-    // placeholder npcDialog, moved later?
-    String[] npcDialog = {"Hi there", "Can I help you?", "No, thank you.", "OK bye!"};
 
     public RPGWorld(projectzelda.map.Map map) throws UnsupportedAudioFileException, LineUnavailableException, IOException {
         this.map = map;
@@ -76,8 +74,44 @@ public class RPGWorld extends World {
         pumpkin = new Pumpkin(pumpkinMo.x, pumpkinMo.y, widthP, heightP, pumpkinMo.imageRef);
         gameObjects.add(pumpkin);
 
+        // Get a list of NPCs
+        List<MapObject> npcs = map.getAllObjects("Npcs");
 
+        MapObject steveMo = npcs.get(0);
+        int widthSteve = steveMo.startingBounds.x2 - steveMo.startingBounds.x1;
+        int heightSteve = steveMo.startingBounds.y2 - steveMo.startingBounds.y1;
+        steve = new SteveNpc(steveMo.x, steveMo.y, widthSteve, heightSteve, steveMo.imageRef);
+        gameObjects.add(steve);
 
+        MapObject catMo = npcs.get(1);
+        int widthCat = catMo.startingBounds.x2 - catMo.startingBounds.x1;
+        int heightCat = catMo.startingBounds.y2 - catMo.startingBounds.y1;
+        cat = new CatNpc(catMo.x, catMo.y, widthCat, heightCat, catMo.imageRef);
+        gameObjects.add(cat);
+
+        MapObject dogMo = npcs.get(2);
+        int widthDog = dogMo.startingBounds.x2 - dogMo.startingBounds.x1;
+        int heightDog = dogMo.startingBounds.y2 - dogMo.startingBounds.y1;
+        dog = new DogNpc(dogMo.x, dogMo.y, widthDog, heightDog, dogMo.imageRef);
+        gameObjects.add(dog);
+
+        MapObject brutusMo = npcs.get(3);
+        int widthBrutus = brutusMo.startingBounds.x2 - brutusMo.startingBounds.x1;
+        int heightBrutus = brutusMo.startingBounds.y2 - brutusMo.startingBounds.y1;
+        brutus = new BrutusNpc(brutusMo.x, brutusMo.y, widthBrutus, heightBrutus, brutusMo.imageRef);
+        gameObjects.add(brutus);
+
+        MapObject olgaMo = npcs.get(4);
+        int widthOlga = olgaMo.startingBounds.x2 - olgaMo.startingBounds.x1;
+        int heightOlga = olgaMo.startingBounds.y2 - olgaMo.startingBounds.y1;
+        olga = new OlgaNpc(olgaMo.x, olgaMo.y, widthOlga, heightOlga, olgaMo.imageRef);
+        gameObjects.add(olga);
+
+        MapObject bobMo = npcs.get(5);
+        int widthBob = bobMo.startingBounds.x2 - bobMo.startingBounds.x1;
+        int heightBob = bobMo.startingBounds.y2 - bobMo.startingBounds.y1;
+        bob = new BobNpc(bobMo.x, bobMo.y, widthBob, heightBob, bobMo.imageRef);
+        gameObjects.add(bob);
 
 
 
@@ -115,12 +149,6 @@ public class RPGWorld extends World {
             gameObjects.add(new Lava(lava.startingBounds.x1, lava.startingBounds.y1, width, height));
         }
 
-        List<MapObject> npcs = map.getAllObjects("Npcs");
-        for(MapObject npc : npcs) {
-            int width = npc.startingBounds.x2 - npc.startingBounds.x1;
-            int height = npc.startingBounds.y2 - npc.startingBounds.y1;
-            gameObjects.add(new Npc(npc.startingBounds.x1, npc.startingBounds.y1, width, height, npc.imageRef));
-        }
 
         List<MapObject> trees = map.getAllObjects("Treebases");
         for(MapObject tree : trees){
@@ -459,6 +487,84 @@ public class RPGWorld extends World {
                         gameState = GameState.PLAY;
                     }
                     break;
+
+                case Const.TYPE_DOG:
+                    DogNpc dogNpcForText = (DogNpc) dog;
+                    if (dogNpcForText.getText().length > chatTrack) {
+                        chatBox.setText(dogNpcForText.getText()[chatTrack]);
+                        chatTrack++;
+
+                    } else {
+                        chatTrack = 1;
+                        chatBoxObjects.remove(0);
+                        gameState = GameState.PLAY;
+                    }
+                    break;
+
+                case Const.TYPE_CAT:
+                    CatNpc catNpcForText = (CatNpc) cat;
+                    if (catNpcForText.getText().length > chatTrack) {
+                        chatBox.setText(catNpcForText.getText()[chatTrack]);
+                        chatTrack++;
+
+                    } else {
+                        chatTrack = 1;
+                        chatBoxObjects.remove(0);
+                        gameState = GameState.PLAY;
+                    }
+                    break;
+
+                case Const.TYPE_STEVE:
+                    SteveNpc steveNpcForText = (SteveNpc) steve;
+                    if (steveNpcForText.getText().length > chatTrack) {
+                        chatBox.setText(steveNpcForText.getText()[chatTrack]);
+                        chatTrack++;
+
+                    } else {
+                        chatTrack = 1;
+                        chatBoxObjects.remove(0);
+                        gameState = GameState.PLAY;
+                    }
+                    break;
+
+                case Const.TYPE_BRUTUS:
+                    BrutusNpc brutusNpcForText = (BrutusNpc) brutus;
+                    if (brutusNpcForText.getText().length > chatTrack) {
+                        chatBox.setText(brutusNpcForText.getText()[chatTrack]);
+                        chatTrack++;
+
+                    } else {
+                        chatTrack = 1;
+                        chatBoxObjects.remove(0);
+                        gameState = GameState.PLAY;
+                    }
+                    break;
+
+                case Const.TYPE_OLGA:
+                    OlgaNpc olgaNpcForText = (OlgaNpc) olga;
+                    if (olgaNpcForText.getText().length > chatTrack) {
+                        chatBox.setText(olgaNpcForText.getText()[chatTrack]);
+                        chatTrack++;
+
+                    } else {
+                        chatTrack = 1;
+                        chatBoxObjects.remove(0);
+                        gameState = GameState.PLAY;
+                    }
+                    break;
+
+                case Const.TYPE_BOB:
+                    BobNpc bobNpcForText = (BobNpc) bob;
+                    if (bobNpcForText.getText().length > chatTrack) {
+                        chatBox.setText(bobNpcForText.getText()[chatTrack]);
+                        chatTrack++;
+
+                    } else {
+                        chatTrack = 1;
+                        chatBoxObjects.remove(0);
+                        gameState = GameState.PLAY;
+                    }
+                    break;
             }
         } else {
             switch (chatBox.objID) {
@@ -466,19 +572,6 @@ public class RPGWorld extends World {
                 case Const.TYPE_BONES:
                     chatBoxObjects.remove(0);
                     gameState = GameState.PLAY;
-                    break;
-                case Const.TYPE_NPC:
-
-                    if (npcDialog.length > chatTrack) {
-                        chatBox.setText(npcDialog[chatTrack]);
-                        chatTrack++;
-
-                    } else {
-
-                        chatTrack = 1;
-                        chatBoxObjects.remove(0);
-                        gameState = GameState.PLAY;
-                    }
                     break;
                     }
 
