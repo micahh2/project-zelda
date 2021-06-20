@@ -49,5 +49,8 @@ public interface GraphicSystem
 
     void drawCenteredTextScreen(int x, int y, int width, int height, Color color, Font font, String text);
 
+    void drawCenteredTextScreenWithSub(int x, int y, int width, int height, Color color, Font font,Font helpFont, String text, String helpText);
+
+
     void drawImageScreen(ImageRef imageRef, int x1, int y1, int x2, int y2);
 }

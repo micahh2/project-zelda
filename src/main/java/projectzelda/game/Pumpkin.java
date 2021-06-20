@@ -5,6 +5,8 @@ import projectzelda.engine.*;
 
 public class Pumpkin extends RectangularGameObject {
 
+    String[] chestTexts = {"You found a pumpkin...", "It's huge!", "You eat it.", "It's very tasty."};
+
     public Pumpkin(double x, double y, int width, int height, ImageRef imageref)
     {
         super(x, y, 0,0, width, height, null);
@@ -12,6 +14,10 @@ public class Pumpkin extends RectangularGameObject {
         this.isMoving = false;
     }
 
-    public int type() { return Const.TYPE_TREE; }
+    public String[] getText() {
+        return chestTexts;
+    }
+
+    public int type() { return Const.TYPE_PUMPKIN; }
 
 }
