@@ -96,6 +96,16 @@ public class Avatar extends CircularGameObject
                     world.chatBoxObjects.add(gChatBox);
                     obj.isLiving = false;
                     break;
+
+                //if object is lava, avatar dies
+                case Const.TYPE_LAVA:
+                    life -= 0.0021;
+                    healthBar.health = life;
+                    if (life <= 0) {
+                        isLiving = false;
+                    }
+                    break;
+
             }
         }
 

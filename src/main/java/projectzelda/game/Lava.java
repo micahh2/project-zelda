@@ -15,6 +15,7 @@ public class Lava extends RectangularGameObject {
     @Override
     public void draw(GraphicSystem gs) { return; }
 
-    public int type() { return Const.TYPE_TREE; }
+    public int type() { return Const.TYPE_LAVA; }
+
 
 }
