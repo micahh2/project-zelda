@@ -190,6 +190,12 @@ public class RPGWorld extends World {
         relY = (int)(0.45 * worldInfo.getPartHeight());
         mainMenuObjects.add(new UIButton(relX, relY, buttonWidth, buttonHeight, "Play"));
 
+        // add the death menu buttons
+        deathMenuObjects.add(new UIButton(relX, relY, buttonWidth, buttonHeight, "Restart"));
+        relY = (int)(0.6 * worldInfo.getPartHeight());
+        deathMenuObjects.add(new UIButton(relX, relY, buttonWidth, buttonHeight, "Quit"));
+
+
         // add the hud elements
         hudObjects.add(((Avatar) avatar).healthBar);
 
@@ -250,6 +256,26 @@ public class RPGWorld extends World {
                 gameState = GameState.PLAY;
             }
         }
+
+
+
+
+        
+        if (this.gameState == GameState.DEATH && userInput.isMousePressed) {
+            UIButton restartButton = (UIButton) deathMenuObjects.get(0);
+            UIButton quitButton = (UIButton) deathMenuObjects.get(1);
+
+            if (userInput.mouseMovedX >= restartButton.x && userInput.mouseMovedX <= restartButton.getMaxX()
+                    && (userInput.mouseMovedY >= restartButton.y && userInput.mouseMovedY <= restartButton.getMaxY())) {
+                gameState = GameState.MAIN_MENU;
+            }
+
+            if (userInput.mouseMovedX >= quitButton.x && userInput.mouseMovedX <= quitButton.getMaxX()
+                    && (userInput.mouseMovedY >= quitButton.y && userInput.mouseMovedY <= quitButton.getMaxY())) {
+                System.exit(0);
+            }
+        }
+
 
         // clicking chatbox (mouse press goes through all the dialog instantly)
       /*  if (!chatBoxObjects.isEmpty()) {

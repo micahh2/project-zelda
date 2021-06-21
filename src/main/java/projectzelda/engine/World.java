@@ -36,10 +36,11 @@ public abstract class World {
     public ArrayList<UIObject> pauseMenuObjects = new ArrayList<>();
     public ArrayList<UIObject> chatBoxObjects = new ArrayList<>();
     public ArrayList<UIObject> mainMenuObjects = new ArrayList<>();
+    public ArrayList<UIObject> deathMenuObjects = new ArrayList<>();
     public ArrayList<UIObject> hudObjects = new ArrayList<>();
 
 
-    //public GameState gameState = GameState.PLAY;
+    
     public GameState gameState = GameState.MAIN_MENU;
 
     protected World() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
@@ -141,6 +142,13 @@ public abstract class World {
             if (gameState == GameState.MAIN_MENU) {
                 for (int i = 0; i < mainMenuObjects.size(); i++) {
                     mainMenuObjects.get(i).draw(graphicSystem, currentTick);
+                }
+            }
+
+            // draw play button of death_menu
+            if (gameState == GameState.DEATH) {
+                for (int i = 0; i < deathMenuObjects.size(); i++) {
+                    deathMenuObjects.get(i).draw(graphicSystem, currentTick);
                 }
             }
 
