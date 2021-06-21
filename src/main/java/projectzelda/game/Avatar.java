@@ -223,6 +223,7 @@ public class Avatar extends CircularGameObject
 
     public void die() {
         this.isLiving = false;
-        ((RPGWorld)world).throwGrenade(x, y);
+        world.gameState = GameState.DEATH;
+        //((RPGWorld)world).throwGrenade(x, y);
     }
 }
