@@ -15,7 +15,7 @@ class HelpText extends TextObject
   
   public String toString()
   { String display = "Move: WASD      Shoot: Mouse Left      "+
-                     "Grenade: Space Bar    Pause: Esc   End: q";
+                     "Attack: Space Bar    Pause: Esc   Quit: q";
     return display;
   }
   

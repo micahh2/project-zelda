@@ -17,9 +17,6 @@ public class RPGWorld extends World {
 
     private boolean isMusicPlaying = true;
 
-    // for grenades
-    private int grenades = 5;
-    private Counter counterG;
     private Counter counterB;
     private HelpText helpText;
 
@@ -166,13 +163,10 @@ public class RPGWorld extends World {
 
 
         counterB = new Counter("Bones: ", 20, 40);
-        counterG = new Counter("Grenades: ", 770, 40);
         helpText = new HelpText(400, 450);
 
 
-        counterG.setNumber(grenades);
         textObjects.add(counterB);
-        textObjects.add(counterG);
         textObjects.add(helpText);
 
         // calculate relative ui button width and height
@@ -427,28 +421,10 @@ public class RPGWorld extends World {
                 return;
             }
 
-
-            // if collisions occur, cancel
-            Grenade grenade = new Grenade(x, y);
-            GameObjectList list = getPhysicsSystem().getCollisions(grenade);
-            if (list.size() != 0) {
-                spawnGrenade = INTERVAL;
-                return;
-            }
-
-            // else add zombie to world
-            this.gameObjects.add(grenade);
-            counterG.setNumber(grenades);
         }
 
     }
 
-    public void addGrenade() {
-        if (grenades < 999) {
-            grenades++;
-        }
-        counterG.setNumber(grenades);
-    }
 
     public void addBones() {
         counterB.increment();
@@ -506,15 +482,6 @@ public class RPGWorld extends World {
                     }
                     break;
             }
-        } else {
-            switch (chatBox.objID) {
-                case GRENADE:
-                case BONES:
-                    chatBoxObjects.remove(0);
-                    gameState = GameState.PLAY;
-                    break;
-                    }
-
         }
     }
 

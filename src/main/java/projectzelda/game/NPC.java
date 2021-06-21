@@ -66,7 +66,6 @@ public class NPC extends RectangularGameObject {
                 case NPC:
                 case GOBLIN:
                 case BONES:
-                case GRENADE:
                 case WATER:
                     stuck = true;
                     this.moveBack(); 
