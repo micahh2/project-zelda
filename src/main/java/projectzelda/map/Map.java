@@ -150,7 +150,7 @@ public class Map implements MediaInfo, WorldInfo {
     }
 
     // These should be things that wont move
-    final List<String> backgroundLayerNames = List.of("Bottom", "Furnitures", "Water");
+    final List<String> backgroundLayerNames = List.of("Bottom", "Furnitures", "Water", "Trees", "Rocks");
 
     public List<ImageRefTo> getNonBackgroundTiles() {
         ArrayList<ImageRefTo> tiles = new ArrayList<ImageRefTo>();
@@ -183,6 +183,22 @@ public class Map implements MediaInfo, WorldInfo {
             tiles.addAll(tilesByLayer.get(l.name));
         }
         return tiles;
+    }
+
+    final List<String> backgroundObjectLayerNames = List.of("Treebases", "Housebases");
+    public List<ImageRef> getBackgroundAreas() {
+        List<ImageRef> list = new LinkedList<ImageRef>();
+        for (String name : backgroundObjectLayerNames) {
+            List<MapObject> mos = getAllObjects(name);
+            if (mos == null) { 
+                System.out.println("Warning - Missing object layer: " + name);
+                continue;
+            }
+            for (MapObject mo : mos) {
+                list.add(mo.startingBounds);
+            }
+        }
+        return list;
     }
 
     public HashMap<String, List<ImageRefTo>> getTilesByLayer() {

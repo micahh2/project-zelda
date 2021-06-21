@@ -214,11 +214,11 @@
 </data>
  </layer>
  <objectgroup id="19" name="Housebases">
-  <object id="288" x="850.667" y="144" width="80" height="54.6667"/>
-  <object id="289" x="850.667" y="198.667" width="34.6667" height="32"/>
-  <object id="292" x="1081.33" y="318.667" width="53.3333" height="57.3333"/>
-  <object id="293" x="1078.67" y="150.667" width="60" height="52"/>
-  <object id="294" x="440" y="320" width="69.3333" height="84"/>
+  <object id="288" x="844.917" y="151" width="88.75" height="52.4167"/>
+  <object id="289" x="845.167" y="203.167" width="44.6667" height="30.75"/>
+  <object id="292" x="1080.33" y="325.417" width="56.3333" height="53.8333"/>
+  <object id="293" x="1075.42" y="153.917" width="67.75" height="49.5"/>
+  <object id="294" x="438.5" y="327.25" width="72.3333" height="81.25"/>
  </objectgroup>
  <layer id="10" name="Furnitures" width="100" height="100">
   <data encoding="csv">
@@ -643,7 +643,7 @@
   <object id="284" x="108" y="414" width="22" height="21"/>
  </objectgroup>
  <objectgroup id="7" name="Rocks">
-  <object id="271" x="62" y="756" width="128" height="46"/>
+  <object id="271" x="62" y="782.25" width="128" height="19.75"/>
  </objectgroup>
  <layer id="2" name="Trees" width="100" height="100">
   <data encoding="csv">

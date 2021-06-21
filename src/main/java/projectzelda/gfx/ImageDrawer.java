@@ -9,7 +9,9 @@ import java.awt.image.ImageObserver;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Color;
 import java.awt.geom.AffineTransform;
+import java.awt.AlphaComposite;
 
 public class ImageDrawer {
     public static BufferedImage createImage(List<ImageRefTo> tiles, int width, int height, Map<String, Image> images, ImageObserver ob) {
@@ -61,6 +63,19 @@ public class ImageDrawer {
                     tile.x1, tile.y1, tile.x2, tile.y2, 
             ob);
             graphics.setTransform(clearTransform);
+        }
+    }
+
+    public static void clearImageAreas(BufferedImage im, List<ImageRef> areas, ImageObserver ob) {
+        Graphics2D graphics = (Graphics2D)im.getGraphics();
+        AlphaComposite alcom = AlphaComposite.getInstance(
+                    AlphaComposite.CLEAR, 0f);
+            graphics.setComposite(alcom);
+
+        for (ImageRef area : areas) {
+            int width = area.x2 - area.x1;
+            int height = area.y2 - area.y1;
+            graphics.fillRect(area.x1, area.y1, width, height);
         }
     }
 }

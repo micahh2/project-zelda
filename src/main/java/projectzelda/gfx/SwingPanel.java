@@ -1,6 +1,3 @@
-
-// (c) Thorsten Hasbargen
-
 package projectzelda.gfx;
 
 import projectzelda.engine.*;
@@ -87,6 +84,7 @@ class SwingPanel extends JPanel implements GraphicSystem {
         }
         background = ImageDrawer.createImage(mediaInfo.getBackgroundTiles(), worldInfo.getWidth(), worldInfo.getHeight(), images, this);
         foreground = ImageDrawer.createImage(mediaInfo.getForegroundTiles(), worldInfo.getWidth(), worldInfo.getHeight(), images, this);
+        // ImageDrawer.clearImageAreas(foreground, mediaInfo.getBackgroundAreas(), this);
     }
 
     public void clear(long tick) {
@@ -183,14 +181,6 @@ class SwingPanel extends JPanel implements GraphicSystem {
         int y1 = (int) (y1Abs - world.worldPartY);
         int x2 = (int) (x2Abs - world.worldPartX);
         int y2 = (int) (y2Abs - world.worldPartY);
-        drawImageScreen(imageRef, x1, y1, x2, y2);
-    }
-
-    public void drawHudImage(ImageRef imageRef, int x1Abs, int y1Abs, int x2Abs, int y2Abs) {
-        int x1 = x1Abs;
-        int y1 = y1Abs;
-        int x2 = x2Abs;
-        int y2 = y2Abs;
         drawImageScreen(imageRef, x1, y1, x2, y2);
     }
 
