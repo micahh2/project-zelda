@@ -18,6 +18,8 @@ public class RPGWorld extends World {
     private double timePassed = 0;
     private double timeSinceLastShot = 0;
 
+    private boolean isMusicPlaying = true;
+
     // for grenades
     private int grenades = 5;
     private Counter counterG;
@@ -29,7 +31,7 @@ public class RPGWorld extends World {
     private projectzelda.map.Map map;
 
     private double lifeHelpText = 10.0;
-    private double lifeChatBox = 2.0;
+
 
     private Sound sound = new Sound("/music/Forest_Ventures.wav");
 
@@ -40,15 +42,21 @@ public class RPGWorld extends World {
     }
 
     public void init() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
+
+        //play the background music
+        sound.playBackgroundMusic();
+        sound.setVolume(-20.0F);
+
         // add the Avatar
         MapObject playerMO = map.getFirstObject("Player");
         MapObject sword = map.getFirstObject("Swords");
         avatar = new Avatar(playerMO.x, playerMO.y, playerMO.imageRef, sword.imageRef);
+        ((Avatar) avatar).addItem("SWORD", sword);
         // avatar = new Avatar(100, 50, new ImageRef("Rocks2", 0, 0, 32, 32));
         gameObjects.add(avatar);
 
         MapObject bossMo = map.getFirstObject("Boss");
-        boss = new BossNMonster(bossMo.x, bossMo.y, bossMo.imageRef, (Avatar)avatar);
+        Boss boss = new Boss(bossMo.x, bossMo.y, bossMo.imageRef, (Avatar) avatar);
         gameObjects.add(boss);
 
         MapObject chestMo = map.getFirstObject("Chests");
@@ -64,10 +72,6 @@ public class RPGWorld extends World {
         gameObjects.add(pumpkin);
 
 
-        //play the background music
-        sound.playBackgroundMusic();
-        sound.setVolume(-20.0F);
-
         // set WorldPart position
         worldPartX = 0;
         worldPartY = 0;
@@ -75,50 +79,50 @@ public class RPGWorld extends World {
 
         // create houses and trees
         List<MapObject> houses = map.getAllObjects("Housebases");
-        for(MapObject house : houses) {
+        for (MapObject house : houses) {
             int width = house.startingBounds.x2 - house.startingBounds.x1;
             int height = house.startingBounds.y2 - house.startingBounds.y1;
             gameObjects.add(new House(house.startingBounds.x1, house.startingBounds.y1, width, height));
         }
 
         List<MapObject> walls = map.getAllObjects("Walls");
-        for(MapObject wall : walls) {
+        for (MapObject wall : walls) {
             int width = wall.startingBounds.x2 - wall.startingBounds.x1;
             int height = wall.startingBounds.y2 - wall.startingBounds.y1;
             gameObjects.add(new Wall(wall.startingBounds.x1, wall.startingBounds.y1, width, height));
         }
 
         List<MapObject> waters = map.getAllObjects("Water");
-        for(MapObject water : waters) {
+        for (MapObject water : waters) {
             int width = water.startingBounds.x2 - water.startingBounds.x1;
             int height = water.startingBounds.y2 - water.startingBounds.y1;
             gameObjects.add(new Water(water.startingBounds.x1, water.startingBounds.y1, width, height));
         }
 
         List<MapObject> lavas = map.getAllObjects("Lava");
-        for(MapObject lava : lavas) {
+        for (MapObject lava : lavas) {
             int width = lava.startingBounds.x2 - lava.startingBounds.x1;
             int height = lava.startingBounds.y2 - lava.startingBounds.y1;
             gameObjects.add(new Lava(lava.startingBounds.x1, lava.startingBounds.y1, width, height));
         }
 
         List<MapObject> npcs = map.getAllObjects("Npcs");
-        for(MapObject npc : npcs) {
+        for (MapObject npc : npcs) {
             int width = npc.startingBounds.x2 - npc.startingBounds.x1;
             int height = npc.startingBounds.y2 - npc.startingBounds.y1;
             gameObjects.add(new Npc(npc.startingBounds.x1, npc.startingBounds.y1, width, height, npc.imageRef));
         }
 
         List<MapObject> trees = map.getAllObjects("Treebases");
-        for(MapObject tree : trees){
-            int radius = Math.round((tree.startingBounds.x2 - tree.startingBounds.x1)/2);
+        for (MapObject tree : trees) {
+            int radius = Math.round((tree.startingBounds.x2 - tree.startingBounds.x1) / 2);
             gameObjects.add(new Tree(tree.startingBounds.x1, tree.startingBounds.y1, radius));
         }
 
         // create some monsters!
         List<MapObject> monsters = map.getAllObjects("Monsters");
-        for(MapObject monster : monsters){
-            gameObjects.add(new BossNMonster(monster.startingBounds.x1, monster.startingBounds.y1, monster.imageRef, (Avatar)avatar));
+        for (MapObject monster : monsters) {
+            gameObjects.add(new Monster(monster.startingBounds.x1, monster.startingBounds.y1, monster.imageRef, (Avatar) avatar));
         }
 
         // got have rock
@@ -141,26 +145,27 @@ public class RPGWorld extends World {
         int buttonHeight = (int) (0.1 * worldInfo.getPartHeight());
 
         // add the pause menu buttons
-        int relX = (int)(0.4 * worldInfo.getPartWidth());
-        int relY = (int)(0.3 * worldInfo.getPartHeight());
+        int relX = (int) (0.4 * worldInfo.getPartWidth());
+        int relY = (int) (0.3 * worldInfo.getPartHeight());
 
         pauseMenuObjects.add(new UIButton(relX, relY, buttonWidth, buttonHeight, "Resume"));
-        relY = (int)(0.6 * worldInfo.getPartHeight());
+        relY = (int) (0.6 * worldInfo.getPartHeight());
         pauseMenuObjects.add(new UIButton(relX, relY, buttonWidth, buttonHeight, "Quit"));
 
         // add the main menu buttons
-        relY = (int)(0.45 * worldInfo.getPartHeight());
+        relY = (int) (0.45 * worldInfo.getPartHeight());
         mainMenuObjects.add(new UIButton(relX, relY, buttonWidth, buttonHeight, "Play"));
 
         // add the hud elements
         hudObjects.add(((Avatar) avatar).healthBar);
 
-        int itemSlotX = (int)(0.9 * worldInfo.getPartWidth());
-        int itemSlotY = (int)(0.045 * worldInfo.getPartHeight());
-        int itemSlotRadius = (int)(0.02 * worldInfo.getPartWidth());
-        hudObjects.add(new ItemSlot(itemSlotX,itemSlotY, itemSlotRadius, (Avatar) avatar, "GRENADE"));
-        itemSlotX = (int)(0.95 * worldInfo.getPartWidth());
-        hudObjects.add(new ItemSlot(itemSlotX,itemSlotY, itemSlotRadius, (Avatar) avatar, "BONES"));
+        int itemSlotX = (int) (0.9 * worldInfo.getPartWidth());
+        int itemSlotY = (int) (0.045 * worldInfo.getPartHeight());
+        int itemSlotRadius = (int) (0.02 * worldInfo.getPartWidth());
+        hudObjects.add(new ItemSlot(itemSlotX, itemSlotY, itemSlotRadius, (Avatar) avatar, "SWORD", sword.imageRef));
+        itemSlotX = (int) (0.95 * worldInfo.getPartWidth());
+        hudObjects.add(new ItemSlot(itemSlotX, itemSlotY, itemSlotRadius, (Avatar) avatar, "BOW", sword.imageRef));
+
 
     }
 
@@ -222,6 +227,21 @@ public class RPGWorld extends World {
             }
         }
 
+        // clicking chatbox
+        if (!chatBoxObjects.isEmpty()) {
+
+            UIButton chatBox = (UIButton) chatBoxObjects.get(0);
+            if (userInput.isMousePressed) {
+                if (userInput.mouseMovedX >= chatBox.x && userInput.mouseMovedX <= chatBox.getMaxX()
+                        && (userInput.mouseMovedY >= chatBox.y && userInput.mouseMovedY <= chatBox.getMaxY())) {
+                    chatBoxObjects.remove(0);
+                    gameState = GameState.PLAY;
+                }
+
+            }
+
+        }
+
 
         //
         // Keyboard events
@@ -230,7 +250,6 @@ public class RPGWorld extends World {
             switch (userInput.keyPressed) {
                 case ' ':
                     throwGrenade(userInput.mouseMovedX + worldPartX, userInput.mouseMovedY + worldPartY);
-                    ((Avatar) avatar).removeItem("GRENADE");
                     Sound sword = new Sound("/music/sword-sound-1_16bit.wav");
                     sword.setVolume(-30.0f);
                     sword.playSound();
@@ -257,6 +276,12 @@ public class RPGWorld extends World {
                 case 'a':
                 case 's':
                 case 'd':
+                    //remove chatbox by moving
+
+                    if (!chatBoxObjects.isEmpty()) {
+                        chatBoxObjects.remove(0);
+                        gameState = GameState.PLAY;
+                    }
                     break;
                 default:
                     System.out.println("Unknown key code " + userInput.keyPressed);

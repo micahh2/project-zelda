@@ -5,8 +5,11 @@ package projectzelda.game;
 
 import projectzelda.*;
 import projectzelda.engine.*;
+import projectzelda.map.MapObject;
+
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -19,8 +22,11 @@ public class Avatar extends CircularGameObject
     private BonesPickedUpText bPickedUpText;
     private GrenadePickedUpText gPickedUpText;
     private boolean flippedX = false;
-    private HashMap<String, List<GameObject>> items;
+    private HashMap<String, MapObject> inventory;
     private ImageRef sword;
+
+    private UIButton gChatBox;
+    private UIButton bChatBox;
 
     public double life = 1.0;
     public HealthBar healthBar;
@@ -31,7 +37,7 @@ public class Avatar extends CircularGameObject
 
         this.isMoving = false;
 
-        items = new HashMap<>();
+        inventory = new HashMap<>();
 
         //imageRef = new ImageRef("Rocks2", 0, 0, 32, 32);
 
@@ -71,36 +77,31 @@ public class Avatar extends CircularGameObject
                 case Const.TYPE_GOBLIN:
                     this.moveBack(); 
                     if (weaponTemp <= 0) {
-                        ((GoblinAI)obj).hit();
+                        ((EnemyAI)obj).hit();
                         weaponTemp = COOLDOWN;
                     }
                     break;
 
                 // pick up Bones
                 case Const.TYPE_BONES:
-                    if(!items.containsKey("BONES")){
-                        items.put("BONES", new ArrayList<>());
-                    }
-                    items.get("BONES").add(obj);
-
                     ((RPGWorld)world).addBones();
-                    bPickedUpText =new BonesPickedUpText(750,1000);
-                    world.textObjects.add(bPickedUpText);
-                    lifeBPickedUpText = 2.0;
+                    // trying to stack chatboxes ontop of eachother but 2nd one simply replaces the first
+                    world.gameState = GameState.DIALOG;
+                    gChatBox = new UIButton(world.worldInfo.getPartWidth()/2-300, world.worldInfo.getPartHeight()-100, 600, 100, "Grenade picked up");
+                    world.chatBoxObjects.add(gChatBox);
+
+                    world.gameState = GameState.DIALOG;
+                    bChatBox = new UIButton( world.worldInfo.getPartWidth()/2-300, world.worldInfo.getPartHeight()-100, 600, 100, "Bones picked up");
+                    world.chatBoxObjects.add(bChatBox);
                     obj.isLiving = false;
                     break;
 
                 // pick up Grenades
                 case Const.TYPE_GRENADE:
-                    if(!items.containsKey("GRENADE")){
-                        items.put("GRENADE", new ArrayList<>());
-                    }
-                    items.get("GRENADE").add(obj);
-
                     ((RPGWorld)world).addGrenade();
-                    gPickedUpText =new GrenadePickedUpText(750,1000);
-                    world.textObjects.add(gPickedUpText);
-                    lifeGPickedUpText = 2.0;
+                    world.gameState = GameState.DIALOG;
+                    gChatBox = new UIButton(world.worldInfo.getPartWidth()/2-300, world.worldInfo.getPartHeight()-100, 600, 100, "Grenade picked up");
+                    world.chatBoxObjects.add(gChatBox);
                     obj.isLiving = false;
                     break;
             }
@@ -123,24 +124,20 @@ public class Avatar extends CircularGameObject
             }
         }
 
-        if (gPickedUpText != null) {
-            lifeGPickedUpText -= diffSeconds;
-            if (lifeGPickedUpText < 0) {
-                world.textObjects.remove(gPickedUpText);
-                gPickedUpText = null;
-            }
-        }
-
     }
 
     public boolean containsItem(String itemType){
-        return items.containsKey(itemType) && !items.get(itemType).isEmpty();
+        return inventory.containsKey(itemType);
     }
 
     public void removeItem(String itemType){
-        if(items.containsKey(itemType)){
-            items.get(itemType).remove(items.get(itemType).size() - 1);
+        if(inventory.containsKey(itemType)){
+            inventory.remove(itemType);
         }
+    }
+
+    public void addItem(String itemType, MapObject item){
+        inventory.put(itemType, item);
     }
         
     @Override
