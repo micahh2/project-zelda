@@ -54,10 +54,11 @@ public class RPGWorld extends World {
         MapObject sword = map.getFirstObject("Swords");
         swordSwing = map.getFirstObject("Swing").imageRef;
         avatar = new Avatar(playerMO.x, playerMO.y, playerMO.imageRef, sword.imageRef);
+        // avatar = new Avatar(100, 50, new ImageRef("Rocks2", 0, 0, 32, 32));
         gameObjects.add(avatar);
 
         MapObject bossMo = map.getFirstObject("Boss");
-        Boss boss = new Boss(bossMo.x, bossMo.y, bossMo.imageRef, (Avatar)avatar);
+        Boss boss = new Boss(bossMo.x, bossMo.y, bossMo.imageRef, (Avatar) avatar);
         gameObjects.add(boss);
 
         MapObject chestMo = map.getFirstObject("Chests");
@@ -119,28 +120,28 @@ public class RPGWorld extends World {
 
         // create houses and trees
         List<MapObject> houses = map.getAllObjects("Housebases");
-        for(MapObject house : houses) {
+        for (MapObject house : houses) {
             int width = house.startingBounds.x2 - house.startingBounds.x1;
             int height = house.startingBounds.y2 - house.startingBounds.y1;
             gameObjects.add(new House(house.startingBounds.x1, house.startingBounds.y1, width, height));
         }
 
         List<MapObject> walls = map.getAllObjects("Walls");
-        for(MapObject wall : walls) {
+        for (MapObject wall : walls) {
             int width = wall.startingBounds.x2 - wall.startingBounds.x1;
             int height = wall.startingBounds.y2 - wall.startingBounds.y1;
             gameObjects.add(new Wall(wall.startingBounds.x1, wall.startingBounds.y1, width, height));
         }
 
         List<MapObject> waters = map.getAllObjects("Water");
-        for(MapObject water : waters) {
+        for (MapObject water : waters) {
             int width = water.startingBounds.x2 - water.startingBounds.x1;
             int height = water.startingBounds.y2 - water.startingBounds.y1;
             gameObjects.add(new Water(water.startingBounds.x1, water.startingBounds.y1, width, height));
         }
 
         List<MapObject> lavas = map.getAllObjects("Lava");
-        for(MapObject lava : lavas) {
+        for (MapObject lava : lavas) {
             int width = lava.startingBounds.x2 - lava.startingBounds.x1;
             int height = lava.startingBounds.y2 - lava.startingBounds.y1;
             gameObjects.add(new Lava(lava.startingBounds.x1, lava.startingBounds.y1, width, height));
@@ -148,15 +149,15 @@ public class RPGWorld extends World {
 
 
         List<MapObject> trees = map.getAllObjects("Treebases");
-        for(MapObject tree : trees){
-            int radius = Math.round((tree.startingBounds.x2 - tree.startingBounds.x1)/2);
+        for (MapObject tree : trees) {
+            int radius = Math.round((tree.startingBounds.x2 - tree.startingBounds.x1) / 2);
             gameObjects.add(new Tree(tree.startingBounds.x1, tree.startingBounds.y1, radius));
         }
 
         // create some monsters!
         List<MapObject> monsters = map.getAllObjects("Monsters");
-        for(MapObject monster : monsters){
-            gameObjects.add(new Monster(monster.startingBounds.x1, monster.startingBounds.y1, monster.imageRef, (Avatar)avatar));
+        for (MapObject monster : monsters) {
+            gameObjects.add(new Monster(monster.startingBounds.x1, monster.startingBounds.y1, monster.imageRef, (Avatar) avatar));
         }
 
         // got have rock
@@ -179,15 +180,15 @@ public class RPGWorld extends World {
         int buttonHeight = (int) (0.1 * worldInfo.getPartHeight());
 
         // add the pause menu buttons
-        int relX = (int)(0.4 * worldInfo.getPartWidth());
-        int relY = (int)(0.3 * worldInfo.getPartHeight());
+        int relX = (int) (0.4 * worldInfo.getPartWidth());
+        int relY = (int) (0.3 * worldInfo.getPartHeight());
 
         pauseMenuObjects.add(new UIButton(relX, relY, buttonWidth, buttonHeight, "Resume"));
-        relY = (int)(0.6 * worldInfo.getPartHeight());
+        relY = (int) (0.6 * worldInfo.getPartHeight());
         pauseMenuObjects.add(new UIButton(relX, relY, buttonWidth, buttonHeight, "Quit"));
 
         // add the main menu buttons
-        relY = (int)(0.45 * worldInfo.getPartHeight());
+        relY = (int) (0.45 * worldInfo.getPartHeight());
         mainMenuObjects.add(new UIButton(relX, relY, buttonWidth, buttonHeight, "Play"));
 
         // add the death menu buttons
@@ -199,12 +200,12 @@ public class RPGWorld extends World {
         // add the hud elements
         hudObjects.add(((Avatar) avatar).healthBar);
 
-        int itemSlotX = (int)(0.95 * worldInfo.getPartWidth());
+        int itemSlotX = (int)(0.9 * worldInfo.getPartWidth());
         int itemSlotY = (int)(0.045 * worldInfo.getPartHeight());
         int itemSlotRadius = (int)(0.02 * worldInfo.getPartWidth());
-        hudObjects.add(new ItemSlot(itemSlotX,itemSlotY, itemSlotRadius));
-        itemSlotX = (int)(0.9 * worldInfo.getPartWidth());
-        hudObjects.add(new ItemSlot(itemSlotX,itemSlotY, itemSlotRadius));
+        hudObjects.add(new ItemSlot(itemSlotX,itemSlotY, itemSlotRadius, (Avatar) avatar, "SWORD", sword.imageRef));
+        itemSlotX = (int)(0.95 * worldInfo.getPartWidth());
+        hudObjects.add(new ItemSlot(itemSlotX,itemSlotY, itemSlotRadius, (Avatar) avatar, "BOW", sword.imageRef));
 
     }
 

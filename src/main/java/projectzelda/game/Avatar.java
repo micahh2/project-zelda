@@ -5,8 +5,14 @@ package projectzelda.game;
 
 import projectzelda.*;
 import projectzelda.engine.*;
+import projectzelda.map.MapObject;
+
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 public class Avatar extends CircularGameObject
 {
@@ -14,6 +20,7 @@ public class Avatar extends CircularGameObject
     private double weaponTemp = 0;
 
     private boolean flippedX = false;
+    private HashMap<String, GameObject> inventory;
     private ImageRef sword;
     boolean hasSword = false;
 
@@ -36,6 +43,8 @@ public class Avatar extends CircularGameObject
         super(x,y,0,200,15, new Color(96,96,255));
 
         this.isMoving = false;
+
+        inventory = new HashMap<>();
 
         //imageRef = new ImageRef("Rocks2", 0, 0, 32, 32);
 
@@ -87,6 +96,7 @@ public class Avatar extends CircularGameObject
                     ((RPGWorld)world).addChatBox(chatBoxText, chest);
                     obj.isLiving = false;
                     hasSword = true;
+                    addItem("SWORD", obj);
                     break;
 
                 case PUMPKIN:
@@ -146,6 +156,20 @@ public class Avatar extends CircularGameObject
         }
     }
 
+    public boolean containsItem(String itemType){
+        return inventory.containsKey(itemType);
+    }
+
+    public void removeItem(String itemType){
+        if(inventory.containsKey(itemType)){
+            inventory.remove(itemType);
+        }
+    }
+
+    public void addItem(String itemType, GameObject item){
+        inventory.put(itemType, item);
+    }
+        
     @Override
     public void draw(GraphicSystem gs, long tick) {
         int swordx = (int)Math.round(flippedX ? x : (x-radius)); //-radius*1.5;
