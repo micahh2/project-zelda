@@ -38,9 +38,9 @@ public class SwordSwing extends CircularGameObject {
         GameObjectList collisions = world.getPhysicsSystem().getCollisions(this);
         for (int i = 0; i < collisions.size(); i++) {
             GameObject obj = collisions.get(i);
-            int type = obj.type();
+            Const.Type type = Const.Type.values()[obj.type()];
             switch (type) {
-                case Const.TYPE_GOBLIN:
+                case GOBLIN:
                     ((EnemyAI)obj).hit();
                     hasHit = true;
             }
@@ -58,5 +58,5 @@ public class SwordSwing extends CircularGameObject {
         gs.drawImage(imageRef, (int)imgX+imageRef.x2, (int)imgY, (int)imgX, (int)imgY+imageRef.y2);
     }
 
-    public int type() { return Const.TYPE_SWORD_SWING; }
+    public int type() { return Const.Type.SWORD_SWING.ordinal(); }
 }

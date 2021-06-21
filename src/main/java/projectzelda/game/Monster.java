@@ -1,6 +1,5 @@
 package projectzelda.game;
 
-import projectzelda.Const;
 import projectzelda.engine.*;
 
 public class Monster extends EnemyAI
@@ -58,10 +57,10 @@ public class Monster extends EnemyAI
         for (int i = 0; i < collisions.size(); i++) {
             GameObject obj = collisions.get(i);
 
-            int type = obj.type();
+            Const.Type type = Const.Type.values()[obj.type()];
 
             switch (type) {
-                case Const.TYPE_AVATAR:
+                case AVATAR:
                     isMoving = false;
                     state = State.STUCK;
                     moveBack();
@@ -70,9 +69,8 @@ public class Monster extends EnemyAI
                         hitCooldown = hitCooldownSeconds;
                     }
                     break;
-                case Const.TYPE_TREE:
-                case Const.TYPE_GOBLIN:
-                case Const.TYPE_ZOMBIE:
+                case TREE:
+                case GOBLIN:
                     isMoving = false;
                     state = State.STUCK;
                     moveBack();

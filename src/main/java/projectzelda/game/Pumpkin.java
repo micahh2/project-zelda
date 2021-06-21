@@ -18,6 +18,6 @@ public class Pumpkin extends RectangularGameObject {
         return pumpkinTexts;
     }
 
-    public int type() { return Const.TYPE_PUMPKIN; }
+    public int type() { return Const.Type.PUMPKIN.ordinal(); }
 
 }

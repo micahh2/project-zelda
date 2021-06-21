@@ -76,7 +76,7 @@ public abstract class EnemyAI extends CircularGameObject {
 
 
     public int type() {
-        return Const.TYPE_GOBLIN;
+        return Const.Type.GOBLIN.ordinal();
     }
 
     protected void adjustHealthBarPosition() {

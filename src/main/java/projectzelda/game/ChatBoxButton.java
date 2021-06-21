@@ -1,6 +1,5 @@
 package projectzelda.game;
 
-import projectzelda.Const;
 import projectzelda.engine.GameObject;
 import projectzelda.engine.UIObject;
 import projectzelda.engine.GraphicSystem;
@@ -15,7 +14,7 @@ public class ChatBoxButton extends UIObject {
     public Font helpFont;
     public Color textColor;
     public GameObject obj;
-    public int objID;
+    public Const.Type objID;
 
     public ChatBoxButton(int x_, int y_, int width_, int height_, String text_, GameObject obj_) {
         super(x_, y_);
@@ -34,7 +33,7 @@ public class ChatBoxButton extends UIObject {
     }
 
     // perhaps superfluous
-    public ChatBoxButton(int x_, int y_, int width_, int height_, String text_, int objID_) {
+    public ChatBoxButton(int x_, int y_, int width_, int height_, String text_, Const.Type objID_) {
         super(x_, y_);
         width = width_;
         height = height_;
