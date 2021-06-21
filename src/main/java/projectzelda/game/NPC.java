@@ -99,5 +99,8 @@ public class NPC extends RectangularGameObject {
         return npcTexts;
     }
 
+    public void hit() { die(); }
+    public void die() { isLiving = false; }
+
     public int type() { return Const.Type.NPC.ordinal(); }
 }

@@ -44,9 +44,11 @@ class Shot extends CircularGameObject
                     break;
                 case NPC:
                     this.isLiving = false;
-                    obj.isLiving = false;
+                    NPC guy = (NPC)obj;
+                    guy.hit();
                     break;
                 case GOBLIN:
+                    this.isLiving = false;
                     EnemyAI bad = (EnemyAI)obj;
                     bad.hit();
                     break;
