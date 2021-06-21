@@ -21,5 +21,5 @@ public abstract class UIObject {
         world = w;
     }
 
-    public abstract void draw(GraphicSystem gs);
+    public abstract void draw(GraphicSystem gs, long tick);
 }

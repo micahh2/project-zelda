@@ -96,6 +96,6 @@ public abstract class GameObject
     public abstract boolean hasCollision(GameObject b);
     public abstract boolean hasCollision(RectangularGameObject b);
     public abstract boolean hasCollision(CircularGameObject b);
-    public abstract void draw(GraphicSystem gs);
+    public abstract void draw(GraphicSystem gs, long tick);
 
 }

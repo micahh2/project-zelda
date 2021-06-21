@@ -1,7 +1,3 @@
-
-// (c) Thorsten Hasbargen
-
-
 package projectzelda.game;
 
 import projectzelda.*;
@@ -28,5 +24,5 @@ class Grenade extends CircularGameObject
 
     }
 
-    public int type() { return Const.TYPE_GRENADE; }
+    public int type() { return Const.Type.GRENADE.ordinal(); }
 }

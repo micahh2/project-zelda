@@ -13,9 +13,8 @@ public class Lava extends RectangularGameObject {
 
     // Invisible
     @Override
-    public void draw(GraphicSystem gs) { return; }
+    public void draw(GraphicSystem gs, long tick) { return; }
 
-    public int type() { return Const.TYPE_LAVA; }
-
+    public int type() { return Const.Type.LAVA.ordinal(); }
 
 }

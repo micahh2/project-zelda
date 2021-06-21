@@ -12,7 +12,7 @@ public abstract class CircularGameObject extends GameObject {
     }
 
     @Override
-    public void draw(GraphicSystem gs) {
+    public void draw(GraphicSystem gs, long tick) {
         gs.draw(this);
     }
 

@@ -24,7 +24,7 @@ public class HealthBar extends UIObject {
     }
 
     @Override
-    public void draw(GraphicSystem gs) {
+    public void draw(GraphicSystem gs, long tick) {
         int healthWidth = (int) (health * width);
         if (isHudElement) {
             gs.fillRectScreen(x, y, width, height, color);

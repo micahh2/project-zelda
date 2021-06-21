@@ -1,6 +1,5 @@
 package projectzelda.game;
 
-import projectzelda.Const;
 import projectzelda.engine.*;
 
 public class Monster extends EnemyAI
@@ -29,12 +28,13 @@ public class Monster extends EnemyAI
     }
 
     @Override
-    public void draw(GraphicSystem gs) {
+    public void draw(GraphicSystem gs, long tick) {
         gs.draw(this);
-        healthBar.draw(gs);
+        healthBar.draw(gs, tick);
     }
 
     public void move(double diffSeconds) {
+        if (hitCooldown >= 0) { hitCooldown -= diffSeconds; }
         if (colorCooldown >= 0) {
             colorCooldown -= diffSeconds;
         } else {
@@ -57,14 +57,20 @@ public class Monster extends EnemyAI
         for (int i = 0; i < collisions.size(); i++) {
             GameObject obj = collisions.get(i);
 
-            int type = obj.type();
+            Const.Type type = Const.Type.values()[obj.type()];
 
-            // if object is avatar, we're being attacked
             switch (type) {
-                case Const.TYPE_AVATAR:
-                case Const.TYPE_TREE:
-                case Const.TYPE_GOBLIN:
-                case Const.TYPE_ZOMBIE:
+                case AVATAR:
+                    isMoving = false;
+                    state = State.STUCK;
+                    moveBack();
+                    if (hitCooldown < 0) {
+                        ((Avatar)obj).hit();
+                        hitCooldown = hitCooldownSeconds;
+                    }
+                    break;
+                case TREE:
+                case GOBLIN:
                     isMoving = false;
                     state = State.STUCK;
                     moveBack();

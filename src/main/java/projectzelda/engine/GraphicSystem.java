@@ -34,6 +34,8 @@ public interface GraphicSystem
 
     void drawImage(ImageRef imageRef, int x1Abs, int y1Abs, int x2Abs, int y2Abs);
 
+    void drawHudImage(ImageRef imageRef, int x1Abs, int y1Abs, int x2Abs, int y2Abs);
+
     void drawOval(int xAbs, int yAbs, int r1, int r2, Color color);
 
     void fillOval(int xAbs, int yAbs, int r1, int r2, Color color);
@@ -48,6 +50,9 @@ public interface GraphicSystem
     void fillOvalScreen(int x, int y, int r1, int r2, Color color);
 
     void drawCenteredTextScreen(int x, int y, int width, int height, Color color, Font font, String text);
+
+    void drawCenteredTextScreenWithSub(int x, int y, int width, int height, Color color, Font font,Font helpFont, String text, String helpText);
+
 
     void drawImageScreen(ImageRef imageRef, int x1, int y1, int x2, int y2);
 }

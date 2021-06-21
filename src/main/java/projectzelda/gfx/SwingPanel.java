@@ -11,8 +11,6 @@ import java.awt.*;
 import java.awt.image.*;
 import java.io.IOException;
 import java.net.URI;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import java.util.Map;
 import java.util.HashMap;
@@ -49,7 +47,7 @@ class SwingPanel extends JPanel implements GraphicSystem {
     private long lastTick = 0;
     private List<ImageRefTo> animationTiles;
 
-    public SwingPanel(MediaInfo mediaInfo, WorldInfo worldInfo) throws UnsupportedAudioFileException, LineUnavailableException, IOException {
+    public SwingPanel(MediaInfo mediaInfo, WorldInfo worldInfo) {
         this.worldInfo = worldInfo;
         this.mediaInfo = mediaInfo;
         animationTiles = mediaInfo.getAnimationTiles(0);
@@ -151,40 +149,48 @@ class SwingPanel extends JPanel implements GraphicSystem {
 
     // For drawing with absolute world coordinates
     public void drawRect(int xAbs, int yAbs, int width, int height, Color color) {
-        int x = (int)(xAbs - world.worldPartX);
-        int y = (int)(yAbs - world.worldPartY);
+        int x = (int) (xAbs - world.worldPartX);
+        int y = (int) (yAbs - world.worldPartY);
         drawRectScreen(x, y, width, height, color);
     }
 
     public void fillRect(int xAbs, int yAbs, int width, int height, Color color) {
-        int x = (int)(xAbs - world.worldPartX);
-        int y = (int)(yAbs - world.worldPartY);
+        int x = (int) (xAbs - world.worldPartX);
+        int y = (int) (yAbs - world.worldPartY);
         fillRectScreen(x, y, width, height, color);
     }
 
     public void drawOval(int xAbs, int yAbs, int r1, int r2, Color color) {
-        int x = (int)(xAbs - world.worldPartX);
-        int y = (int)(yAbs - world.worldPartY);
+        int x = (int) (xAbs - world.worldPartX);
+        int y = (int) (yAbs - world.worldPartY);
         drawOvalScreen(x, y, r1, r2, color);
     }
 
     public void fillOval(int xAbs, int yAbs, int r1, int r2, Color color) {
-        int x = (int)(xAbs - world.worldPartX);
-        int y = (int)(yAbs - world.worldPartY);
+        int x = (int) (xAbs - world.worldPartX);
+        int y = (int) (yAbs - world.worldPartY);
         fillOvalScreen(x, y, r1, r2, color);
     }
 
     public void drawCenteredText(int xAbs, int yAbs, int width, int height, Color color, Font font, String text) {
-        int x = (int)(xAbs - world.worldPartX);
-        int y = (int)(yAbs - world.worldPartY);
+        int x = (int) (xAbs - world.worldPartX);
+        int y = (int) (yAbs - world.worldPartY);
         drawCenteredTextScreen(x, y, width, height, color, font, text);
     }
 
     public void drawImage(ImageRef imageRef, int x1Abs, int y1Abs, int x2Abs, int y2Abs) {
-        int x1 = (int)(x1Abs - world.worldPartX);
-        int y1 = (int)(y1Abs - world.worldPartY);
-        int x2 = (int)(x2Abs - world.worldPartX);
-        int y2 = (int)(y2Abs - world.worldPartY);
+        int x1 = (int) (x1Abs - world.worldPartX);
+        int y1 = (int) (y1Abs - world.worldPartY);
+        int x2 = (int) (x2Abs - world.worldPartX);
+        int y2 = (int) (y2Abs - world.worldPartY);
+        drawImageScreen(imageRef, x1, y1, x2, y2);
+    }
+
+    public void drawHudImage(ImageRef imageRef, int x1Abs, int y1Abs, int x2Abs, int y2Abs) {
+        int x1 = x1Abs;
+        int y1 = y1Abs;
+        int x2 = x2Abs;
+        int y2 = y2Abs;
         drawImageScreen(imageRef, x1, y1, x2, y2);
     }
 
@@ -216,6 +222,21 @@ class SwingPanel extends JPanel implements GraphicSystem {
         y = y + ((height - metrics.getHeight()) / 2) + metrics.getAscent();
         graphics.setFont(font);
         graphics.drawString(text, x, y);
+    }
+     public void drawCenteredTextScreenWithSub(int x, int y, int width, int height, Color color, Font font,Font helpFont, String text, String helpText){
+        graphics.setColor(color);
+        FontMetrics metrics = graphics.getFontMetrics(font);
+        int xMain = x + (width - metrics.stringWidth(text)) / 2;
+        int yMain = y + ((height - metrics.getHeight()) / 2) + metrics.getAscent();
+        graphics.setFont(font);
+        graphics.drawString(text, xMain, yMain);
+
+        metrics = graphics.getFontMetrics(helpFont);
+        int helpX = x + (width - metrics.stringWidth(helpText)) / 2;
+        int helpY = y + ((height - metrics.getHeight()) / 2) + metrics.getAscent() + 25;
+        graphics.setFont(helpFont);
+        graphics.drawString(helpText, helpX, helpY);
+
     }
 
     public final void drawImageScreen(ImageRef imageRef, int x1, int y1, int x2, int y2) {

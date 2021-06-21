@@ -15,6 +15,9 @@ public abstract class EnemyAI extends CircularGameObject {
     protected double colorCooldown = 0;
     protected WorldInfo worldInfo;
 
+    protected double hitCooldownSeconds = 0.5;
+    protected double hitCooldown = 0;
+
     protected enum State {
         STUCK,
         FREE
@@ -73,7 +76,7 @@ public abstract class EnemyAI extends CircularGameObject {
 
 
     public int type() {
-        return Const.TYPE_GOBLIN;
+        return Const.Type.GOBLIN.ordinal();
     }
 
     protected void adjustHealthBarPosition() {

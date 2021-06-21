@@ -1,6 +1,5 @@
 package projectzelda.game;
 
-import projectzelda.Const;
 import projectzelda.engine.GraphicSystem;
 import projectzelda.engine.RectangularGameObject;
 
@@ -16,8 +15,8 @@ public class Rock extends RectangularGameObject
 
     // Invisible
     @Override
-    public void draw(GraphicSystem gs) { return; }
+    public void draw(GraphicSystem gs, long tick) { return; }
 
-    public int type() { return Const.TYPE_TREE; }
+    public int type() { return Const.Type.TREE.ordinal(); }
 
 }
