@@ -2,6 +2,7 @@ package projectzelda.game;
 
 import projectzelda.engine.GraphicSystem;
 import projectzelda.engine.RectangularGameObject;
+import projectzelda.engine.ImageRef;
 
 import java.awt.*;
 
@@ -16,22 +17,25 @@ public class Rock extends RectangularGameObject
     protected static final double COLOR_COOLDOWN = 0.2;
     protected double colorCooldown = 0;
 
-    public Rock(double x, double y)
+    public Rock(double x, double y, ImageRef imageref)
         {
             super(x, y, 0, 0, 128, 46, null);
             this.isMoving = false;
+            this.imageRef = imageref;
             healthBar = new HealthBar(0, 0, 80, 5);
             adjustHealthBarPosition();
         }
 
     // Invisible
     @Override
-    public void draw(GraphicSystem gs, long tick) {
 
-        healthBar.draw(gs, tick);
-        return;
 
-    }
+    //public void draw(GraphicSystem gs, long tick) {
+
+       // healthBar.draw(gs, tick);
+       // return;
+
+   // }
 
     public int type() { return Const.Type.ROCK.ordinal(); }
 
