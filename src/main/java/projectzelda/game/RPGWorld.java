@@ -359,7 +359,6 @@ public class RPGWorld extends World {
         int horz = 0;
         if (userInput.keysPressed.contains('w')) {
             vert -= 10;
-
         }
         if (userInput.keysPressed.contains('a')) {
             horz -= 10;
@@ -384,7 +383,7 @@ public class RPGWorld extends World {
         for (int i = 0; i < 2000; i++) {
             double alfa = Math.random() * Math.PI * 2;
             double speed = 50 + Math.random() * 200;
-            double time = 0.2 + Math.random() * 0.4;
+            double time = 0.2 + Math.random() * 7.4;
             Shot shot = new Shot(x, y, alfa, speed, time);
             this.gameObjects.add(shot);
         }

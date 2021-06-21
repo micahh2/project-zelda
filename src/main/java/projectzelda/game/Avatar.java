@@ -15,6 +15,7 @@ public class Avatar extends CircularGameObject
 
     private boolean flippedX = false;
     private ImageRef sword;
+    boolean hasSword = false;
 
     private SwordSwing swordSwing;
 
@@ -85,6 +86,7 @@ public class Avatar extends CircularGameObject
                     chatBoxText= chest.chestTexts[0];
                     ((RPGWorld)world).addChatBox(chatBoxText, chest);
                     obj.isLiving = false;
+                    hasSword = true;
                     break;
 
                 case PUMPKIN:
@@ -151,14 +153,14 @@ public class Avatar extends CircularGameObject
         int width = (int)Math.round((sword.x2 - sword.x1)*0.8);
         int height = (int)Math.round((sword.y2 - sword.y1)*0.8);
 
-        if (swordSwing == null || !swordSwing.isLiving) {
+        if (hasSword && (swordSwing == null || !swordSwing.isLiving)) {
             gs.drawImage(sword, swordx, swordy, swordx+width, swordy+height);
         }
         gs.draw(this);
     }
 
     public void swingSword(ImageRef imageRef) {
-        if (weaponTemp > 0) { return; }
+        if (weaponTemp > 0 || !hasSword) { return; }
 
         Sound sword = new Sound("/music/sword-sound-1_16bit.wav");
         sword.setVolume(-30.0f);
