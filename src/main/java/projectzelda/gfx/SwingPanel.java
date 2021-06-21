@@ -1,6 +1,3 @@
-
-// (c) Thorsten Hasbargen
-
 package projectzelda.gfx;
 
 import projectzelda.engine.*;
@@ -87,6 +84,7 @@ class SwingPanel extends JPanel implements GraphicSystem {
         }
         background = ImageDrawer.createImage(mediaInfo.getBackgroundTiles(), worldInfo.getWidth(), worldInfo.getHeight(), images, this);
         foreground = ImageDrawer.createImage(mediaInfo.getForegroundTiles(), worldInfo.getWidth(), worldInfo.getHeight(), images, this);
+        // ImageDrawer.clearImageAreas(foreground, mediaInfo.getBackgroundAreas(), this);
     }
 
     public void clear(long tick) {

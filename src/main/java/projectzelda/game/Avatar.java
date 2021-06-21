@@ -34,6 +34,8 @@ public class Avatar extends CircularGameObject
     private int posYChatBox = world.worldInfo.getPartHeight()-100;
 
     private boolean talkedToNPC = false;
+    double timeToDie = 2.0;
+    boolean dying = false;
 
     public double life = 1.0;
     public HealthBar healthBar;
@@ -61,6 +63,16 @@ public class Avatar extends CircularGameObject
     @Override
     public void move(double diffSeconds)
     {
+        if (dying) {
+            if (timeToDie < 0) {
+                isLiving = false;
+                world.gameState = GameState.DEATH;
+                return;
+            }
+            timeToDie -= diffSeconds;
+            return;
+        }
+
         if (weaponTemp > 0) {
             weaponTemp -= diffSeconds;
         }
@@ -209,8 +221,7 @@ public class Avatar extends CircularGameObject
     }
 
     public void die() {
-        this.isLiving = false;
-        world.gameState = GameState.DEATH;
-        //((RPGWorld)world).throwGrenade(x, y);
+        dying = true;
+        ((RPGWorld)world).throwGrenade(x, y);
     }
 }
