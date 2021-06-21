@@ -92,7 +92,12 @@ public class Avatar extends CircularGameObject
             switch (type) {
                 // if Object is a tree, move back one step
                 case TREE:
+
                 case WATER:
+                    this.moveBack();
+                    break;
+
+                case WALL:
                     this.moveBack();
                     break;
 
@@ -149,6 +154,11 @@ public class Avatar extends CircularGameObject
                     world.chatBoxObjects.add(chatBox);
                     obj.isLiving = false;
                     break;
+                case ROCK:
+                    obj.isLiving = false;
+                    break;
+
+
 
             }
         }

@@ -20,6 +20,7 @@ public final class Const
         SWORD_SWING,
         WATER,
         LAVA,
-        WALL
+        WALL,
+        ROCK
     }
 }
