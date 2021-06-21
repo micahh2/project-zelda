@@ -1,6 +1,3 @@
-
-// (c) Thorsten Hasbargen
-
 package projectzelda.gfx;
 
 import projectzelda.engine.*;
@@ -11,8 +8,6 @@ import java.awt.*;
 import java.awt.image.*;
 import java.io.IOException;
 import java.net.URI;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import java.util.Map;
 import java.util.HashMap;
@@ -49,7 +44,7 @@ class SwingPanel extends JPanel implements GraphicSystem {
     private long lastTick = 0;
     private List<ImageRefTo> animationTiles;
 
-    public SwingPanel(MediaInfo mediaInfo, WorldInfo worldInfo) throws UnsupportedAudioFileException, LineUnavailableException, IOException {
+    public SwingPanel(MediaInfo mediaInfo, WorldInfo worldInfo) {
         this.worldInfo = worldInfo;
         this.mediaInfo = mediaInfo;
         animationTiles = mediaInfo.getAnimationTiles(0);
@@ -89,6 +84,7 @@ class SwingPanel extends JPanel implements GraphicSystem {
         }
         background = ImageDrawer.createImage(mediaInfo.getBackgroundTiles(), worldInfo.getWidth(), worldInfo.getHeight(), images, this);
         foreground = ImageDrawer.createImage(mediaInfo.getForegroundTiles(), worldInfo.getWidth(), worldInfo.getHeight(), images, this);
+        // ImageDrawer.clearImageAreas(foreground, mediaInfo.getBackgroundAreas(), this);
     }
 
     public void clear(long tick) {
@@ -151,40 +147,40 @@ class SwingPanel extends JPanel implements GraphicSystem {
 
     // For drawing with absolute world coordinates
     public void drawRect(int xAbs, int yAbs, int width, int height, Color color) {
-        int x = (int)(xAbs - world.worldPartX);
-        int y = (int)(yAbs - world.worldPartY);
+        int x = (int) (xAbs - world.worldPartX);
+        int y = (int) (yAbs - world.worldPartY);
         drawRectScreen(x, y, width, height, color);
     }
 
     public void fillRect(int xAbs, int yAbs, int width, int height, Color color) {
-        int x = (int)(xAbs - world.worldPartX);
-        int y = (int)(yAbs - world.worldPartY);
+        int x = (int) (xAbs - world.worldPartX);
+        int y = (int) (yAbs - world.worldPartY);
         fillRectScreen(x, y, width, height, color);
     }
 
     public void drawOval(int xAbs, int yAbs, int r1, int r2, Color color) {
-        int x = (int)(xAbs - world.worldPartX);
-        int y = (int)(yAbs - world.worldPartY);
+        int x = (int) (xAbs - world.worldPartX);
+        int y = (int) (yAbs - world.worldPartY);
         drawOvalScreen(x, y, r1, r2, color);
     }
 
     public void fillOval(int xAbs, int yAbs, int r1, int r2, Color color) {
-        int x = (int)(xAbs - world.worldPartX);
-        int y = (int)(yAbs - world.worldPartY);
+        int x = (int) (xAbs - world.worldPartX);
+        int y = (int) (yAbs - world.worldPartY);
         fillOvalScreen(x, y, r1, r2, color);
     }
 
     public void drawCenteredText(int xAbs, int yAbs, int width, int height, Color color, Font font, String text) {
-        int x = (int)(xAbs - world.worldPartX);
-        int y = (int)(yAbs - world.worldPartY);
+        int x = (int) (xAbs - world.worldPartX);
+        int y = (int) (yAbs - world.worldPartY);
         drawCenteredTextScreen(x, y, width, height, color, font, text);
     }
 
     public void drawImage(ImageRef imageRef, int x1Abs, int y1Abs, int x2Abs, int y2Abs) {
-        int x1 = (int)(x1Abs - world.worldPartX);
-        int y1 = (int)(y1Abs - world.worldPartY);
-        int x2 = (int)(x2Abs - world.worldPartX);
-        int y2 = (int)(y2Abs - world.worldPartY);
+        int x1 = (int) (x1Abs - world.worldPartX);
+        int y1 = (int) (y1Abs - world.worldPartY);
+        int x2 = (int) (x2Abs - world.worldPartX);
+        int y2 = (int) (y2Abs - world.worldPartY);
         drawImageScreen(imageRef, x1, y1, x2, y2);
     }
 

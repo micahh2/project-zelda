@@ -1,10 +1,8 @@
 package projectzelda.game;
 
-import projectzelda.Const;
 import projectzelda.engine.ImageRef;
-import projectzelda.engine.RectangularGameObject;
 
-public class DogNpc extends RectangularGameObject {
+public class DogNpc extends NPC {
 
     String[] dogNpcText = {"Hey dog, what`s up?" , "Au Au.", "I wonder what you're doing out here alone..", "Woof."};
     String[] dogNpcQuestText = {"You must be Bob's dog", "*Excited Woof*", "Absolutely sounds like it","Come on boy let's go home"};

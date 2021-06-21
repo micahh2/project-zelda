@@ -1,12 +1,8 @@
 package projectzelda.game;
 
-import projectzelda.Const;
 import projectzelda.engine.ImageRef;
-import projectzelda.engine.RectangularGameObject;
 
-public class SteveNpc extends RectangularGameObject {
-
-
+public class SteveNpc extends NPC {
 
     private String[] steveNpcQuestText;
 

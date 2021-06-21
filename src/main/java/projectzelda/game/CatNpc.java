@@ -1,10 +1,8 @@
 package projectzelda.game;
 
-import projectzelda.Const;
 import projectzelda.engine.ImageRef;
-import projectzelda.engine.RectangularGameObject;
 
-public class CatNpc extends RectangularGameObject {
+public class CatNpc extends NPC {
 
     private String[] catNpcText = {"Hey cat, what`s up?" , "Miau!", "He's so cute..","I want to take him home with me.","But I shouldn't.",
     "I'm sure it's owner loves him."};
@@ -25,4 +23,9 @@ public class CatNpc extends RectangularGameObject {
     public String[] getCatNpcQuestText() { return catNpcQuestText; }
     public int type() { return Const.TYPE_CAT; }
 
+    static String[] catNpcTexts = {"Hey cat, what`s up?" , "Miau!"};
+
+    public CatNpc(double x, double y, int width, int height, ImageRef imageRef) {
+        super(x, y, width, height, imageRef, catNpcTexts);
+    }
 }

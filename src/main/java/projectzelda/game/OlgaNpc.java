@@ -1,10 +1,8 @@
 package projectzelda.game;
 
-import projectzelda.Const;
 import projectzelda.engine.ImageRef;
-import projectzelda.engine.RectangularGameObject;
 
-public class OlgaNpc extends RectangularGameObject {
+public class OlgaNpc extends NPC {
 
     private String[] olgaNpcQuestText;
 
@@ -86,9 +84,7 @@ public class OlgaNpc extends RectangularGameObject {
     private boolean olgaNpcMonsterQuestStart = false;
     private boolean olgaNpcMonsterQuestCompleted = false;
 
-
-
-    public OlgaNpc(double x, double y, int width, int height, ImageRef imageref)
+    public OlgaNpc(double x, double y, int width, int height, ImageRef imageRef)
     {
         super(x, y, 0,0, width, height, null);
         this.imageRef = imageref;
@@ -140,5 +136,3 @@ public class OlgaNpc extends RectangularGameObject {
     public int type() { return Const.TYPE_OLGA; }
 
 }
-
-

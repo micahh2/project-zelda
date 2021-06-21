@@ -26,6 +26,7 @@ public class Pumpkin extends RectangularGameObject {
     public void setPumpkinText(String[] pumpkinText) { this.pumpkinText = pumpkinText; }
     public String[] getPumpkinQuestText() { return pumpkinQuestText;
     }
+
     public int type() { return Const.TYPE_PUMPKIN; }
 
 }

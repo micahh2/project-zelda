@@ -5,16 +5,25 @@ package projectzelda.game;
 
 import projectzelda.*;
 import projectzelda.engine.*;
+import projectzelda.map.MapObject;
+
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 public class Avatar extends CircularGameObject {
     private final double COOLDOWN = 0.5;
     private double weaponTemp = 0;
 
     private boolean flippedX = false;
+    private HashMap<String, GameObject> inventory;
     private ImageRef sword;
+    boolean hasSword = false;
 
+    private SwordSwing swordSwing;
 
     private ChatBoxButton chatBox;
     private String chatBoxText;
@@ -24,7 +33,6 @@ public class Avatar extends CircularGameObject {
     private int posYChatBox = world.worldInfo.getPartHeight() - 100;
 
     private boolean talkedToNPC = false;
-
 
     private SteveNpc steveNpc;
     private Pumpkin pumpkin;
@@ -36,15 +44,20 @@ public class Avatar extends CircularGameObject {
     private DogNpc dogNpc;
 
     private Counter counterBones;
+    double timeToDie = 2.0;
+    boolean dying = false;
 
     public double life = 1.0;
     public HealthBar healthBar;
 
 
-    public Avatar(double x, double y, ImageRef imageRef, ImageRef sword) {
-        super(x, y, 0, 200, 15, new Color(96, 96, 255));
+    public Avatar(double x, double y, ImageRef imageRef, ImageRef sword) 
+    { 
+        super(x,y,0,200,15, new Color(96,96,255));
 
         this.isMoving = false;
+
+        inventory = new HashMap<>();
 
         //imageRef = new ImageRef("Rocks2", 0, 0, 32, 32);
 
@@ -58,13 +71,26 @@ public class Avatar extends CircularGameObject {
         this.sword = sword;
     }
 
-    public void move(double diffSeconds) {
+    @Override
+    public void move(double diffSeconds)
+    {
+        if (dying) {
+            if (timeToDie < 0) {
+                isLiving = false;
+                world.gameState = GameState.DEATH;
+                return;
+            }
+            timeToDie -= diffSeconds;
+            return;
+        }
+
         if (weaponTemp > 0) {
             weaponTemp -= diffSeconds;
         }
 
         // Save starting x-pos for calculating orientation
-        int startx = (int) x;
+        int startx = (int)x;
+        int starty = (int)y;
 
         // move Avatar one step forward
         super.move(diffSeconds);
@@ -148,10 +174,6 @@ public class Avatar extends CircularGameObject {
                         olgaNpc.setOlgaNpcMonsterQuestCompleted(true);
                     }
                     chatBox = new ChatBoxButton(posXChatBox, posYChatBox, 600, 100, "Bones picked up", Const.TYPE_BONES);
-                    world.chatBoxObjects.add(chatBox);
-                    obj.isLiving = false;
-                    break;
-
                 // pick up Grenades
                 case Const.TYPE_GRENADE:
                     ((RPGWorld) world).addGrenade();
@@ -164,7 +186,9 @@ public class Avatar extends CircularGameObject {
         }
 
         // Hacky, but we can flip the orientation of the avatar by switching the image coordinates to draw from
-        int endx = (int) x;
+        int endx = (int)x;
+        int endy = (int)y;
+      
         if ((startx < endx && !flippedX) || (startx > endx && flippedX)) {
             int tempx = imageRef.x1;
             imageRef.x1 = imageRef.x2;
@@ -172,19 +196,25 @@ public class Avatar extends CircularGameObject {
             flippedX = !flippedX;
         }
 
-
+        if (swordSwing != null && (startx != endx || starty != endy)) {
+            swordSwing.offset(endx-startx, endy-starty);
+        }
     }
 
-    @Override
-    public void draw(GraphicSystem gs) {
-        int swordx = (int) Math.round(flippedX ? x : (x - radius)); //-radius*1.5;
-        int swordy = (int) Math.round(y - radius * 1.2);
-        int width = (int) Math.round((sword.x2 - sword.x1) * 0.8);
-        int height = (int) Math.round((sword.y2 - sword.y1) * 0.8);
-
-        gs.drawImage(sword, swordx, swordy, swordx + width, swordy + height);
-        gs.draw(this);
+    public boolean containsItem(String itemType){
+        return inventory.containsKey(itemType);
     }
+
+    public void removeItem(String itemType){
+        if(inventory.containsKey(itemType)){
+            inventory.remove(itemType);
+        }
+    }
+
+    public void addItem(String itemType, GameObject item){
+        inventory.put(itemType, item);
+    }
+       
 
     public void questDog() {
         this.moveBack();
@@ -411,11 +441,10 @@ public class Avatar extends CircularGameObject {
                 steveNpc.setSteveNpcQuestText(steveNpc.getSteveNpcQuestStartText());
                 chatBoxText = steveNpc.getSteveNpcText(0);
                 ((RPGWorld)world).addChatBox(chatBoxText, steveNpc);
-                steveNpc.setSteveNpcQuestStart(true);
-                steveNpc.setSteveNpcQuestInProg(true);
+                steveNpc.setSteveNpcQuestStart(true)steveNpc.setSteveNpcQuestInProg(true);
             // talked to but not pumpkin found
             } else if (steveNpc.isSteveNpcQuestInProg() && !steveNpc.isSteveNpcQuestCompleted()) {
-                steveNpc.setSteveNpcQuestText(steveNpc.getSteveNpcQuestInProgText());
+              .setSteveNpcQuestText(steveNpc.getSteveNpcQuestInProgText());
                 chatBoxText = steveNpc.getSteveNpcText(0);
                 ((RPGWorld)world).addChatBox(chatBoxText, steveNpc);
 
@@ -441,7 +470,45 @@ public class Avatar extends CircularGameObject {
         }
     }
 
+    public void draw(GraphicSystem gs, long tick) {
+        int swordx = (int)Math.round(flippedX ? x : (x-radius)); //-radius*1.5;
+        int swordy = (int)Math.round(y - radius * 1.2);
+        int width = (int)Math.round((sword.x2 - sword.x1)*0.8);
+        int height = (int)Math.round((sword.y2 - sword.y1)*0.8);
 
-    public int type() { return Const.TYPE_AVATAR; }
+        if (hasSword && (swordSwing == null || !swordSwing.isLiving)) {
+            gs.drawImage(sword, swordx, swordy, swordx+width, swordy+height);
+        }
+        gs.draw(this);
+    }
 
+    public void swingSword(ImageRef imageRef) {
+        if (weaponTemp > 0 || !hasSword) { return; }
+
+        Sound sword = new Sound("/music/sword-sound-1_16bit.wav");
+        sword.setVolume(-30.0f);
+        sword.playSound();
+
+        weaponTemp = COOLDOWN;
+        swordSwing = new SwordSwing(x, y, imageRef, flippedX);
+        world.gameObjects.add(swordSwing);
+    }
+
+    public int type() { return Const.Type.AVATAR.ordinal(); }
+
+    public void hit(double val) {
+        // every hit decreases life
+        life -= 0.05;
+        healthBar.health = life;
+
+        if (life <= 0) { die(); }
+    }
+    public void hit() {
+        hit(0.05);
+    }
+
+    public void die() {
+        dying = true;
+        ((RPGWorld)world).throwGrenade(x, y);
+    }
 }
