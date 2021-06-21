@@ -54,7 +54,6 @@ public class RPGWorld extends World {
         MapObject sword = map.getFirstObject("Swords");
         swordSwing = map.getFirstObject("Swing").imageRef;
         avatar = new Avatar(playerMO.x, playerMO.y, playerMO.imageRef, sword.imageRef);
-        ((Avatar) avatar).addItem("SWORD", sword);
         // avatar = new Avatar(100, 50, new ImageRef("Rocks2", 0, 0, 32, 32));
         gameObjects.add(avatar);
 
@@ -201,12 +200,12 @@ public class RPGWorld extends World {
         // add the hud elements
         hudObjects.add(((Avatar) avatar).healthBar);
 
-        int itemSlotX = (int)(0.95 * worldInfo.getPartWidth());
+        int itemSlotX = (int)(0.9 * worldInfo.getPartWidth());
         int itemSlotY = (int)(0.045 * worldInfo.getPartHeight());
         int itemSlotRadius = (int)(0.02 * worldInfo.getPartWidth());
-        hudObjects.add(new ItemSlot(itemSlotX,itemSlotY, itemSlotRadius));
-        itemSlotX = (int)(0.9 * worldInfo.getPartWidth());
-        hudObjects.add(new ItemSlot(itemSlotX,itemSlotY, itemSlotRadius));
+        hudObjects.add(new ItemSlot(itemSlotX,itemSlotY, itemSlotRadius, (Avatar) avatar, "SWORD", sword.imageRef));
+        itemSlotX = (int)(0.95 * worldInfo.getPartWidth());
+        hudObjects.add(new ItemSlot(itemSlotX,itemSlotY, itemSlotRadius, (Avatar) avatar, "BOW", sword.imageRef));
 
     }
 

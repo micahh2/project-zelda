@@ -20,7 +20,7 @@ public class Avatar extends CircularGameObject
     private double weaponTemp = 0;
 
     private boolean flippedX = false;
-    private HashMap<String, MapObject> inventory;
+    private HashMap<String, GameObject> inventory;
     private ImageRef sword;
     boolean hasSword = false;
 
@@ -96,6 +96,7 @@ public class Avatar extends CircularGameObject
                     ((RPGWorld)world).addChatBox(chatBoxText, chest);
                     obj.isLiving = false;
                     hasSword = true;
+                    addItem("SWORD", obj);
                     break;
 
                 case PUMPKIN:
@@ -165,7 +166,7 @@ public class Avatar extends CircularGameObject
         }
     }
 
-    public void addItem(String itemType, MapObject item){
+    public void addItem(String itemType, GameObject item){
         inventory.put(itemType, item);
     }
         
