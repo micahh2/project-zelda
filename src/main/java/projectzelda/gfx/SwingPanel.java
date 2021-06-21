@@ -184,14 +184,6 @@ class SwingPanel extends JPanel implements GraphicSystem {
         drawImageScreen(imageRef, x1, y1, x2, y2);
     }
 
-    public void drawHudImage(ImageRef imageRef, int x1Abs, int y1Abs, int x2Abs, int y2Abs) {
-        int x1 = x1Abs;
-        int y1 = y1Abs;
-        int x2 = x2Abs;
-        int y2 = y2Abs;
-        drawImageScreen(imageRef, x1, y1, x2, y2);
-    }
-
     // For drawing with relative screen coordinates
     public void drawRectScreen(int x, int y, int width, int height, Color color) {
         graphics.setColor(color);

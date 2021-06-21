@@ -37,8 +37,7 @@ public class ItemSlot extends UIObject {
             int width = (int) Math.round((image.x2 - image.x1) * 1.8);
             int height = (int) Math.round((image.y2 - image.y1) * 1.8);
 
-            gs.drawHudImage(image, swordx, swordy, swordx + width, swordy + height);
-
+            gs.drawImageScreen(image, swordx, swordy, swordx + width, swordy + height);
         }
     }
 }
