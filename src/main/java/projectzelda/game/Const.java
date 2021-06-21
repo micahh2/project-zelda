@@ -11,7 +11,6 @@ public final class Const
         TREE,
         GOBLIN,
         SHOT,
-        GRENADE,
         BONES,
         CHEST,
         PUMPKIN,
