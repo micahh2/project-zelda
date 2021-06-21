@@ -34,8 +34,6 @@ public interface GraphicSystem
 
     void drawImage(ImageRef imageRef, int x1Abs, int y1Abs, int x2Abs, int y2Abs);
 
-    void drawHudImage(ImageRef imageRef, int x1Abs, int y1Abs, int x2Abs, int y2Abs);
-
     void drawOval(int xAbs, int yAbs, int r1, int r2, Color color);
 
     void fillOval(int xAbs, int yAbs, int r1, int r2, Color color);
