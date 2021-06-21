@@ -4,6 +4,7 @@ import projectzelda.*;
 import projectzelda.engine.*;
 import projectzelda.map.MapObject;
 
+import java.awt.*;
 import java.util.List;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
@@ -19,8 +20,6 @@ public class RPGWorld extends World {
 
     // for grenades
     private int grenades = 5;
-    private Counter counterG;
-    private Counter counterB;
     private HelpText helpText;
 
 
@@ -165,14 +164,8 @@ public class RPGWorld extends World {
         gameObjects.add(new Rock(rocks.startingBounds.x1, rocks.startingBounds.y1));
 
 
-        counterB = new Counter("Bones: ", 20, 40);
-        counterG = new Counter("Grenades: ", 770, 40);
         helpText = new HelpText(400, 450);
 
-
-        counterG.setNumber(grenades);
-        textObjects.add(counterB);
-        textObjects.add(counterG);
         textObjects.add(helpText);
 
         // calculate relative ui button width and height
@@ -196,6 +189,11 @@ public class RPGWorld extends World {
         relY = (int)(0.6 * worldInfo.getPartHeight());
         deathMenuObjects.add(new UIButton(relX, relY, buttonWidth, buttonHeight, "Quit"));
 
+        // initialize the background and add it to different screens
+        Background background = new Background(0, 0, map.getPartWidth(), map.getHeight(), new Color(1f,1f,1f,0.2f ));
+        pauseMenuObjects.add(background);
+        mainMenuObjects.add(background);
+        deathMenuObjects.add(background);
 
         // add the hud elements
         hudObjects.add(((Avatar) avatar).healthBar);
@@ -438,7 +436,6 @@ public class RPGWorld extends World {
 
             // else add zombie to world
             this.gameObjects.add(grenade);
-            counterG.setNumber(grenades);
         }
 
     }
@@ -447,11 +444,6 @@ public class RPGWorld extends World {
         if (grenades < 999) {
             grenades++;
         }
-        counterG.setNumber(grenades);
-    }
-
-    public void addBones() {
-        counterB.increment();
     }
 
     public void addChatBox(String text, GameObject obj) {

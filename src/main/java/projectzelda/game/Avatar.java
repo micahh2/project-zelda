@@ -93,6 +93,7 @@ public class Avatar extends CircularGameObject
                 // if Object is a tree, move back one step
                 case TREE:
                 case WATER:
+                case GOBLIN:
                     this.moveBack();
                     break;
 
@@ -128,13 +129,8 @@ public class Avatar extends CircularGameObject
                     ((RPGWorld)world).addChatBox(chatBoxText, npc);
                     break;
 
-                case GOBLIN:
-                    this.moveBack(); 
-                    break;
-
                 // pick up Bones
                 case BONES:
-                    ((RPGWorld)world).addBones();
                     world.gameState = GameState.DIALOG;
                     chatBox = new ChatBoxButton(posXChatBox, posYChatBox, 600, 100, "Bones picked up", Const.Type.BONES);
                     world.chatBoxObjects.add(chatBox);
