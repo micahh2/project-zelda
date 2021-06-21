@@ -27,7 +27,9 @@ class Counter extends TextObject
   { 
     return text + number;
   }
-  
-  public void increment(){ number++; }
+
+  public int getNumber() { return number; }
+
+    public void increment(){ number++; }
   public void setNumber(int n){ number = n; }
 }

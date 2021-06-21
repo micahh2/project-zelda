@@ -11,6 +11,8 @@ public class ChatBoxButton extends UIObject {
     public int height;
     public String helpText;
     public String text;
+    public String nameText;
+
     public Font textFont;
     public Font helpFont;
     public Color textColor;
@@ -24,6 +26,7 @@ public class ChatBoxButton extends UIObject {
         text = text_;
         obj = obj_;
         helpText = "(spacebar to continue)";
+        nameText = obj.toString();
         textFont = new Font("BUTTON FONT", Font.ROMAN_BASELINE, 23);
         helpFont = new Font("BUTTON FONT", Font.ROMAN_BASELINE, 14);
         color = Color.WHITE;

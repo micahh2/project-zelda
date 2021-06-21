@@ -128,10 +128,10 @@ public abstract class World {
             graphicSystem.drawForeground(currentTick);
 
             // draw all Chatboxes
-            if (gameState == GameState.DIALOG)  {
-                for (int i = 0; i < chatBoxObjects.size(); i++) {
+
+            for (int i = 0; i < chatBoxObjects.size(); i++) {
                     chatBoxObjects.get(i).draw(graphicSystem);
-                }
+
             }
 
             // draw all TextObjects
