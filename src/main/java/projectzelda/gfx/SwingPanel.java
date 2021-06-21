@@ -11,8 +11,6 @@ import java.awt.*;
 import java.awt.image.*;
 import java.io.IOException;
 import java.net.URI;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import java.util.Map;
 import java.util.HashMap;
@@ -49,7 +47,7 @@ class SwingPanel extends JPanel implements GraphicSystem {
     private long lastTick = 0;
     private List<ImageRefTo> animationTiles;
 
-    public SwingPanel(MediaInfo mediaInfo, WorldInfo worldInfo) throws UnsupportedAudioFileException, LineUnavailableException, IOException {
+    public SwingPanel(MediaInfo mediaInfo, WorldInfo worldInfo) {
         this.worldInfo = worldInfo;
         this.mediaInfo = mediaInfo;
         animationTiles = mediaInfo.getAnimationTiles(0);
@@ -224,6 +222,21 @@ class SwingPanel extends JPanel implements GraphicSystem {
         y = y + ((height - metrics.getHeight()) / 2) + metrics.getAscent();
         graphics.setFont(font);
         graphics.drawString(text, x, y);
+    }
+     public void drawCenteredTextScreenWithSub(int x, int y, int width, int height, Color color, Font font,Font helpFont, String text, String helpText){
+        graphics.setColor(color);
+        FontMetrics metrics = graphics.getFontMetrics(font);
+        int xMain = x + (width - metrics.stringWidth(text)) / 2;
+        int yMain = y + ((height - metrics.getHeight()) / 2) + metrics.getAscent();
+        graphics.setFont(font);
+        graphics.drawString(text, xMain, yMain);
+
+        metrics = graphics.getFontMetrics(helpFont);
+        int helpX = x + (width - metrics.stringWidth(helpText)) / 2;
+        int helpY = y + ((height - metrics.getHeight()) / 2) + metrics.getAscent() + 25;
+        graphics.setFont(helpFont);
+        graphics.drawString(helpText, helpX, helpY);
+
     }
 
     public final void drawImageScreen(ImageRef imageRef, int x1, int y1, int x2, int y2) {

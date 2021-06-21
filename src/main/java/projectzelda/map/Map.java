@@ -12,7 +12,6 @@ import javax.xml.parsers.DocumentBuilder;
 import org.w3c.dom.*;
 import projectzelda.engine.*;
 import projectzelda.gfx.MediaInfo;
-import projectzelda.Const;
 
 public class Map implements MediaInfo, WorldInfo {
     public List<Layer> layers;

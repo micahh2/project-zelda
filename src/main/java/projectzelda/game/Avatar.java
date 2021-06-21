@@ -7,6 +7,7 @@ import projectzelda.*;
 import projectzelda.engine.*;
 import projectzelda.map.MapObject;
 
+
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,16 +18,22 @@ public class Avatar extends CircularGameObject
 {
     private final double COOLDOWN = 0.5;
     private double weaponTemp = 0;
-    private double lifeBPickedUpText;
-    private double lifeGPickedUpText;
-    private BonesPickedUpText bPickedUpText;
-    private GrenadePickedUpText gPickedUpText;
+
     private boolean flippedX = false;
     private HashMap<String, MapObject> inventory;
     private ImageRef sword;
+    boolean hasSword = false;
 
-    private UIButton gChatBox;
-    private UIButton bChatBox;
+    private SwordSwing swordSwing;
+
+    private ChatBoxButton chatBox;
+    private String chatBoxText;
+
+    // place of chatbox
+    private int posXChatBox = world.worldInfo.getPartWidth()/2-300;
+    private int posYChatBox = world.worldInfo.getPartHeight()-100;
+
+    private boolean talkedToNPC = false;
 
     public double life = 1.0;
     public HealthBar healthBar;
@@ -51,6 +58,7 @@ public class Avatar extends CircularGameObject
         this.sword = sword;
     }
 
+    @Override
     public void move(double diffSeconds)
     {
         if (weaponTemp > 0) {
@@ -59,6 +67,7 @@ public class Avatar extends CircularGameObject
 
         // Save starting x-pos for calculating orientation
         int startx = (int)x;
+        int starty = (int)y;
 
         // move Avatar one step forward
         super.move(diffSeconds);
@@ -67,48 +76,73 @@ public class Avatar extends CircularGameObject
         GameObjectList collisions = world.getPhysicsSystem().getCollisions(this);
         for(int i = 0; i < collisions.size(); i++) {
             GameObject obj = collisions.get(i);
-
-            switch (obj.type()) {
+            Const.Type type = Const.Type.values()[obj.type()];
+            switch (type) {
                 // if Object is a tree, move back one step
-                case Const.TYPE_TREE:
-                    this.moveBack(); 
+                case TREE:
+                case WATER:
+                    this.moveBack();
                     break;
-                
-                case Const.TYPE_GOBLIN:
+
+                case LAVA:
+                    hit(0.25);
+                    break;
+
+                case CHEST:
+                    this.moveBack();
+                    world.gameState = GameState.DIALOG;
+                    Chest chest = (Chest)obj;
+                    chatBoxText= chest.chestTexts[0];
+                    ((RPGWorld)world).addChatBox(chatBoxText, chest);
+                    obj.isLiving = false;
+                    hasSword = true;
+                    break;
+
+                case PUMPKIN:
+                    this.moveBack();
+                    world.gameState = GameState.DIALOG;
+                    Pumpkin pumpkin = (Pumpkin)obj;
+                    chatBoxText = pumpkin.pumpkinTexts[0];
+                    ((RPGWorld)world).addChatBox(chatBoxText, pumpkin);
+                    obj.isLiving = false;
+                    break;
+
+                case NPC:
+                    this.moveBack();
+                    world.gameState = GameState.DIALOG;
+                    NPC npc = (NPC)obj;
+                    chatBoxText = npc.npcTexts[0];
+                    ((RPGWorld)world).addChatBox(chatBoxText, npc);
+                    break;
+
+                case GOBLIN:
                     this.moveBack(); 
-                    if (weaponTemp <= 0) {
-                        ((EnemyAI)obj).hit();
-                        weaponTemp = COOLDOWN;
-                    }
                     break;
 
                 // pick up Bones
-                case Const.TYPE_BONES:
+                case BONES:
                     ((RPGWorld)world).addBones();
-                    // trying to stack chatboxes ontop of eachother but 2nd one simply replaces the first
                     world.gameState = GameState.DIALOG;
-                    gChatBox = new UIButton(world.worldInfo.getPartWidth()/2-300, world.worldInfo.getPartHeight()-100, 600, 100, "Grenade picked up");
-                    world.chatBoxObjects.add(gChatBox);
-
-                    world.gameState = GameState.DIALOG;
-                    bChatBox = new UIButton( world.worldInfo.getPartWidth()/2-300, world.worldInfo.getPartHeight()-100, 600, 100, "Bones picked up");
-                    world.chatBoxObjects.add(bChatBox);
+                    chatBox = new ChatBoxButton(posXChatBox, posYChatBox, 600, 100, "Bones picked up", Const.Type.BONES);
+                    world.chatBoxObjects.add(chatBox);
                     obj.isLiving = false;
                     break;
 
                 // pick up Grenades
-                case Const.TYPE_GRENADE:
+                case GRENADE:
                     ((RPGWorld)world).addGrenade();
                     world.gameState = GameState.DIALOG;
-                    gChatBox = new UIButton(world.worldInfo.getPartWidth()/2-300, world.worldInfo.getPartHeight()-100, 600, 100, "Grenade picked up");
-                    world.chatBoxObjects.add(gChatBox);
+                    chatBox = new ChatBoxButton(posXChatBox, posYChatBox, 600, 100, "Grenade picked up", Const.Type.GRENADE);
+                    world.chatBoxObjects.add(chatBox);
                     obj.isLiving = false;
                     break;
+
             }
         }
 
         // Hacky, but we can flip the orientation of the avatar by switching the image coordinates to draw from
         int endx = (int)x;
+        int endy = (int)y;
         if ((startx < endx && !flippedX) || (startx > endx && flippedX)) {
             int tempx = imageRef.x1;
             imageRef.x1 = imageRef.x2;
@@ -116,14 +150,9 @@ public class Avatar extends CircularGameObject
             flippedX = !flippedX;
         }
 
-        if (bPickedUpText != null) {
-            lifeBPickedUpText -= diffSeconds;
-            if (lifeBPickedUpText < 0) {
-                world.textObjects.remove(bPickedUpText);
-                bPickedUpText = null;
-            }
+        if (swordSwing != null && (startx != endx || starty != endy)) {
+            swordSwing.offset(endx-startx, endy-starty);
         }
-
     }
 
     public boolean containsItem(String itemType){
@@ -141,16 +170,46 @@ public class Avatar extends CircularGameObject
     }
         
     @Override
-    public void draw(GraphicSystem gs) {
+    public void draw(GraphicSystem gs, long tick) {
         int swordx = (int)Math.round(flippedX ? x : (x-radius)); //-radius*1.5;
         int swordy = (int)Math.round(y - radius * 1.2);
         int width = (int)Math.round((sword.x2 - sword.x1)*0.8);
         int height = (int)Math.round((sword.y2 - sword.y1)*0.8);
 
-        gs.drawImage(sword, swordx, swordy, swordx+width, swordy+height);
+        if (hasSword && (swordSwing == null || !swordSwing.isLiving)) {
+            gs.drawImage(sword, swordx, swordy, swordx+width, swordy+height);
+        }
         gs.draw(this);
     }
 
+    public void swingSword(ImageRef imageRef) {
+        if (weaponTemp > 0 || !hasSword) { return; }
 
-    public int type() { return Const.TYPE_AVATAR; }
+        Sound sword = new Sound("/music/sword-sound-1_16bit.wav");
+        sword.setVolume(-30.0f);
+        sword.playSound();
+
+        weaponTemp = COOLDOWN;
+        swordSwing = new SwordSwing(x, y, imageRef, flippedX);
+        world.gameObjects.add(swordSwing);
+    }
+
+    public int type() { return Const.Type.AVATAR.ordinal(); }
+
+    public void hit(double val) {
+        // every hit decreases life
+        life -= 0.05;
+        healthBar.health = life;
+
+        if (life <= 0) { die(); }
+    }
+    public void hit() {
+        hit(0.05);
+    }
+
+    public void die() {
+        this.isLiving = false;
+        world.gameState = GameState.DEATH;
+        //((RPGWorld)world).throwGrenade(x, y);
+    }
 }
