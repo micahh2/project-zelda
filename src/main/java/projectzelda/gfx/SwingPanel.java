@@ -11,8 +11,6 @@ import java.awt.*;
 import java.awt.image.*;
 import java.io.IOException;
 import java.net.URI;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import java.util.Map;
 import java.util.HashMap;
@@ -49,7 +47,7 @@ class SwingPanel extends JPanel implements GraphicSystem {
     private long lastTick = 0;
     private List<ImageRefTo> animationTiles;
 
-    public SwingPanel(MediaInfo mediaInfo, WorldInfo worldInfo) throws UnsupportedAudioFileException, LineUnavailableException, IOException {
+    public SwingPanel(MediaInfo mediaInfo, WorldInfo worldInfo) {
         this.worldInfo = worldInfo;
         this.mediaInfo = mediaInfo;
         animationTiles = mediaInfo.getAnimationTiles(0);

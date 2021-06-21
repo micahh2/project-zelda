@@ -20,5 +20,5 @@ class Bones extends CircularGameObject
         if (life < 0) { isLiving=false; }
     }
 
-    public int type() { return Const.TYPE_BONES; }
+    public int type() { return Const.Type.BONES.ordinal(); }
 }

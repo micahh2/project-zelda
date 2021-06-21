@@ -1,24 +1,12 @@
 package projectzelda.game;
 
-import projectzelda.Const;
 import projectzelda.engine.ImageRef;
-import projectzelda.engine.RectangularGameObject;
 
-public class DogNpc extends RectangularGameObject {
+public class DogNpc extends NPC {
 
-    String[] dogNpcTexts = {"Hey dog, what`s up?" , "Au Au", "Wow, that is really deep!", "Woof"};
+    static String[] dogNpcTexts = {"Hey dog, what`s up?" , "Au Au", "Wow, that is really deep!", "Woof"};
 
-    public DogNpc(double x, double y, int width, int height, ImageRef imageref) {
-        super(x, y, 0,0, width, height, null);
-        this.imageRef = imageref;
-        this.isMoving = false;
-
+    public DogNpc(double x, double y, int width, int height, ImageRef imageRef) {
+        super(x, y, width, height, imageRef, dogNpcTexts);
     }
-
-    public String[] getText() {
-        return dogNpcTexts;
-    }
-
-    public int type() { return Const.TYPE_DOG; }
-
 }

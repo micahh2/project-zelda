@@ -27,15 +27,8 @@ public class Avatar extends CircularGameObject
 
     private boolean talkedToNPC = false;
 
-
-
-
-
     public double life = 1.0;
     public HealthBar healthBar;
-
-
-
 
     public Avatar(double x, double y, ImageRef imageRef, ImageRef sword) 
     { 
@@ -55,6 +48,7 @@ public class Avatar extends CircularGameObject
         this.sword = sword;
     }
 
+    @Override
     public void move(double diffSeconds)
     {
         if (weaponTemp > 0) {
@@ -72,98 +66,62 @@ public class Avatar extends CircularGameObject
         GameObjectList collisions = world.getPhysicsSystem().getCollisions(this);
         for(int i = 0; i < collisions.size(); i++) {
             GameObject obj = collisions.get(i);
-
-            switch (obj.type()) {
+            Const.Type type = Const.Type.values()[obj.type()];
+            switch (type) {
                 // if Object is a tree, move back one step
-                case Const.TYPE_TREE:
+                case TREE:
+                case WATER:
                     this.moveBack();
                     break;
 
-                case Const.TYPE_CHEST:
+                case LAVA:
+                    hit(0.25);
+                    break;
+
+                case CHEST:
                     this.moveBack();
                     world.gameState = GameState.DIALOG;
-                    Chest chest = (Chest)((RPGWorld)world).chest;
+                    Chest chest = (Chest)obj;
                     chatBoxText= chest.chestTexts[0];
                     ((RPGWorld)world).addChatBox(chatBoxText, chest);
                     obj.isLiving = false;
                     break;
 
-                case Const.TYPE_PUMPKIN:
+                case PUMPKIN:
                     this.moveBack();
                     world.gameState = GameState.DIALOG;
-                    Pumpkin pumpkin = (Pumpkin)((RPGWorld)world).pumpkin;
+                    Pumpkin pumpkin = (Pumpkin)obj;
                     chatBoxText = pumpkin.pumpkinTexts[0];
                     ((RPGWorld)world).addChatBox(chatBoxText, pumpkin);
                     obj.isLiving = false;
                     break;
 
-                case Const.TYPE_STEVE:
+                case NPC:
                     this.moveBack();
                     world.gameState = GameState.DIALOG;
-                    SteveNpc steveNpc = (SteveNpc) ((RPGWorld)world).steve;
-                    chatBoxText = steveNpc.steveNpcTexts[0];
-                    ((RPGWorld)world).addChatBox(chatBoxText, steveNpc);
+                    NPC npc = (NPC)obj;
+                    chatBoxText = npc.npcTexts[0];
+                    ((RPGWorld)world).addChatBox(chatBoxText, npc);
                     break;
 
-                case Const.TYPE_DOG:
-                    this.moveBack();
-                    world.gameState = GameState.DIALOG;
-                    DogNpc dogNpc = (DogNpc)((RPGWorld)world).dog;
-                    chatBoxText = dogNpc.dogNpcTexts[0];
-                    ((RPGWorld)world).addChatBox(chatBoxText, dogNpc);
-                    break;
-
-                case Const.TYPE_CAT:
-                    this.moveBack();
-                    world.gameState = GameState.DIALOG;
-                    CatNpc catNpc = (CatNpc)((RPGWorld)world).cat;
-                    chatBoxText = catNpc.catNpcTexts[0];
-                    ((RPGWorld)world).addChatBox(chatBoxText, catNpc);
-                    break;
-
-                case Const.TYPE_BRUTUS:
-                    this.moveBack();
-                    world.gameState = GameState.DIALOG;
-                    BrutusNpc brutusNpc = (BrutusNpc) ((RPGWorld)world).brutus;
-                    chatBoxText = brutusNpc.brutusNpcTexts[0];
-                    ((RPGWorld)world).addChatBox(chatBoxText, brutusNpc);
-                    break;
-
-                case Const.TYPE_OLGA:
-                    this.moveBack();
-                    world.gameState = GameState.DIALOG;
-                    OlgaNpc olgaNpc = (OlgaNpc) ((RPGWorld)world).olga;
-                    chatBoxText = olgaNpc.olgaNpcTexts[0];
-                    ((RPGWorld)world).addChatBox(chatBoxText, olgaNpc);
-                    break;
-
-                case Const.TYPE_BOB:
-                    this.moveBack();
-                    world.gameState = GameState.DIALOG;
-                    BobNpc bobNpc = (BobNpc) ((RPGWorld)world).bob;
-                    chatBoxText = bobNpc.bobNpcTexts[0];
-                    ((RPGWorld)world).addChatBox(chatBoxText, bobNpc);
-                    break;
-
-
-                case Const.TYPE_GOBLIN:
+                case GOBLIN:
                     this.moveBack(); 
                     break;
 
                 // pick up Bones
-                case Const.TYPE_BONES:
+                case BONES:
                     ((RPGWorld)world).addBones();
                     world.gameState = GameState.DIALOG;
-                    chatBox = new ChatBoxButton( posXChatBox, posYChatBox, 600, 100, "Bones picked up", Const.TYPE_BONES);
+                    chatBox = new ChatBoxButton(posXChatBox, posYChatBox, 600, 100, "Bones picked up", Const.Type.BONES);
                     world.chatBoxObjects.add(chatBox);
                     obj.isLiving = false;
                     break;
 
                 // pick up Grenades
-                case Const.TYPE_GRENADE:
+                case GRENADE:
                     ((RPGWorld)world).addGrenade();
                     world.gameState = GameState.DIALOG;
-                    chatBox = new ChatBoxButton(posXChatBox, posYChatBox, 600, 100, "Grenade picked up", Const.TYPE_GRENADE);
+                    chatBox = new ChatBoxButton(posXChatBox, posYChatBox, 600, 100, "Grenade picked up", Const.Type.GRENADE);
                     world.chatBoxObjects.add(chatBox);
                     obj.isLiving = false;
                     break;
@@ -211,14 +169,17 @@ public class Avatar extends CircularGameObject
         world.gameObjects.add(swordSwing);
     }
 
-    public int type() { return Const.TYPE_AVATAR; }
+    public int type() { return Const.Type.AVATAR.ordinal(); }
 
-    public void hit() {
+    public void hit(double val) {
         // every hit decreases life
         life -= 0.05;
         healthBar.health = life;
 
         if (life <= 0) { die(); }
+    }
+    public void hit() {
+        hit(0.05);
     }
 
     public void die() {

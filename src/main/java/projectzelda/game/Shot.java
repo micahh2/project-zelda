@@ -7,7 +7,7 @@ import java.awt.Color;
 
 class Shot extends CircularGameObject
 { 
-    private double lifeTime = 1.2;
+    private double lifeTime = 5;
 
     public Shot(double x, double y, double xDest, double yDest)
     {
@@ -30,22 +30,23 @@ class Shot extends CircularGameObject
             return;
         }
 
-
-        // handle collisions of the zombie
         GameObjectList collisions = world.getPhysicsSystem().getCollisions(this);
         for(int i=0; i<collisions.size(); i++)
         {
             GameObject obj = collisions.get(i);
 
-            int type = obj.type();
+            Const.Type type = Const.Type.values()[obj.type()];
 
             switch(type) {
-                // tree: shot is deleted
-                case Const.TYPE_TREE:
+                case WALL:
+                case TREE:
                     this.isLiving = false;
                     break;
-                    // Zombie: inform Zombie it is hit
-                case Const.TYPE_GOBLIN:
+                case NPC:
+                    this.isLiving = false;
+                    obj.isLiving = false;
+                    break;
+                case GOBLIN:
                     EnemyAI bad = (EnemyAI)obj;
                     bad.hit();
                     break;
@@ -55,5 +56,5 @@ class Shot extends CircularGameObject
         super.move(diffSeconds);
     }
 
-    public final int type() { return Const.TYPE_SHOT;}
+    public final int type() { return Const.Type.SHOT.ordinal();}
 }

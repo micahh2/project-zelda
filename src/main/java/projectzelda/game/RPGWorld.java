@@ -1,6 +1,3 @@
-
-// (c) Thorsten Hasbargen
-
 package projectzelda.game;
 
 import projectzelda.*;
@@ -57,7 +54,6 @@ public class RPGWorld extends World {
         MapObject sword = map.getFirstObject("Swords");
         swordSwing = map.getFirstObject("Swing").imageRef;
         avatar = new Avatar(playerMO.x, playerMO.y, playerMO.imageRef, sword.imageRef);
-        // avatar = new Avatar(100, 50, new ImageRef("Rocks2", 0, 0, 32, 32));
         gameObjects.add(avatar);
 
         MapObject bossMo = map.getFirstObject("Boss");
@@ -67,55 +63,54 @@ public class RPGWorld extends World {
         MapObject chestMo = map.getFirstObject("Chests");
         int widthC = chestMo.startingBounds.x2 - chestMo.startingBounds.x1;
         int heightC = chestMo.startingBounds.y2 - chestMo.startingBounds.y1;
-        chest = new Chest(chestMo.x, chestMo.y, widthC, heightC, chestMo.imageRef);
+        Chest chest = new Chest(chestMo.x, chestMo.y, widthC, heightC, chestMo.imageRef);
         gameObjects.add(chest);
 
         MapObject pumpkinMo = map.getFirstObject("Pumpkin");
         int widthP = pumpkinMo.startingBounds.x2 - pumpkinMo.startingBounds.x1;
         int heightP = pumpkinMo.startingBounds.y2 - pumpkinMo.startingBounds.y1;
-        pumpkin = new Pumpkin(pumpkinMo.x, pumpkinMo.y, widthP, heightP, pumpkinMo.imageRef);
+        Pumpkin pumpkin = new Pumpkin(pumpkinMo.x, pumpkinMo.y, widthP, heightP, pumpkinMo.imageRef);
         gameObjects.add(pumpkin);
 
         // Get a list of NPCs
         List<MapObject> npcs = map.getAllObjects("Npcs");
+        double charScale = 0.7;
 
         MapObject steveMo = npcs.get(0);
         int widthSteve = steveMo.startingBounds.x2 - steveMo.startingBounds.x1;
         int heightSteve = steveMo.startingBounds.y2 - steveMo.startingBounds.y1;
-        steve = new SteveNpc(steveMo.x, steveMo.y, widthSteve, heightSteve, steveMo.imageRef);
+        NPC steve = new SteveNpc(steveMo.x, steveMo.y, (int)(widthSteve*charScale), (int)(heightSteve*charScale), steveMo.imageRef);
         gameObjects.add(steve);
 
         MapObject catMo = npcs.get(1);
         int widthCat = catMo.startingBounds.x2 - catMo.startingBounds.x1;
         int heightCat = catMo.startingBounds.y2 - catMo.startingBounds.y1;
-        cat = new CatNpc(catMo.x, catMo.y, widthCat, heightCat, catMo.imageRef);
+        NPC cat = new CatNpc(catMo.x, catMo.y, (int)widthCat/2, (int)heightCat/2, catMo.imageRef);
         gameObjects.add(cat);
 
         MapObject dogMo = npcs.get(2);
         int widthDog = dogMo.startingBounds.x2 - dogMo.startingBounds.x1;
         int heightDog = dogMo.startingBounds.y2 - dogMo.startingBounds.y1;
-        dog = new DogNpc(dogMo.x, dogMo.y, widthDog, heightDog, dogMo.imageRef);
+        NPC dog = new DogNpc(dogMo.x, dogMo.y, (int)widthDog/2, (int)heightDog/2, dogMo.imageRef);
         gameObjects.add(dog);
 
         MapObject brutusMo = npcs.get(3);
         int widthBrutus = brutusMo.startingBounds.x2 - brutusMo.startingBounds.x1;
         int heightBrutus = brutusMo.startingBounds.y2 - brutusMo.startingBounds.y1;
-        brutus = new BrutusNpc(brutusMo.x, brutusMo.y, widthBrutus, heightBrutus, brutusMo.imageRef);
+        NPC brutus = new BrutusNpc(brutusMo.x, brutusMo.y, (int)(widthBrutus*charScale), (int)(heightBrutus*charScale), brutusMo.imageRef);
         gameObjects.add(brutus);
 
         MapObject olgaMo = npcs.get(4);
         int widthOlga = olgaMo.startingBounds.x2 - olgaMo.startingBounds.x1;
         int heightOlga = olgaMo.startingBounds.y2 - olgaMo.startingBounds.y1;
-        olga = new OlgaNpc(olgaMo.x, olgaMo.y, widthOlga, heightOlga, olgaMo.imageRef);
+        NPC olga = new OlgaNpc(olgaMo.x, olgaMo.y, (int)(widthOlga*charScale), (int)(heightOlga*charScale), olgaMo.imageRef);
         gameObjects.add(olga);
 
         MapObject bobMo = npcs.get(5);
         int widthBob = bobMo.startingBounds.x2 - bobMo.startingBounds.x1;
         int heightBob = bobMo.startingBounds.y2 - bobMo.startingBounds.y1;
-        bob = new BobNpc(bobMo.x, bobMo.y, widthBob, heightBob, bobMo.imageRef);
+        NPC bob = new BobNpc(bobMo.x, bobMo.y, (int)(widthBob*charScale), (int)(heightBob*charScale), bobMo.imageRef);
         gameObjects.add(bob);
-
-
 
         // set WorldPart position
         worldPartX = 0;
@@ -205,8 +200,6 @@ public class RPGWorld extends World {
         itemSlotX = (int)(0.9 * worldInfo.getPartWidth());
         hudObjects.add(new ItemSlot(itemSlotX,itemSlotY, itemSlotRadius));
 
-
-
     }
 
 
@@ -214,18 +207,8 @@ public class RPGWorld extends World {
         // distinguish if Avatar shall move or shoots	  
         int button = userInput.mouseButton;
 
-
         //
         // Mouse events
-        //
-        // if (userInput.isMouseEvent) {
-        //     // move
-        //     if(button==1) { 
-        //         avatar.setDestination(userInput.mousePressedX+worldPartX, 
-        //             userInput.mousePressedY+worldPartY);
-        //     }
-        // }
-
         //
         // Mouse still pressed?
         //
@@ -451,14 +434,17 @@ public class RPGWorld extends World {
         ChatBoxButton chatBox = new ChatBoxButton(posXChatBox, posYChatBox,600,100, text, obj);
         chatBoxObjects.add(chatBox);
     }
+
     public void handleDialog(ChatBoxButton chatBox) {
 
         // not ideal
 
       if (chatBox.obj != null) {
-            switch (chatBox.obj.type()) {
-                case Const.TYPE_CHEST:
-                    Chest chestForText = (Chest) chest;
+          // Convert from int to enum
+          Const.Type type = Const.Type.values()[chatBox.obj.type()];
+          switch (type) {
+                case CHEST:
+                    Chest chestForText = (Chest)chatBox.obj;
                     if (chestForText.getText().length > chatTrack) {
                         chatBox.setText(chestForText.getText()[chatTrack]);
                         chatTrack++;
@@ -469,8 +455,8 @@ public class RPGWorld extends World {
                         gameState = GameState.PLAY;
                     }
                     break;
-                case Const.TYPE_PUMPKIN:
-                    Pumpkin pumpkinForText = (Pumpkin) pumpkin;
+                case PUMPKIN:
+                    Pumpkin pumpkinForText = (Pumpkin)chatBox.obj;
                     if (pumpkinForText.getText().length > chatTrack) {
                         chatBox.setText(pumpkinForText.getText()[chatTrack]);
                         chatTrack++;
@@ -482,77 +468,11 @@ public class RPGWorld extends World {
                     }
                     break;
 
-                case Const.TYPE_DOG:
-                    DogNpc dogNpcForText = (DogNpc) dog;
-                    if (dogNpcForText.getText().length > chatTrack) {
-                        chatBox.setText(dogNpcForText.getText()[chatTrack]);
+                case NPC:
+                    NPC npc = (NPC) chatBox.obj;
+                    if (npc.getText().length > chatTrack) {
+                        chatBox.setText(npc.getText()[chatTrack]);
                         chatTrack++;
-
-                    } else {
-                        chatTrack = 1;
-                        chatBoxObjects.remove(0);
-                        gameState = GameState.PLAY;
-                    }
-                    break;
-
-                case Const.TYPE_CAT:
-                    CatNpc catNpcForText = (CatNpc) cat;
-                    if (catNpcForText.getText().length > chatTrack) {
-                        chatBox.setText(catNpcForText.getText()[chatTrack]);
-                        chatTrack++;
-
-                    } else {
-                        chatTrack = 1;
-                        chatBoxObjects.remove(0);
-                        gameState = GameState.PLAY;
-                    }
-                    break;
-
-                case Const.TYPE_STEVE:
-                    SteveNpc steveNpcForText = (SteveNpc) steve;
-                    if (steveNpcForText.getText().length > chatTrack) {
-                        chatBox.setText(steveNpcForText.getText()[chatTrack]);
-                        chatTrack++;
-
-                    } else {
-                        chatTrack = 1;
-                        chatBoxObjects.remove(0);
-                        gameState = GameState.PLAY;
-                    }
-                    break;
-
-                case Const.TYPE_BRUTUS:
-                    BrutusNpc brutusNpcForText = (BrutusNpc) brutus;
-                    if (brutusNpcForText.getText().length > chatTrack) {
-                        chatBox.setText(brutusNpcForText.getText()[chatTrack]);
-                        chatTrack++;
-
-                    } else {
-                        chatTrack = 1;
-                        chatBoxObjects.remove(0);
-                        gameState = GameState.PLAY;
-                    }
-                    break;
-
-                case Const.TYPE_OLGA:
-                    OlgaNpc olgaNpcForText = (OlgaNpc) olga;
-                    if (olgaNpcForText.getText().length > chatTrack) {
-                        chatBox.setText(olgaNpcForText.getText()[chatTrack]);
-                        chatTrack++;
-
-                    } else {
-                        chatTrack = 1;
-                        chatBoxObjects.remove(0);
-                        gameState = GameState.PLAY;
-                    }
-                    break;
-
-                case Const.TYPE_BOB:
-                    BobNpc bobNpcForText = (BobNpc) bob;
-                    if (bobNpcForText.getText().length > chatTrack) {
-                        chatBox.setText(bobNpcForText.getText()[chatTrack]);
-                        chatTrack++;
-
                     } else {
                         chatTrack = 1;
                         chatBoxObjects.remove(0);
@@ -562,19 +482,14 @@ public class RPGWorld extends World {
             }
         } else {
             switch (chatBox.objID) {
-                case Const.TYPE_GRENADE:
-                case Const.TYPE_BONES:
+                case GRENADE:
+                case BONES:
                     chatBoxObjects.remove(0);
                     gameState = GameState.PLAY;
                     break;
                     }
 
-
-
-
         }
-
-
     }
 
 }

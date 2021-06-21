@@ -20,6 +20,6 @@ public class Chest extends RectangularGameObject {
         return chestTexts;
     }
 
-    public int type() { return Const.TYPE_CHEST; }
+    public int type() { return Const.Type.CHEST.ordinal(); }
 
 }
