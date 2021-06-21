@@ -29,9 +29,9 @@ public class Boss extends EnemyAI
     }
 
     @Override
-    public void draw(GraphicSystem gs) {
+    public void draw(GraphicSystem gs, long tick) {
         gs.draw(this);
-        healthBar.draw(gs);
+        healthBar.draw(gs, tick);
     }
 
     public void move(double diffSeconds) {

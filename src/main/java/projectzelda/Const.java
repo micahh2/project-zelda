@@ -25,7 +25,5 @@ public final class Const
   public static final int TYPE_BRUTUS = 14;
   public static final int TYPE_OLGA = 15;
   public static final int TYPE_BOB = 16;
-
-
-
+  public static final int TYPE_SWORD_SWING  = 17;
 }

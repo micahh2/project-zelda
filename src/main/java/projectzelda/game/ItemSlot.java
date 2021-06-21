@@ -16,7 +16,7 @@ public class ItemSlot extends UIObject {
     }
 
     @Override
-    public void draw(GraphicSystem gs) {
+    public void draw(GraphicSystem gs, long tick) {
         int xCorner = (int) (x - radius);
         int yCorner = (int) (y - radius);
         int d = (radius * 2);

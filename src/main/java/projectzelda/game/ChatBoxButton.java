@@ -65,7 +65,7 @@ public class ChatBoxButton extends UIObject {
     }
 
     @Override
-    public void draw(GraphicSystem gs) {
+    public void draw(GraphicSystem gs, long tick) {
         gs.fillRectScreen(x, y, width, height, color);
         gs.drawRectScreen(x, y, width, height, outlineColor);
 

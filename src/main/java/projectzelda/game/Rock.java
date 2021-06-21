@@ -16,7 +16,7 @@ public class Rock extends RectangularGameObject
 
     // Invisible
     @Override
-    public void draw(GraphicSystem gs) { return; }
+    public void draw(GraphicSystem gs, long tick) { return; }
 
     public int type() { return Const.TYPE_TREE; }
 

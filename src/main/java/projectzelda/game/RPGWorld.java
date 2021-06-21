@@ -33,6 +33,7 @@ public class RPGWorld extends World {
     private double lifeHelpText = 10.0;
 
 
+    private ImageRef swordSwing;
     private Sound sound = new Sound("/music/Forest_Ventures.wav");
 
 
@@ -54,6 +55,7 @@ public class RPGWorld extends World {
         // add the Avatar
         MapObject playerMO = map.getFirstObject("Player");
         MapObject sword = map.getFirstObject("Swords");
+        swordSwing = map.getFirstObject("Swing").imageRef;
         avatar = new Avatar(playerMO.x, playerMO.y, playerMO.imageRef, sword.imageRef);
         // avatar = new Avatar(100, 50, new ImageRef("Rocks2", 0, 0, 32, 32));
         gameObjects.add(avatar);
@@ -300,10 +302,8 @@ public class RPGWorld extends World {
                        handleDialog(chatBox);
 
                     } else {
-                        throwGrenade(userInput.mouseMovedX + worldPartX, userInput.mouseMovedY + worldPartY);
-                        Sound sword = new Sound("/music/sword-sound-1_16bit.wav");
-                        sword.setVolume(-30.0f);
-                        sword.playSound();
+
+                        ((Avatar)avatar).swingSword(swordSwing);
                     }
 
                     break;
@@ -370,9 +370,7 @@ public class RPGWorld extends World {
     }
 
 
-    private void throwGrenade(double x, double y) {
-        if (grenades <= 0) return;
-
+    public void throwGrenade(double x, double y) {
         // throw grenade
         for (int i = 0; i < 2000; i++) {
             double alfa = Math.random() * Math.PI * 2;
@@ -381,10 +379,6 @@ public class RPGWorld extends World {
             Shot shot = new Shot(x, y, alfa, speed, time);
             this.gameObjects.add(shot);
         }
-
-        // inform counter
-        grenades--;
-        counterG.setNumber(grenades);
     }
 
 

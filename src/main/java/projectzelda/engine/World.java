@@ -123,14 +123,14 @@ public abstract class World {
             // draw all Objects
             graphicSystem.clear(currentTick);
             for (int i = 0; i < gameSize; i++) {
-                gameObjects.get(i).draw(graphicSystem);
+                gameObjects.get(i).draw(graphicSystem, currentTick);
             }
             graphicSystem.drawForeground(currentTick);
 
             // draw all Chatboxes
             if (gameState == GameState.DIALOG)  {
                 for (int i = 0; i < chatBoxObjects.size(); i++) {
-                    chatBoxObjects.get(i).draw(graphicSystem);
+                    chatBoxObjects.get(i).draw(graphicSystem, currentTick);
                 }
             }
 
@@ -141,7 +141,7 @@ public abstract class World {
 
             if (gameState == GameState.PAUSE) {
                 for (int i = 0; i < pauseMenuObjects.size(); i++) {
-                    pauseMenuObjects.get(i).draw(graphicSystem);
+                    pauseMenuObjects.get(i).draw(graphicSystem, currentTick);
                 }
             }
 
@@ -149,13 +149,13 @@ public abstract class World {
             // draw play button of main_menu
             if (gameState == GameState.MAIN_MENU) {
                 for (int i = 0; i < mainMenuObjects.size(); i++) {
-                    mainMenuObjects.get(i).draw(graphicSystem);
+                    mainMenuObjects.get(i).draw(graphicSystem, currentTick);
                 }
             }
 
             // draw HUD
             for (int i = 0; i < hudObjects.size(); i++) {
-                hudObjects.get(i).draw(graphicSystem);
+                hudObjects.get(i).draw(graphicSystem, currentTick);
             }
 
 
