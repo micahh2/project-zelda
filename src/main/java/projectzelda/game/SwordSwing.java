@@ -2,11 +2,8 @@ package projectzelda.game;
 
 import projectzelda.*;
 import java.awt.Color;
-import projectzelda.engine.CircularGameObject;
-import projectzelda.engine.GraphicSystem;
-import projectzelda.engine.GameObjectList;
-import projectzelda.engine.GameObject;
-import projectzelda.engine.ImageRef;
+
+import projectzelda.engine.*;
 
 public class SwordSwing extends CircularGameObject {
 
@@ -43,6 +40,11 @@ public class SwordSwing extends CircularGameObject {
                 case GOBLIN:
                     ((EnemyAI)obj).hit();
                     hasHit = true;
+                case ROCK:
+                    ((Rock)obj).hit();
+                    hasHit = true;
+
+
             }
         }
     }

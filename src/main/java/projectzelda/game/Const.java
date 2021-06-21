@@ -11,7 +11,6 @@ public final class Const
         TREE,
         GOBLIN,
         SHOT,
-        GRENADE,
         BONES,
         CHEST,
         PUMPKIN,
@@ -20,6 +19,7 @@ public final class Const
         SWORD_SWING,
         WATER,
         LAVA,
-        WALL
+        WALL,
+        ROCK
     }
 }

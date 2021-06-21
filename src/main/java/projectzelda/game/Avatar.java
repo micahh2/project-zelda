@@ -91,7 +91,13 @@ public class Avatar extends CircularGameObject
             Const.Type type = Const.Type.values()[obj.type()];
             switch (type) {
                 // if Object is a tree, move back one step
+                case WALL:
+                    this.moveBack();
+                    break;
+
                 case TREE:
+                case ROCK:
+
                 case WATER:
                     this.moveBack();
                     break;
@@ -141,14 +147,6 @@ public class Avatar extends CircularGameObject
                     obj.isLiving = false;
                     break;
 
-                // pick up Grenades
-                case GRENADE:
-                    ((RPGWorld)world).addGrenade();
-                    world.gameState = GameState.DIALOG;
-                    chatBox = new ChatBoxButton(posXChatBox, posYChatBox, 600, 100, "Grenade picked up", Const.Type.GRENADE);
-                    world.chatBoxObjects.add(chatBox);
-                    obj.isLiving = false;
-                    break;
 
             }
         }
