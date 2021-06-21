@@ -15,6 +15,9 @@ public abstract class EnemyAI extends CircularGameObject {
     protected double colorCooldown = 0;
     protected WorldInfo worldInfo;
 
+    protected double hitCooldownSeconds = 0.5;
+    protected double hitCooldown = 0;
+
     protected enum State {
         STUCK,
         FREE

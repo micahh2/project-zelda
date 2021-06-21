@@ -16,6 +16,7 @@ public class Avatar extends CircularGameObject
     private boolean flippedX = false;
     private ImageRef sword;
 
+    private SwordSwing swordSwing;
 
     private ChatBoxButton chatBox;
     private String chatBoxText;
@@ -62,6 +63,7 @@ public class Avatar extends CircularGameObject
 
         // Save starting x-pos for calculating orientation
         int startx = (int)x;
+        int starty = (int)y;
 
         // move Avatar one step forward
         super.move(diffSeconds);
@@ -146,10 +148,6 @@ public class Avatar extends CircularGameObject
 
                 case Const.TYPE_GOBLIN:
                     this.moveBack(); 
-                    if (weaponTemp <= 0) {
-                        ((EnemyAI)obj).hit();
-                        weaponTemp = COOLDOWN;
-                    }
                     break;
 
                 // pick up Bones
@@ -175,6 +173,7 @@ public class Avatar extends CircularGameObject
 
         // Hacky, but we can flip the orientation of the avatar by switching the image coordinates to draw from
         int endx = (int)x;
+        int endy = (int)y;
         if ((startx < endx && !flippedX) || (startx > endx && flippedX)) {
             int tempx = imageRef.x1;
             imageRef.x1 = imageRef.x2;
@@ -182,21 +181,48 @@ public class Avatar extends CircularGameObject
             flippedX = !flippedX;
         }
 
-
+        if (swordSwing != null && (startx != endx || starty != endy)) {
+            swordSwing.offset(endx-startx, endy-starty);
+        }
     }
 
     @Override
-    public void draw(GraphicSystem gs) {
+    public void draw(GraphicSystem gs, long tick) {
         int swordx = (int)Math.round(flippedX ? x : (x-radius)); //-radius*1.5;
         int swordy = (int)Math.round(y - radius * 1.2);
         int width = (int)Math.round((sword.x2 - sword.x1)*0.8);
         int height = (int)Math.round((sword.y2 - sword.y1)*0.8);
 
-        gs.drawImage(sword, swordx, swordy, swordx+width, swordy+height);
+        if (swordSwing == null || !swordSwing.isLiving) {
+            gs.drawImage(sword, swordx, swordy, swordx+width, swordy+height);
+        }
         gs.draw(this);
     }
 
+    public void swingSword(ImageRef imageRef) {
+        if (weaponTemp > 0) { return; }
 
+        Sound sword = new Sound("/music/sword-sound-1_16bit.wav");
+        sword.setVolume(-30.0f);
+        sword.playSound();
+
+        weaponTemp = COOLDOWN;
+        swordSwing = new SwordSwing(x, y, imageRef, flippedX);
+        world.gameObjects.add(swordSwing);
+    }
 
     public int type() { return Const.TYPE_AVATAR; }
+
+    public void hit() {
+        // every hit decreases life
+        life -= 0.05;
+        healthBar.health = life;
+
+        if (life <= 0) { die(); }
+    }
+
+    public void die() {
+        this.isLiving = false;
+        ((RPGWorld)world).throwGrenade(x, y);
+    }
 }

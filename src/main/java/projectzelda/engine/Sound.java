@@ -14,38 +14,39 @@ public class Sound {
     private long currentFrame;
 
     //constructor to initialize streams and clip
-    public Sound(String fileName) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+    public Sound(String fileName) {
 
         this.fileName = fileName;
         inputStream = getClass().getResourceAsStream(fileName);
 
 
         // the stream holding the file content
-        if (inputStream == null) {
-            throw new IllegalArgumentException("file not found! " + fileName);
-        } else {
+        try {
+            if (inputStream == null) {
+                throw new IllegalArgumentException("file not found! " + fileName);
+            } else {
 
-            audioInputStream = AudioSystem.getAudioInputStream(inputStream);
-            clip = AudioSystem.getClip();
-            clip.open(audioInputStream);
+                audioInputStream = AudioSystem.getAudioInputStream(inputStream);
+                clip = AudioSystem.getClip();
+                clip.open(audioInputStream);
 
+            }
+        } catch (Exception e) {
+            System.out.println("Exception with Sound");
+            e.printStackTrace();
         }
 
 
     }
 
     public void playBackgroundMusic()  {
-
         clip.start();
         clip.loop(Clip.LOOP_CONTINUOUSLY);
-
     }
 
     public void playSound()  {
-
-            clip.start();
-
-        }
+        clip.start();
+    }
 
     // volume in decibels
     public void setVolume (float volume) {
