@@ -158,8 +158,9 @@ public class RPGWorld extends World {
         }
 
         // got have rock
-        MapObject rocks = map.getFirstObject("Rocks");
-        gameObjects.add(new Rock(rocks.startingBounds.x1, rocks.startingBounds.y1));
+        MapObject RockMo = map.getFirstObject("DestroyableRocks");
+        Rock rock = new Rock(RockMo.startingBounds.x1, RockMo.startingBounds.y1, RockMo.imageRef);
+        gameObjects.add(rock);
 
 
         counterB = new Counter("Bones: ", 20, 40);
