@@ -27,7 +27,7 @@ public class BrutusNpc extends NPC {
     static String[] brutusNpcQuestOlgaInProgText = {
             "Did you find Olga?",
             "No, can you tell me where she is?",
-            "Shes close-by, just south-west of us.",
+            "Shes close-by, just south-east of us.",
             "Ok, thank you"
     };
 
@@ -38,7 +38,7 @@ public class BrutusNpc extends NPC {
             "Many thanks to you!",
             "But theres still more to do!",
             "My friend Steve is terrified of a pumpkin.",
-            "Go find him to the east and see what you can...",
+            "Go find him to the west and see what you can...",
             ".. do for him."
     };
 
@@ -96,9 +96,8 @@ public class BrutusNpc extends NPC {
 
     static String[] brutusNpcQuestPostText = {
             "Oh it's you again!",
-            "Yes, it's me is there anything else I can do?",
-            "No, but perhaps the others have something for you.",
-            "Thanks."
+            "Thank you for all the help around here!"
+
     };
 
     public BrutusNpc(double x, double y, int width, int height, ImageRef imageRef) {
@@ -109,22 +108,29 @@ public class BrutusNpc extends NPC {
     public String[] getNpcQuestText(QuestState q) {
         switch(q) {
             case START:
-            case OLGA:
                 return brutusNpcQuestStartText;
+            case OLGA:
             case OLGA_SWORD_SEARCH:
             case OLGA_SWORD_SEARCH_COMPLETED:
             case OLGA_MONSTERS:
-                return brutusNpcQuestOlgaInProgText;
             case OLGA_COMPLETED:
-                return brutusNpcQuestOlgaCompleteText;
+                return brutusNpcQuestOlgaInProgText;
             case STEVE:
-                return brutusNpcQuestSteveInProgText;
+                return brutusNpcQuestOlgaCompleteText;
+            case STEVE_START:
+            case STEVE_IN_PROGRESS:
             case STEVE_COMPLETED:
-                return brutusNpcQuestSteveCompleteText;
+                return brutusNpcQuestSteveInProgText;
             case BOB:
+                return brutusNpcQuestSteveCompleteText;
+            case BOB_START:
+            case BOB_IN_PROGRESS_CAT:
+            case BOB_IN_PROGRESS_DOG:
+            case BOB_PETS_FOUND:
                 return brutusNpcQuestBobInProgText;
             case BOB_COMPLETED:
                 return brutusNpcQuestBobCompleted;
+
             case BOSS:
             default:  // Java's a pretty horrible language, huh? 
                 return brutusNpcQuestPostText;
@@ -141,10 +147,22 @@ public class BrutusNpc extends NPC {
             case OLGA_SWORD_SEARCH_COMPLETED:
             case OLGA_MONSTERS:
             case OLGA_COMPLETED:
+                return false;
             case STEVE:
+                return true;
+            case STEVE_START:
+            case STEVE_IN_PROGRESS:
             case STEVE_COMPLETED:
+                return false;
             case BOB:
+                return true;
+            case BOB_START:
+            case BOB_IN_PROGRESS_CAT:
+            case BOB_IN_PROGRESS_DOG:
+            case BOB_PETS_FOUND:
+                return false;
             case BOB_COMPLETED:
+                return true;
             case BOSS:
             default:  // Java's a pretty horrible language, huh? 
                 return false;

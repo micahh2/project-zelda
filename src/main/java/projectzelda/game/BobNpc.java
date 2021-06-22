@@ -62,13 +62,20 @@ public class BobNpc extends NPC {
             case OLGA_MONSTERS:
             case OLGA_COMPLETED:
             case STEVE:
-                return bobNpcQuestWaiting;
+            case STEVE_START:
+            case STEVE_IN_PROGRESS:
             case STEVE_COMPLETED:
-                return bobNpcQuestStartText;
             case BOB:
+                return bobNpcQuestWaiting;
+            case BOB_START:
+                   return bobNpcQuestStartText;
+            case BOB_IN_PROGRESS_CAT:
+            case BOB_IN_PROGRESS_DOG:
                 return bobNpcQuestInProgText;
-            case BOB_COMPLETED:
+            case BOB_PETS_FOUND:
                 return bobNpcQuestCompleteText;
+            case BOB_COMPLETED:
+
             case BOSS:
             default:  // Java's a pretty horrible language, huh? 
                 return bobNpcQuestPostText;
@@ -85,13 +92,19 @@ public class BobNpc extends NPC {
             case OLGA_MONSTERS:
             case OLGA_COMPLETED:
             case STEVE:
-                return false;
+            case STEVE_START:
+            case STEVE_IN_PROGRESS:
             case STEVE_COMPLETED:
-                return true;
             case BOB:
                 return false;
-            case BOB_COMPLETED:
+            case BOB_START:
                 return true;
+            case BOB_IN_PROGRESS_CAT:
+            case BOB_IN_PROGRESS_DOG:
+                return false;
+            case BOB_PETS_FOUND:
+                return true;
+            case BOB_COMPLETED:
             case BOSS:
             default:  // Java's a pretty horrible language, huh? 
                 return false;

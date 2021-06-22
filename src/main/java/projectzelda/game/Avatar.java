@@ -128,19 +128,20 @@ public class Avatar extends CircularGameObject {
                         chatBox = new ChatBoxButton(posXChatBox, posYChatBox, 600, 100, "I'm going to need a weapon", Const.Type.GOBLIN);
                         world.chatBoxObjects.add(chatBox);
                     }
-
-                    break;
+                break;
 
                 // pick up Bones
                 case BONES:
-                    hit(life =1.0);
-                    ((RPGWorld)world).addBones();
-                    if (q == QuestState.OLGA_MONSTERS && counterBones.getNumber() >= 6) { 
-                        ((RPGWorld)world).nextQuest();
+                    hit(life = 1.0);
+                    ((RPGWorld) world).addBones();
+                    chatBox = new ChatBoxButton(posXChatBox, posYChatBox, 600, 100, "Bones picked up", Const.Type.BONES);
+                    world.chatBoxObjects.add(chatBox);
+                    if (q == QuestState.OLGA_MONSTERS && counterBones.getNumber() >= 6) {
+                        ((RPGWorld) world).nextQuest();
+
                     }
                     obj.isLiving = false;
                     break;
-
             }
         }
 
@@ -179,11 +180,12 @@ public class Avatar extends CircularGameObject {
         this.moveBack();
         world.gameState = GameState.DIALOG;
         QuestState q = ((RPGWorld)world).questState;
-        if (q == QuestState.STEVE) {
+        if (q == QuestState.STEVE_IN_PROGRESS) {
             pumpkin.setPumpkinText(pumpkin.getPumpkinQuestText());
             chatBoxText = pumpkin.getPumpkinText(0);
             ((RPGWorld) world).addChatBox(chatBoxText, pumpkin);
             pumpkin.isLiving = false;
+            System.out.println("Next! " + ((RPGWorld)world).questState);
             ((RPGWorld)world).nextQuest();
         } else {
             chatBoxText = pumpkin.getPumpkinText(0);
@@ -200,6 +202,8 @@ public class Avatar extends CircularGameObject {
             chatBoxText = chest.getChestText(0);
             ((RPGWorld) world).addChatBox(chatBoxText, chest);
             chest.isLiving = false;
+            hasSword= true;
+            System.out.println("Next! " + ((RPGWorld)world).questState);
             ((RPGWorld)world).nextQuest();
         } else {
             chatBoxText = chest.getChestText(0);
@@ -215,6 +219,28 @@ public class Avatar extends CircularGameObject {
         ((RPGWorld)world).addChatBox(chatBoxText, npc);
     }
 
+    public void questAnimal(NPC animal) {
+        this.moveBack();
+        world.gameState = GameState.DIALOG;
+        QuestState q = ((RPGWorld)world).questState;
+        if (q == QuestState.BOB_IN_PROGRESS_CAT ) {
+            chatBoxText =animal.getNpcQuestText(q,0);
+            ((RPGWorld) world).addChatBox(chatBoxText, animal);
+            animal.isLiving = false;
+            System.out.println("Next! " + ((RPGWorld)world).questState);
+           ((RPGWorld)world).nextQuest();
+        }  else if (q == QuestState.BOB_IN_PROGRESS_DOG ) {
+            chatBoxText =animal.getNpcQuestText(q,0);
+            ((RPGWorld) world).addChatBox(chatBoxText, animal);
+            animal.isLiving = false;
+            System.out.println("Next! " + ((RPGWorld)world).questState);
+           ((RPGWorld)world).nextQuest();
+        }
+        else {
+            chatBoxText =animal.getNpcQuestText(q,0);
+            ((RPGWorld) world).addChatBox(chatBoxText, animal);
+        }
+    }
     public void draw(GraphicSystem gs, long tick) {
         int swordx = (int)Math.round(flippedX ? x : (x-radius)); //-radius*1.5;
         int swordy = (int)Math.round(y - radius * 1.2);

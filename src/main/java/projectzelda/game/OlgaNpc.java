@@ -25,7 +25,7 @@ public class OlgaNpc extends NPC {
     private String[] olgaNpcChestQuestInProgText = {
             "Did you find the chest?",
             "No, can you tell me where it is again?",
-            "Just east of here! Hurry we don't have much time."
+            "Just west of here! Hurry we don't have much time."
     };
 
     private String[] olgaNpcChestQuestCompleteText = {
@@ -36,13 +36,16 @@ public class OlgaNpc extends NPC {
             "There are monsters south of us at the beach.",
             "My kids can't play there anymore.",
             "Can you get rid of them for us?",
-            "Yes, of course!"
+            "Yes, of course!",
+            "Thank you, don't forget to bring me..",
+            ".. all 6 of their bones!"
     };
 
     private String[] olgaNpcMonsterQuestStartText = {
             "Did you kill the monsters yet?",
-            "No, I didn't",
-            "Don't come back until you do"
+            "No, I didn't.",
+            "Don't come back until you do.",
+            "Remember I want to see 6 bones!"
     };
 
 
@@ -87,8 +90,14 @@ public class OlgaNpc extends NPC {
             case OLGA_COMPLETED:
                 return olgaNpcMonsterQuestCompletedText;
             case STEVE:
+            case STEVE_START:
+            case STEVE_IN_PROGRESS:
             case STEVE_COMPLETED:
             case BOB:
+            case BOB_START:
+            case BOB_IN_PROGRESS_CAT:
+            case BOB_IN_PROGRESS_DOG:
+            case BOB_PETS_FOUND:
             case BOB_COMPLETED:
             case BOSS:
             default:  // Java's a pretty horrible language, huh? 
@@ -110,8 +119,14 @@ public class OlgaNpc extends NPC {
             case OLGA_COMPLETED:
                 return true;
             case STEVE:
+            case STEVE_START:
+            case STEVE_IN_PROGRESS:
             case STEVE_COMPLETED:
             case BOB:
+            case BOB_START:
+            case BOB_IN_PROGRESS_CAT:
+            case BOB_IN_PROGRESS_DOG:
+            case BOB_PETS_FOUND:
             case BOB_COMPLETED:
             case BOSS:
             case START:

@@ -50,18 +50,24 @@ public class SteveNpc extends NPC {
     public String[] getNpcQuestText(QuestState q) {
         switch(q) {
             case START:
-                return steveNpcQuestWaiting;
             case OLGA:
             case OLGA_SWORD_SEARCH:
             case OLGA_SWORD_SEARCH_COMPLETED:
             case OLGA_MONSTERS:
             case OLGA_COMPLETED:
-                return steveNpcQuestStartText;
             case STEVE:
+                return steveNpcQuestWaiting;
+            case STEVE_START:
+                return steveNpcQuestStartText;
+            case STEVE_IN_PROGRESS:
                 return steveNpcQuestInProgText;
             case STEVE_COMPLETED:
                 return steveNpcQuestCompleteText;
             case BOB:
+            case BOB_START:
+            case BOB_IN_PROGRESS_CAT:
+            case BOB_IN_PROGRESS_DOG:
+            case BOB_PETS_FOUND:
             case BOB_COMPLETED:
             case BOSS:
             default:  // Java's a pretty horrible language, huh? 
@@ -79,9 +85,17 @@ public class SteveNpc extends NPC {
             case OLGA_COMPLETED:
             case STEVE:
                 return false;
+            case STEVE_START:
+                return true;
+            case STEVE_IN_PROGRESS:
+                return false;
             case STEVE_COMPLETED:
                 return true;
             case BOB:
+            case BOB_START:
+            case BOB_IN_PROGRESS_CAT:
+            case BOB_IN_PROGRESS_DOG:
+            case BOB_PETS_FOUND:
             case BOB_COMPLETED:
             case BOSS:
             case START:

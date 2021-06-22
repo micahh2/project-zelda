@@ -33,6 +33,7 @@ public class RPGWorld extends World {
     QuestState questState = QuestState.START;
 
     private int chatTrack = 1;
+    private boolean isEnterKeyPressed = false;
 
     public RPGWorld(projectzelda.map.Map map) throws UnsupportedAudioFileException, LineUnavailableException, IOException {
         this.map = map;
@@ -43,7 +44,7 @@ public class RPGWorld extends World {
     public void init() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
 
         //play the background music
-        sound.playBackgroundMusic();
+       // sound.playBackgroundMusic();
         sound.setVolume(-20.0F);
 
         // add the Avatar
@@ -346,13 +347,15 @@ public class RPGWorld extends World {
                     } else {
                         gameState = GameState.PLAY;
                     }
-                    break;
+
                 default:
-                    System.out.println("Unknown key code " + userInput.keyPressed);
+                  //  System.out.println("Unknown key code " + userInput.keyPressed);
                     break;
             }
 
         }
+
+
         int vert = 0;
         int horz = 0;
         if (userInput.keysPressed.contains('w')) {
@@ -436,6 +439,7 @@ public class RPGWorld extends World {
         chatBoxObjects.add(chatBox);
     }
 
+
     public Counter getCounterB() {
         return counterB;
     }
@@ -470,7 +474,10 @@ public class RPGWorld extends World {
 
                 }
                 break;
+
+
             case NPC:
+            case ANIMAL:
                 NPC npc = (NPC)chatBox.obj;
                 if (npc.getNpcQuestText(questState).length > chatTrack) {
                     chatBox.setText(npc.getNpcQuestText(questState, chatTrack));
@@ -478,12 +485,16 @@ public class RPGWorld extends World {
                 } else {
                     if (npc.progressFromTalk(questState)) {
                         System.out.println("Next! " + questState);
-                        nextQuest();
+                        if (!(questState == QuestState.BOB_IN_PROGRESS_CAT || questState == QuestState.BOB_IN_PROGRESS_DOG)){
+                            nextQuest();
+                        }
+
                     }
                     chatTrack = 1;
                     chatBoxObjects.remove(0);
                 }
                 break;
+
             case BONES:
             case GOBLIN:
                 chatBoxObjects.remove(0);

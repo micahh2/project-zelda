@@ -13,8 +13,11 @@ public class DogNpc extends NPC {
 
     @Override
     public String[] getNpcQuestText(QuestState q) {
-        if (q == QuestState.BOB) {
+        if (q == QuestState.BOB_IN_PROGRESS_CAT) {
             return dogNpcQuestText;
+        } else if (q == QuestState.BOB_IN_PROGRESS_DOG) {
+            return dogNpcQuestText;
+
         }
         return dogNpcText;
     }
