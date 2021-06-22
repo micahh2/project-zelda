@@ -4,6 +4,7 @@ import projectzelda.*;
 import projectzelda.engine.*;
 import projectzelda.map.MapObject;
 
+import java.awt.*;
 import java.util.List;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
@@ -17,7 +18,6 @@ public class RPGWorld extends World {
 
     private boolean isMusicPlaying = true;
 
-    private Counter counterB;
     private HelpText helpText;
 
 
@@ -166,11 +166,8 @@ public class RPGWorld extends World {
             sound.stopBackgroundMusic();
         }
 
-        counterB = new Counter("Bones: ", 20, 40);
         helpText = new HelpText(400, 450);
 
-
-        textObjects.add(counterB);
         textObjects.add(helpText);
 
         // calculate relative ui button width and height
@@ -194,6 +191,11 @@ public class RPGWorld extends World {
         relY = (int)(0.6 * worldInfo.getPartHeight());
         deathMenuObjects.add(new UIButton(relX, relY, buttonWidth, buttonHeight, "Quit"));
 
+        // initialize the background and add it to different screens
+        Background background = new Background(0, 0, map.getPartWidth(), map.getHeight(), new Color(1f,1f,1f,0.2f ));
+        pauseMenuObjects.add(background);
+        mainMenuObjects.add(background);
+        deathMenuObjects.add(background);
 
         // add the hud elements
         hudObjects.add(((Avatar) avatar).healthBar);
@@ -429,10 +431,6 @@ public class RPGWorld extends World {
 
     }
 
-
-    public void addBones() {
-        counterB.increment();
-    }
 
     public void addChatBox(String text, GameObject obj) {
         int posXChatBox = worldInfo.getPartWidth()/2-300;
