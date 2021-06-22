@@ -29,6 +29,7 @@ public class NPC extends RectangularGameObject {
         stuckTimer = STUCK_COUNTDOWN*Math.random();
     }
 
+
     @Override
     public void move(double diffSeconds) {
 
@@ -66,7 +67,6 @@ public class NPC extends RectangularGameObject {
                 case NPC:
                 case GOBLIN:
                 case BONES:
-                case GRENADE:
                 case WATER:
                     stuck = true;
                     this.moveBack(); 

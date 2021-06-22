@@ -150,7 +150,7 @@ public class Map implements MediaInfo, WorldInfo {
     }
 
     // These should be things that wont move
-    final List<String> backgroundLayerNames = List.of("Bottom", "Furnitures", "Water", "Trees", "Rocks");
+    final List<String> backgroundLayerNames = List.of("Bottom", "Furnitures", "Water", "Trees");
 
     public List<ImageRefTo> getNonBackgroundTiles() {
         ArrayList<ImageRefTo> tiles = new ArrayList<ImageRefTo>();

@@ -61,6 +61,7 @@ public class Boss extends EnemyAI
             switch (type) {
                 case AVATAR:
                 case TREE:
+                case ROCK:
                 case GOBLIN:
                 case LAVA:
                 case WATER:

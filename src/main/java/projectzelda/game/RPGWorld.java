@@ -18,8 +18,6 @@ public class RPGWorld extends World {
 
     private boolean isMusicPlaying = true;
 
-    // for grenades
-    private int grenades = 5;
     private HelpText helpText;
 
 
@@ -160,9 +158,13 @@ public class RPGWorld extends World {
         }
 
         // got have rock
-        MapObject rocks = map.getFirstObject("Rocks");
-        gameObjects.add(new Rock(rocks.startingBounds.x1, rocks.startingBounds.y1));
+        MapObject RockMo = map.getFirstObject("DestroyableRocks");
+        Rock rock = new Rock(RockMo.startingBounds.x1, RockMo.startingBounds.y1, RockMo.imageRef);
+        gameObjects.add(rock);
 
+        if (!rock.isLiving) {
+            sound.stopBackgroundMusic();
+        }
 
         helpText = new HelpText(400, 450);
 
@@ -425,26 +427,10 @@ public class RPGWorld extends World {
                 return;
             }
 
-
-            // if collisions occur, cancel
-            Grenade grenade = new Grenade(x, y);
-            GameObjectList list = getPhysicsSystem().getCollisions(grenade);
-            if (list.size() != 0) {
-                spawnGrenade = INTERVAL;
-                return;
-            }
-
-            // else add zombie to world
-            this.gameObjects.add(grenade);
         }
 
     }
 
-    public void addGrenade() {
-        if (grenades < 999) {
-            grenades++;
-        }
-    }
 
     public void addChatBox(String text, GameObject obj) {
         int posXChatBox = worldInfo.getPartWidth()/2-300;
@@ -498,15 +484,6 @@ public class RPGWorld extends World {
                     }
                     break;
             }
-        } else {
-            switch (chatBox.objID) {
-                case GRENADE:
-                case BONES:
-                    chatBoxObjects.remove(0);
-                    gameState = GameState.PLAY;
-                    break;
-                    }
-
         }
     }
 
