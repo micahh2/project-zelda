@@ -29,6 +29,7 @@ public class NPC extends RectangularGameObject {
         stuckTimer = STUCK_COUNTDOWN*Math.random();
     }
 
+
     @Override
     public void move(double diffSeconds) {
 

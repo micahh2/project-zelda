@@ -162,6 +162,9 @@ public class RPGWorld extends World {
         Rock rock = new Rock(RockMo.startingBounds.x1, RockMo.startingBounds.y1, RockMo.imageRef);
         gameObjects.add(rock);
 
+        if (!rock.isLiving) {
+            sound.stopBackgroundMusic();
+        }
 
         counterB = new Counter("Bones: ", 20, 40);
         helpText = new HelpText(400, 450);

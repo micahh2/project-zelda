@@ -28,20 +28,16 @@ public class Rock extends RectangularGameObject
 
     // Invisible
     @Override
-
-
-    //public void draw(GraphicSystem gs, long tick) {
-
-       // healthBar.draw(gs, tick);
-       // return;
-
-   // }
+    public void draw(GraphicSystem gs, long tick) {
+        gs.draw(this);
+        healthBar.draw(gs, tick);
+    }
 
     public int type() { return Const.Type.ROCK.ordinal(); }
 
     protected void adjustHealthBarPosition() {
         int healthBarX = (int) (x - healthBar.width /10);
-        int healthBarY = (int) (y - radius - 7 * healthBar.height);
+        int healthBarY = (int) (y - radius + 15 * healthBar.height);
         healthBar.x = healthBarX;
         healthBar.y = healthBarY;
     }

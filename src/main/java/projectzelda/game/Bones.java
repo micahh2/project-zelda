@@ -17,7 +17,8 @@ class Bones extends CircularGameObject
     public void move(double diffSeconds)
     {
         life -= diffSeconds;
-        if (life < 0) { isLiving=false; }
+        if (life < 0) { isLiving=false;
+        }
     }
 
     public int type() { return Const.Type.BONES.ordinal(); }

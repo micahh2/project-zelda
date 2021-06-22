@@ -140,15 +140,17 @@ public class Avatar extends CircularGameObject
 
                 // pick up Bones
                 case BONES:
+                    hit(life =1.0);
                     ((RPGWorld)world).addBones();
-                    world.gameState = GameState.DIALOG;
-                    chatBox = new ChatBoxButton(posXChatBox, posYChatBox, 600, 100, "Bones picked up", Const.Type.BONES);
-                    world.chatBoxObjects.add(chatBox);
+                    //world.gameState = GameState.DIALOG;
+                    //chatBox = new ChatBoxButton(posXChatBox, posYChatBox, 600, 100, "Bones picked up", Const.Type.BONES);
+                    //world.chatBoxObjects.add(chatBox);
                     obj.isLiving = false;
                     break;
 
-
             }
+
+
         }
 
         // Hacky, but we can flip the orientation of the avatar by switching the image coordinates to draw from

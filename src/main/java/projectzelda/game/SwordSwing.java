@@ -41,7 +41,9 @@ public class SwordSwing extends CircularGameObject {
                     ((EnemyAI)obj).hit();
                     hasHit = true;
                 case ROCK:
-                    ((Rock)obj).hit();
+                    if (obj instanceof Rock) {
+                        ((Rock)obj).hit();
+                    }
                     hasHit = true;
 
 
