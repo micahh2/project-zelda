@@ -41,53 +41,52 @@ public class SteveNpc extends NPC {
             "Thanks."
     };
 
-
-
-
-    private boolean steveNpcQuestUnlocked = false;
-    private  boolean steveNpcQuestStart = false;
-    private boolean steveNpcQuestInProg = false;
-    private  boolean steveNpcQuestCompleted = false;
-    private boolean steveNpcQuestPost = false;
-
-
-    public SteveNpc(double x, double y, int width, int height, ImageRef imageref) {
-        super(x, y, 0,0, width, height, null);
-        this.imageRef = imageref;
-        this.isMoving = false;
-        steveNpcQuestText = steveNpcQuestStartText;
-
+    public SteveNpc(double x, double y, int width, int height, ImageRef imageRef) {
+        super(x, y, width, height, imageRef);
     }
 
 
+    @Override
+    public String[] getNpcQuestText(QuestState q) {
+        switch(q) {
+            case START:
+                return steveNpcQuestWaiting;
+            case OLGA:
+            case OLGA_SWORD_SEARCH:
+            case OLGA_SWORD_SEARCH_COMPLETED:
+            case OLGA_MONSTERS:
+            case OLGA_COMPLETED:
+                return steveNpcQuestStartText;
+            case STEVE:
+                return steveNpcQuestInProgText;
+            case STEVE_COMPLETED:
+                return steveNpcQuestCompleteText;
+            case BOB:
+            case BOB_COMPLETED:
+            case BOSS:
+            default:  // Java's a pretty horrible language, huh? 
+                return steveNpcQuestPostText;
+        }
+    }
 
-    // obtain text
-    public String[] getSteveNpcQuestText() { return steveNpcQuestText; }
-    public String getSteveNpcText(int index) { return steveNpcQuestText[index]; }
-    public void setSteveNpcQuestText(String[] questText) { steveNpcQuestText = questText; }
-    public String[] getSteveNpcQuestWaiting() { return steveNpcQuestWaiting; }
-    public String[] getSteveNpcQuestStartText() { return steveNpcQuestStartText; }
-    public String[] getSteveNpcQuestInProgText() { return steveNpcQuestInProgText; }
-    public String[] getSteveNpcQuestCompleteText() { return steveNpcQuestCompleteText; }
-    public String[] getGetSteveNpcQuestPostText() { return steveNpcQuestPostText; }
-
-    // track quest state
-
-    public boolean isSteveNpcQuestUnlocked() { return steveNpcQuestUnlocked; }
-    public void setSteveNpcQuestUnlocked(boolean steveNpcQuestUnlocked) { this.steveNpcQuestUnlocked = steveNpcQuestUnlocked; }
-
-    public boolean isSteveNpcQuestStart() { return steveNpcQuestStart; }
-    public void setSteveNpcQuestStart(boolean steveNpcQuestStart) { this.steveNpcQuestStart = steveNpcQuestStart; }
-
-    public boolean isSteveNpcQuestInProg() { return steveNpcQuestInProg; }
-    public void setSteveNpcQuestInProg(boolean steveNpcQuestInProg) { this.steveNpcQuestInProg = steveNpcQuestInProg; }
-
-    public boolean isSteveNpcQuestCompleted() { return steveNpcQuestCompleted; }
-    public void setSteveNpcQuestCompleted(boolean steveNpcQuestCompleted) { this.steveNpcQuestCompleted = steveNpcQuestCompleted; }
-
-    public boolean isSteveNpcQuestPost() { return steveNpcQuestPost; }
-    public void setSteveNpcQuestPost(boolean steveNpcQuestPost) { this.steveNpcQuestPost = steveNpcQuestPost; }
-
-    public int type() { return Const.TYPE_STEVE; }
-
+    @Override
+    public boolean progressFromTalk(QuestState q) {
+        switch(q) {
+            case OLGA:
+            case OLGA_SWORD_SEARCH:
+            case OLGA_SWORD_SEARCH_COMPLETED:
+            case OLGA_MONSTERS:
+            case OLGA_COMPLETED:
+            case STEVE:
+                return false;
+            case STEVE_COMPLETED:
+                return true;
+            case BOB:
+            case BOB_COMPLETED:
+            case BOSS:
+            case START:
+            default:  // Java's a pretty horrible language, huh? 
+                return false;
+        }
+    }
 }

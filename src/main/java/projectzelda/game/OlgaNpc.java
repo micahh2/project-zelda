@@ -4,9 +4,6 @@ import projectzelda.engine.ImageRef;
 
 public class OlgaNpc extends NPC {
 
-    private String[] olgaNpcQuestText;
-
-
     private String[] olgaNpcQuestWaiting = {
             "*She ignores you*",
             "Wow that's rude!",
@@ -69,70 +66,57 @@ public class OlgaNpc extends NPC {
     };
 
 
-    // overall quest completion
-    private boolean olgaNpcQuestCompleted = false;
-
-    // Chest portion of quest
-    private  boolean olgaNpcChestQuestStart = false;
-    private boolean olgaNpcChestQuestInProg = false;
-    private  boolean olgaNpcChestQuestCompleted = false;
-    private boolean olgaNpcChestQuestPost = false;
-
-
-
-    // monster portion of quest
-    private boolean olgaNpcMonsterQuestStart = false;
-    private boolean olgaNpcMonsterQuestCompleted = false;
-
     public OlgaNpc(double x, double y, int width, int height, ImageRef imageRef)
     {
-        super(x, y, 0,0, width, height, null);
-        this.imageRef = imageref;
-        this.isMoving = false;
-        olgaNpcQuestText = olgaNpcQuestStartText;
+        super(x, y, width, height, imageRef);
     }
 
-    // obtain text
-    public String[] getOlgaNpcQuestText() { return olgaNpcQuestText; }
-    public String getOlgaNpcText(int index) { return olgaNpcQuestText[index]; }
-    public void setOlgaNpcQuestText(String[] questText) { olgaNpcQuestText = questText; }
-    public String[] getOlgaNpcQuestWaiting() { return olgaNpcQuestWaiting; }
-    public String[] getOlgaNpcQuestStartText() { return olgaNpcQuestStartText; }
-    public String[] getOlgaNpcChestQuestInProgText() { return olgaNpcChestQuestInProgText; }
-    public String[] getOlgaNpcChestQuestCompleteText() { return olgaNpcChestQuestCompleteText; }
-    public String[] getOlgaNpcMonsterQuestStartText() { return olgaNpcMonsterQuestStartText; }
-    public String[] getOlgaNpcMonsterQuestCompletedText() { return olgaNpcMonsterQuestCompletedText; }
-    public String[] getOlgaNpcPostQuestText() { return olgaNpcPostQuestText; }
-
-    // track quest state
-    public boolean isOlgaNpcQuestCompleted() { return olgaNpcQuestCompleted;
+    @Override
+    public String[] getNpcQuestText(QuestState q) {
+        switch(q) {
+            case START:
+                return olgaNpcQuestWaiting;
+            case OLGA:
+                return olgaNpcQuestStartText;
+            case OLGA_SWORD_SEARCH:
+                return olgaNpcChestQuestInProgText;
+            case OLGA_SWORD_SEARCH_COMPLETED:
+                return olgaNpcChestQuestCompleteText;
+            case OLGA_MONSTERS:
+                return olgaNpcMonsterQuestStartText;
+            case OLGA_COMPLETED:
+                return olgaNpcMonsterQuestCompletedText;
+            case STEVE:
+            case STEVE_COMPLETED:
+            case BOB:
+            case BOB_COMPLETED:
+            case BOSS:
+            default:  // Java's a pretty horrible language, huh? 
+                return olgaNpcPostQuestText;
+        }
     }
 
-    public void setOlgaNpcQuestCompleted(boolean olgaNpcQuestCompleted) { this.olgaNpcQuestCompleted = olgaNpcQuestCompleted;
+    @Override
+    public boolean progressFromTalk(QuestState q) {
+        switch(q) {
+            case OLGA:
+                return true;
+            case OLGA_SWORD_SEARCH:
+                return false;
+            case OLGA_SWORD_SEARCH_COMPLETED:
+                return true;
+            case OLGA_MONSTERS:
+                return false;
+            case OLGA_COMPLETED:
+                return true;
+            case STEVE:
+            case STEVE_COMPLETED:
+            case BOB:
+            case BOB_COMPLETED:
+            case BOSS:
+            case START:
+            default:  // Java's a pretty horrible language, huh? 
+                return false;
+        }
     }
-
-
-
-    // track Chest quest
-    public boolean isOlgaNpcChestQuestStart() { return olgaNpcChestQuestStart; }
-    public void setOlgaNpcChestQuestStart(boolean olgaNpcChestQuestStart) { this.olgaNpcChestQuestStart = olgaNpcChestQuestStart; }
-
-    public boolean isOlgaNpcChestQuestInProg() { return olgaNpcChestQuestInProg; }
-    public void setOlgaNpcChestQuestInProg(boolean olgaNpcChestQuestInProg) { this.olgaNpcChestQuestInProg = olgaNpcChestQuestInProg; }
-
-    public boolean isOlgaNpcChestQuestCompleted() { return olgaNpcChestQuestCompleted; }
-    public void setOlgaNpcChestQuestCompleted(boolean olgaNpcChestQuestCompleted) { this.olgaNpcChestQuestCompleted = olgaNpcChestQuestCompleted; }
-
-    public boolean isOlgaNpcQuestPost() { return olgaNpcChestQuestPost; }
-    public void setOlgaNpcQuestPost(boolean olgaNpcQuestPost) { this.olgaNpcChestQuestPost = olgaNpcQuestPost; }
-
-    // track monster quest
-    public boolean isOlgaNpcMonsterQuestCompleted() { return olgaNpcMonsterQuestCompleted; }
-    public void setOlgaNpcMonsterQuestCompleted(boolean olgaNpcMonsterQuestCompleted) { this.olgaNpcMonsterQuestCompleted  = olgaNpcMonsterQuestCompleted; }
-
-    public boolean isOlgaNpcMonsterQuestStart() { return olgaNpcMonsterQuestStart; }
-    public void setOlgaNpcMonsterQuestStart(boolean olgaNpcMonsterQuestStart) { this.olgaNpcMonsterQuestStart = olgaNpcMonsterQuestStart; }
-
-    public int type() { return Const.TYPE_OLGA; }
-
 }

@@ -30,7 +30,7 @@ public class RPGWorld extends World {
     private ImageRef swordSwing;
     private Sound sound = new Sound("/music/Forest_Ventures.wav");
 
-
+    QuestState questState = QuestState.START;
 
     private int chatTrack = 1;
 
@@ -227,12 +227,12 @@ public class RPGWorld extends World {
                 if (userInput.mouseMovedX >= resumeButton.x && userInput.mouseMovedX <= resumeButton.getMaxX()
                         && (userInput.mouseMovedY >= resumeButton.y && userInput.mouseMovedY <= resumeButton.getMaxY())) {
                     gameState = GameState.PLAY;
-                }
+                        }
 
                 if (userInput.mouseMovedX >= quitButton.x && userInput.mouseMovedX <= quitButton.getMaxX()
                         && (userInput.mouseMovedY >= quitButton.y && userInput.mouseMovedY <= quitButton.getMaxY())) {
                     System.exit(0);
-                }
+                        }
 
             } else {
                 // only 1 shot every ... seconds:
@@ -255,13 +255,13 @@ public class RPGWorld extends World {
             if (userInput.mouseMovedX >= playButton.x && userInput.mouseMovedX <= playButton.getMaxX()
                     && (userInput.mouseMovedY >= playButton.y && userInput.mouseMovedY <= playButton.getMaxY())) {
                 gameState = GameState.PLAY;
-            }
+                    }
         }
 
 
 
 
-        
+
         if (this.gameState == GameState.DEATH && userInput.isMousePressed) {
             UIButton restartButton = (UIButton) deathMenuObjects.get(0);
             UIButton quitButton = (UIButton) deathMenuObjects.get(1);
@@ -269,27 +269,27 @@ public class RPGWorld extends World {
             if (userInput.mouseMovedX >= restartButton.x && userInput.mouseMovedX <= restartButton.getMaxX()
                     && (userInput.mouseMovedY >= restartButton.y && userInput.mouseMovedY <= restartButton.getMaxY())) {
                 gameState = GameState.MAIN_MENU;
-            }
+                    }
 
             if (userInput.mouseMovedX >= quitButton.x && userInput.mouseMovedX <= quitButton.getMaxX()
                     && (userInput.mouseMovedY >= quitButton.y && userInput.mouseMovedY <= quitButton.getMaxY())) {
                 System.exit(0);
-            }
+                    }
         }
 
 
         // clicking chatbox (mouse press goes through all the dialog instantly)
-       /* if (!chatBoxObjects.isEmpty()) {
-            ChatBoxButton chatBox = (ChatBoxButton) chatBoxObjects.get(0);
-            if (userInput.isMousePressed) {
-                if (userInput.mouseMovedX >= chatBox.x && userInput.mouseMovedX <= chatBox.getMaxX()
-                        && (userInput.mouseMovedY >= chatBox.y && userInput.mouseMovedY <= chatBox.getMaxY())) {
-                   handleDialog(chatBox);
-                }
+        /* if (!chatBoxObjects.isEmpty()) {
+           ChatBoxButton chatBox = (ChatBoxButton) chatBoxObjects.get(0);
+           if (userInput.isMousePressed) {
+           if (userInput.mouseMovedX >= chatBox.x && userInput.mouseMovedX <= chatBox.getMaxX()
+           && (userInput.mouseMovedY >= chatBox.y && userInput.mouseMovedY <= chatBox.getMaxY())) {
+           handleDialog(chatBox);
+           }
 
-            }
+           }
 
-        } */
+           } */
 
 
         //
@@ -299,9 +299,9 @@ public class RPGWorld extends World {
             switch (userInput.keyPressed) {
                 case ' ':
                     // go through dialog via spacebar
-                   if (!chatBoxObjects.isEmpty()) {
-                       ChatBoxButton chatBox = (ChatBoxButton) chatBoxObjects.get(0);
-                       handleDialog(chatBox);
+                    if (!chatBoxObjects.isEmpty()) {
+                        ChatBoxButton chatBox = (ChatBoxButton) chatBoxObjects.get(0);
+                        handleDialog(chatBox);
 
                     } else {
 
@@ -333,10 +333,10 @@ public class RPGWorld extends World {
                 case 'd':
 
                     /*
-                    * exit dialog via movement > problem if moved accidentally on object that gets deleted on collision dialog is lost
-                    *                          > if left out accidental dialog is forced upon user upon collision
-                    * fixes chatloop > game frozen until wasd pressed after chatbox is cleared
-                    * */
+                     * exit dialog via movement > problem if moved accidentally on object that gets deleted on collision dialog is lost
+                     *                          > if left out accidental dialog is forced upon user upon collision
+                     * fixes chatloop > game frozen until wasd pressed after chatbox is cleared
+                     * */
                     if (!chatBoxObjects.isEmpty()) {
                         ChatBoxButton chatBoxButton = (ChatBoxButton) chatBoxObjects.get(0);
                         if(chatBoxButton.obj != null) {
@@ -443,119 +443,57 @@ public class RPGWorld extends World {
     public void handleDialog(ChatBoxButton chatBox) {
 
         // not ideal
+        Const.Type type = chatBox.obj != null
+            ?  Const.Type.values()[chatBox.obj.type()]
+            :  chatBox.objID;
 
-      if (chatBox.obj != null) {
-            switch (chatBox.obj.type()) {
-                case Const.TYPE_CHEST:
-                    Chest chestForText = (Chest) chest;
-                    if (chestForText.getChestText().length > chatTrack) {
-                        chatBox.setText(chestForText.getChestText()[chatTrack]);
-                        chatTrack++;
-                    } else {
-                        chatTrack = 1;
-                        chatBoxObjects.remove(0);
-
-                    }
-                    break;
-                case Const.TYPE_PUMPKIN:
-                    Pumpkin pumpkinForText = (Pumpkin) pumpkin;
-                    if (pumpkinForText.getPumpkinText().length > chatTrack) {
-                        chatBox.setText(pumpkinForText.getPumpkinText()[chatTrack]);
-                        chatTrack++;
-                    } else {
-                        chatTrack = 1;
-                        chatBoxObjects.remove(0);
-
-                    }
-                    break;
-                case Const.TYPE_DOG:
-                    DogNpc dogNpcForText = (DogNpc) dog;
-                    if (dogNpcForText.getDogNpcText().length > chatTrack) {
-                        chatBox.setText(dogNpcForText.getDogNpcText()[chatTrack]);
-                        chatTrack++;
-
-                    } else {
-                        chatTrack = 1;
-                        chatBoxObjects.remove(0);
-
-                    }
-                    break;
-
-                case Const.TYPE_CAT:
-                    CatNpc catNpcForText = (CatNpc) cat;
-                    if (catNpcForText.getCatNpcText().length > chatTrack) {
-                        chatBox.setText(catNpcForText.getCatNpcText()[chatTrack]);
-                        chatTrack++;
-
-                    } else {
-                        chatTrack = 1;
-                        chatBoxObjects.remove(0);
-
-                    }
-                    break;
-
-                case Const.TYPE_STEVE:
-                    SteveNpc steveNpcForText = (SteveNpc) steve;
-                    if (steveNpcForText.getSteveNpcQuestText().length > chatTrack) {
-                        chatBox.setText(steveNpcForText.getSteveNpcQuestText()[chatTrack]);
-                        chatTrack++;
-
-                    } else {
-                        chatTrack = 1;
-                        chatBoxObjects.remove(0);
-
-                    }
-                    break;
-
-                case Const.TYPE_BRUTUS:
-                    BrutusNpc brutusNpcForText = (BrutusNpc) brutus;
-                    if (brutusNpcForText.getBrutusNpcQuestText().length > chatTrack) {
-                        chatBox.setText(brutusNpcForText.getBrutusNpcQuestText()[chatTrack]);
-                        chatTrack++;
-
-                    } else {
-                        chatTrack = 1;
-                        chatBoxObjects.remove(0);
-
-                    }
-                    break;
-
-                case Const.TYPE_OLGA:
-                    OlgaNpc olgaNpcForText = (OlgaNpc) olga;
-                    if (olgaNpcForText.getOlgaNpcQuestText().length > chatTrack) {
-                        chatBox.setText(olgaNpcForText.getOlgaNpcQuestText()[chatTrack]);
-                        chatTrack++;
-
-                    } else {
-                        chatTrack = 1;
-                        chatBoxObjects.remove(0);
-
-                    }
-                    break;
-
-                case Const.TYPE_BOB:
-                    BobNpc bobNpcForText = (BobNpc) bob;
-                    if (bobNpcForText.getBobNpcQuestText().length > chatTrack) {
-                        chatBox.setText(bobNpcForText.getBobNpcQuestText()[chatTrack]);
-                        chatTrack++;
-                    } else {
-                        chatTrack = 1;
-                        chatBoxObjects.remove(0);
-
-                    }
-                    break;
-            }
-        } else {
-            switch (chatBox.objID) {
-                case Const.TYPE_GRENADE:
-                case Const.TYPE_BONES:
-                case Const.TYPE_GOBLIN:
+        switch (type) {
+            case CHEST:
+                Chest chestForText = (Chest)chatBox.obj;
+                if (chestForText.getChestText().length > chatTrack) {
+                    chatBox.setText(chestForText.getChestText()[chatTrack]);
+                    chatTrack++;
+                } else {
+                    chatTrack = 1;
                     chatBoxObjects.remove(0);
 
-                    break;
-                    }
+                }
+                break;
+            case PUMPKIN:
+                Pumpkin pumpkinForText = (Pumpkin)chatBox.obj;
+                if (pumpkinForText.getPumpkinText().length > chatTrack) {
+                    chatBox.setText(pumpkinForText.getPumpkinText()[chatTrack]);
+                    chatTrack++;
+                } else {
+                    chatTrack = 1;
+                    chatBoxObjects.remove(0);
 
+                }
+                break;
+            case NPC:
+                NPC npc = (NPC)chatBox.obj;
+                if (npc.getNpcQuestText(questState).length > chatTrack) {
+                    chatBox.setText(npc.getNpcQuestText(questState, chatTrack));
+                    chatTrack++;
+                } else {
+                    if (npc.progressFromTalk(questState)) {
+                        System.out.println("Next! " + questState);
+                        nextQuest();
+                    }
+                    chatTrack = 1;
+                    chatBoxObjects.remove(0);
+                }
+                break;
+            case BONES:
+            case GOBLIN:
+                chatBoxObjects.remove(0);
+                break;
         }
+
     }
 
+    public void nextQuest() {
+        int ord = questState.ordinal();
+        questState = QuestState.values()[ord+1];
+    }
 }

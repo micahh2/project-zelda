@@ -8,24 +8,18 @@ public class CatNpc extends NPC {
     "I'm sure it's owner loves him."};
     private String[] catNpcQuestText ={"Well you must be Bob's cat.", "Purrrrr", "Bob misses you a lot.", "Come with me I'll bring you home."};
 
-    public CatNpc(double x, double y, int width, int height, ImageRef imageref) {
-        super(x, y, 0,0, width, height, null);
-        this.imageRef = imageref;
-        this.isMoving = false;
-
+    public CatNpc(double x, double y, int width, int height, ImageRef imageRef) {
+        super(x, y, width, height, imageRef);
     }
 
-    public String[] getCatNpcText() {
+    @Override
+    public String[] getNpcQuestText(QuestState q) {
+        if (q == QuestState.BOB) {
+            return catNpcQuestText;
+        }
         return catNpcText;
     }
-    public String getCatNpcText(int index) { return catNpcText[index]; }
-    public void setCatNpcText(String[] dogNpcText) { this.catNpcText = dogNpcText; }
-    public String[] getCatNpcQuestText() { return catNpcQuestText; }
-    public int type() { return Const.TYPE_CAT; }
 
-    static String[] catNpcTexts = {"Hey cat, what`s up?" , "Miau!"};
-
-    public CatNpc(double x, double y, int width, int height, ImageRef imageRef) {
-        super(x, y, width, height, imageRef, catNpcTexts);
-    }
+    @Override
+    public int type() { return Const.Type.ANIMAL.ordinal(); }
 }

@@ -8,8 +8,6 @@ public class Chest extends RectangularGameObject {
     
     private String[] chestText = {"Hmm, it's locked.", "Maybe I can find the key somewhere."};
 
-
-
     private String[] chestQuestText = {"You open the chest...",
             "In it you find...",
             "A rather large sword and shield!",
@@ -28,6 +26,6 @@ public class Chest extends RectangularGameObject {
     public void setChestText(String[] chestText) { this.chestText = chestText; }
 
     public String[] getChestQuestText() { return chestQuestText; }
-    public int type() { return Const.TYPE_CHEST; }
+    public int type() { return Const.Type.CHEST.ordinal(); }
 
 }
