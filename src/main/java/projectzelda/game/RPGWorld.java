@@ -279,20 +279,12 @@ public class RPGWorld extends World {
 
 
         // clicking chatbox (mouse press goes through all the dialog instantly)
-      /*  if (!chatBoxObjects.isEmpty()) {
+       /* if (!chatBoxObjects.isEmpty()) {
             ChatBoxButton chatBox = (ChatBoxButton) chatBoxObjects.get(0);
             if (userInput.isMousePressed) {
                 if (userInput.mouseMovedX >= chatBox.x && userInput.mouseMovedX <= chatBox.getMaxX()
                         && (userInput.mouseMovedY >= chatBox.y && userInput.mouseMovedY <= chatBox.getMaxY())) {
-                    if (chestTexts.length > chatTrack){
-                        chatBox.setText(chestTexts[chatTrack]);
-                        chatTrack++;
-
-                    } else {
-                        chatTrack = 1;
-                        chatBoxObjects.remove(0);
-                        gameState = GameState.PLAY;
-                    }
+                   handleDialog(chatBox);
                 }
 
             }
@@ -343,12 +335,17 @@ public class RPGWorld extends World {
                     /*
                     * exit dialog via movement > problem if moved accidentally on object that gets deleted on collision dialog is lost
                     *                          > if left out accidental dialog is forced upon user upon collision
+                    * fixes chatloop > game frozen until wasd pressed after chatbox is cleared
                     * */
-                   /* if (!chatBoxObjects.isEmpty()) {
-                        chatBoxObjects.remove(0);
-                        gameState = GameState.PLAY;
-                    } */
+                    if (!chatBoxObjects.isEmpty()) {
+                        ChatBoxButton chatBoxButton = (ChatBoxButton) chatBoxObjects.get(0);
+                        if(chatBoxButton.obj != null) {
+                            gameState = GameState.DIALOG;
+                        }
 
+                    } else {
+                        gameState = GameState.PLAY;
+                    }
                     break;
                 default:
                     System.out.println("Unknown key code " + userInput.keyPressed);
@@ -439,51 +436,125 @@ public class RPGWorld extends World {
         chatBoxObjects.add(chatBox);
     }
 
+    public Counter getCounterB() {
+        return counterB;
+    }
+
     public void handleDialog(ChatBoxButton chatBox) {
 
         // not ideal
 
       if (chatBox.obj != null) {
-          // Convert from int to enum
-          Const.Type type = Const.Type.values()[chatBox.obj.type()];
-          switch (type) {
-                case CHEST:
-                    Chest chestForText = (Chest)chatBox.obj;
-                    if (chestForText.getText().length > chatTrack) {
-                        chatBox.setText(chestForText.getText()[chatTrack]);
+            switch (chatBox.obj.type()) {
+                case Const.TYPE_CHEST:
+                    Chest chestForText = (Chest) chest;
+                    if (chestForText.getChestText().length > chatTrack) {
+                        chatBox.setText(chestForText.getChestText()[chatTrack]);
                         chatTrack++;
-
                     } else {
                         chatTrack = 1;
                         chatBoxObjects.remove(0);
-                        gameState = GameState.PLAY;
+
                     }
                     break;
-                case PUMPKIN:
-                    Pumpkin pumpkinForText = (Pumpkin)chatBox.obj;
-                    if (pumpkinForText.getText().length > chatTrack) {
-                        chatBox.setText(pumpkinForText.getText()[chatTrack]);
+                case Const.TYPE_PUMPKIN:
+                    Pumpkin pumpkinForText = (Pumpkin) pumpkin;
+                    if (pumpkinForText.getPumpkinText().length > chatTrack) {
+                        chatBox.setText(pumpkinForText.getPumpkinText()[chatTrack]);
+                        chatTrack++;
+                    } else {
+                        chatTrack = 1;
+                        chatBoxObjects.remove(0);
+
+                    }
+                    break;
+                case Const.TYPE_DOG:
+                    DogNpc dogNpcForText = (DogNpc) dog;
+                    if (dogNpcForText.getDogNpcText().length > chatTrack) {
+                        chatBox.setText(dogNpcForText.getDogNpcText()[chatTrack]);
                         chatTrack++;
 
                     } else {
                         chatTrack = 1;
                         chatBoxObjects.remove(0);
-                        gameState = GameState.PLAY;
+
                     }
                     break;
 
-                case NPC:
-                    NPC npc = (NPC) chatBox.obj;
-                    if (npc.getText().length > chatTrack) {
-                        chatBox.setText(npc.getText()[chatTrack]);
+                case Const.TYPE_CAT:
+                    CatNpc catNpcForText = (CatNpc) cat;
+                    if (catNpcForText.getCatNpcText().length > chatTrack) {
+                        chatBox.setText(catNpcForText.getCatNpcText()[chatTrack]);
+                        chatTrack++;
+
+                    } else {
+                        chatTrack = 1;
+                        chatBoxObjects.remove(0);
+
+                    }
+                    break;
+
+                case Const.TYPE_STEVE:
+                    SteveNpc steveNpcForText = (SteveNpc) steve;
+                    if (steveNpcForText.getSteveNpcQuestText().length > chatTrack) {
+                        chatBox.setText(steveNpcForText.getSteveNpcQuestText()[chatTrack]);
+                        chatTrack++;
+
+                    } else {
+                        chatTrack = 1;
+                        chatBoxObjects.remove(0);
+
+                    }
+                    break;
+
+                case Const.TYPE_BRUTUS:
+                    BrutusNpc brutusNpcForText = (BrutusNpc) brutus;
+                    if (brutusNpcForText.getBrutusNpcQuestText().length > chatTrack) {
+                        chatBox.setText(brutusNpcForText.getBrutusNpcQuestText()[chatTrack]);
+                        chatTrack++;
+
+                    } else {
+                        chatTrack = 1;
+                        chatBoxObjects.remove(0);
+
+                    }
+                    break;
+
+                case Const.TYPE_OLGA:
+                    OlgaNpc olgaNpcForText = (OlgaNpc) olga;
+                    if (olgaNpcForText.getOlgaNpcQuestText().length > chatTrack) {
+                        chatBox.setText(olgaNpcForText.getOlgaNpcQuestText()[chatTrack]);
+                        chatTrack++;
+
+                    } else {
+                        chatTrack = 1;
+                        chatBoxObjects.remove(0);
+
+                    }
+                    break;
+
+                case Const.TYPE_BOB:
+                    BobNpc bobNpcForText = (BobNpc) bob;
+                    if (bobNpcForText.getBobNpcQuestText().length > chatTrack) {
+                        chatBox.setText(bobNpcForText.getBobNpcQuestText()[chatTrack]);
                         chatTrack++;
                     } else {
                         chatTrack = 1;
                         chatBoxObjects.remove(0);
-                        gameState = GameState.PLAY;
+
                     }
                     break;
             }
+        } else {
+            switch (chatBox.objID) {
+                case Const.TYPE_GRENADE:
+                case Const.TYPE_BONES:
+                case Const.TYPE_GOBLIN:
+                    chatBoxObjects.remove(0);
+
+                    break;
+                    }
+
         }
     }
 
