@@ -27,7 +27,6 @@ public class RPGWorld extends World {
     private double lifeHelpText = 10.0;
 
 
-    private ImageRef swordSwing;
     private Sound sound = new Sound("/music/Forest_Ventures.wav");
 
     QuestState questState = QuestState.START;
@@ -49,12 +48,13 @@ public class RPGWorld extends World {
 
         // add the Avatar
         MapObject playerMO = map.getFirstObject("Player");
-        MapObject sword = map.getFirstObject("Swords");
+        MapObject swordMO = map.getFirstObject("Swords");
         ImageRef arrow = map.getFirstObject("Arrow").imageRef;
         List<ImageRef> bowFrames = map.getAllObjectImageRefs("Bow");
-        ImageRef swor = map.getFirstObject("Swing").imageRef;
+        ImageRef swordSwing = map.getFirstObject("Swing").imageRef;
         Bow bow = new Bow(bowFrames, arrow);
-        avatar = new Avatar(playerMO.x, playerMO.y, playerMO.imageRef, sword.imageRef, bow);
+        Sword sword = new Sword(swordMO.imageRef, swordSwing);
+        avatar = new Avatar(playerMO.x, playerMO.y, playerMO.imageRef, sword, bow);
         // avatar = new Avatar(100, 50, new ImageRef("Rocks2", 0, 0, 32, 32));
         gameObjects.add(avatar);
 
@@ -308,8 +308,7 @@ public class RPGWorld extends World {
                         handleDialog(chatBox);
 
                     } else {
-
-                        ((Avatar)avatar).swingSword(swordSwing);
+                        ((Avatar)avatar).fire();
                     }
 
                     break;

@@ -12,6 +12,7 @@ import javax.swing.*;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
+import java.awt.geom.AffineTransform;
 
 class SwingPanel extends JPanel implements GraphicSystem {
     // constants
@@ -43,6 +44,7 @@ class SwingPanel extends JPanel implements GraphicSystem {
     private int height;
     private long lastTick = 0;
     private List<ImageRefTo> animationTiles;
+    AffineTransform clearTransform;
 
     public SwingPanel(MediaInfo mediaInfo, WorldInfo worldInfo) {
         this.worldInfo = worldInfo;
@@ -54,6 +56,7 @@ class SwingPanel extends JPanel implements GraphicSystem {
         imageBuffer = graphicsConf.createCompatibleImage(
                 this.getWidth(), this.getHeight());
         graphics = imageBuffer.getGraphics();
+        clearTransform = ((Graphics2D)graphics).getTransform();
 
         // initialize Listeners
         this.addMouseListener(inputSystem);
@@ -85,6 +88,7 @@ class SwingPanel extends JPanel implements GraphicSystem {
         background = ImageDrawer.createImage(mediaInfo.getBackgroundTiles(), worldInfo.getWidth(), worldInfo.getHeight(), images, this);
         foreground = ImageDrawer.createImage(mediaInfo.getForegroundTiles(), worldInfo.getWidth(), worldInfo.getHeight(), images, this);
         // ImageDrawer.clearImageAreas(foreground, mediaInfo.getBackgroundAreas(), this);
+
     }
 
     public void clear(long tick) {
@@ -177,11 +181,14 @@ class SwingPanel extends JPanel implements GraphicSystem {
     }
 
     public void drawImage(ImageRef imageRef, int x1Abs, int y1Abs, int x2Abs, int y2Abs) {
+        drawImage(imageRef, x1Abs, y1Abs, x2Abs, y2Abs, 0f);
+    }
+    public void drawImage(ImageRef imageRef, int x1Abs, int y1Abs, int x2Abs, int y2Abs, float rotation) {
         int x1 = (int) (x1Abs - world.worldPartX);
         int y1 = (int) (y1Abs - world.worldPartY);
         int x2 = (int) (x2Abs - world.worldPartX);
         int y2 = (int) (y2Abs - world.worldPartY);
-        drawImageScreen(imageRef, x1, y1, x2, y2);
+        drawImageScreen(imageRef, x1, y1, x2, y2, rotation);
     }
 
     // For drawing with relative screen coordinates
@@ -230,11 +237,23 @@ class SwingPanel extends JPanel implements GraphicSystem {
     }
 
     public final void drawImageScreen(ImageRef imageRef, int x1, int y1, int x2, int y2) {
+        drawImageScreen(imageRef, x1, y1, x2, y2, 0f);
+    }
+    public final void drawImageScreen(ImageRef imageRef, int x1, int y1, int x2, int y2, float rotation) {
+        Graphics2D gfx = (Graphics2D)graphics;
         Image img = images.get(imageRef.name);
-        graphics.drawImage(img,
+        int centerx = x1 + (int)((x2-x1)/2);
+        int centery = y1 + (int)((y2-y1)/2);
+        AffineTransform trans = AffineTransform.getTranslateInstance(centerx, centery);
+        trans.rotate(Math.PI*2*rotation);
+
+        trans.translate(-centerx, -centery);
+        gfx.transform(trans);
+        gfx.drawImage(img,
                 x1, y1, x2, y2,
                 imageRef.x1, imageRef.y1, imageRef.x2, imageRef.y2,
                 this);
+        gfx.setTransform(clearTransform);
     }
 
     public void redraw() {

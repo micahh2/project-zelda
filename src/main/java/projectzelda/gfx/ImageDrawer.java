@@ -35,8 +35,8 @@ public class ImageDrawer {
 
                 int tilewidth = tile.destx2 - tile.destx1;
                 int tileheight = tile.desty2 - tile.desty1;
-                int centerx = tile.destx1 + Math.round(tilewidth/2);
-                int centery = tile.desty1 + Math.round(tileheight/2);
+                int centerx = tile.destx1 + (int)(tilewidth/2);
+                int centery = tile.desty1 + (int)(tileheight/2);
                 AffineTransform trans = AffineTransform.getTranslateInstance(centerx, centery);
 
                 // Flip the image diagonally
