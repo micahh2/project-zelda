@@ -93,11 +93,16 @@ public class Avatar extends CircularGameObject {
             switch (type) {
                 // if Object is a tree, move back one step
                 case TREE:
+                case WATER:
+                case ROCK:
+                case WALL:
                     this.moveBack();
                     break;
 
-                case WATER:
+                case LAVA:
+                    hit(0.1);
                     this.moveBack();
+                    break;
 
                 case CHEST:
                     questChest((Chest)obj);
@@ -129,7 +134,7 @@ public class Avatar extends CircularGameObject {
 
                 // pick up Bones
                 case BONES:
-                    hit(life = 1.0);
+                    hit(-0.1);
                     counterBones++;
                     chatBox = new ChatBoxButton(posXChatBox, posYChatBox, 600, 100, "Bones picked up", Const.Type.BONES);
                     world.chatBoxObjects.add(chatBox);
