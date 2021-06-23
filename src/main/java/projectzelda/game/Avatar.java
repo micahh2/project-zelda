@@ -130,7 +130,8 @@ public class Avatar extends CircularGameObject {
 
                 // pick up Bones
                 case BONES:
-                    hit(-0.1);
+                    hit(life = 1.05);
+
                     counterBones++;
                     chatBox = new ChatBoxButton(posXChatBox, posYChatBox, 600, 100, "Bones picked up", Const.Type.BONES);
                     world.chatBoxObjects.add(chatBox);
