@@ -44,7 +44,7 @@ public class RPGWorld extends World {
     public void init() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
 
         //play the background music
-       // sound.playBackgroundMusic();
+        sound.playBackgroundMusic();
         sound.setVolume(-20.0F);
 
         // add the Avatar
