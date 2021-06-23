@@ -14,8 +14,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-public class Avatar extends CircularGameObject
-{
+public class Avatar extends CircularGameObject {
     private final double COOLDOWN = 0.5;
     private double weaponTemp = 0;
 
@@ -30,15 +29,16 @@ public class Avatar extends CircularGameObject
     private String chatBoxText;
 
     // place of chatbox
-    private int posXChatBox = world.worldInfo.getPartWidth()/2-300;
-    private int posYChatBox = world.worldInfo.getPartHeight()-100;
+    private int posXChatBox = world.worldInfo.getPartWidth() / 2 - 300;
+    private int posYChatBox = world.worldInfo.getPartHeight() - 100;
 
-    private boolean talkedToNPC = false;
+    private int counterBones = 0;
     double timeToDie = 2.0;
     boolean dying = false;
 
     public double life = 1.0;
     public HealthBar healthBar;
+
 
     public Avatar(double x, double y, ImageRef imageRef, ImageRef sword) 
     { 
@@ -50,10 +50,10 @@ public class Avatar extends CircularGameObject
 
         //imageRef = new ImageRef("Rocks2", 0, 0, 32, 32);
 
-        int healthBarWidth = (int)(0.3 * world.worldInfo.getPartWidth());
-        int healthBarHeight = (int)(0.03 * world.worldInfo.getPartHeight());
-        int healthBarX = (int)(0.005 * world.worldInfo.getPartWidth());
-        int healthBarY = (int)(0.01 * world.worldInfo.getPartHeight());
+        int healthBarWidth = (int) (0.3 * world.worldInfo.getPartWidth());
+        int healthBarHeight = (int) (0.03 * world.worldInfo.getPartHeight());
+        int healthBarX = (int) (0.005 * world.worldInfo.getPartWidth());
+        int healthBarY = (int) (0.01 * world.worldInfo.getPartHeight());
         healthBar = new HealthBar(healthBarX, healthBarY, healthBarWidth, healthBarHeight);
         healthBar.isHudElement = true;
         this.imageRef = imageRef;
@@ -86,72 +86,65 @@ public class Avatar extends CircularGameObject
 
         // calculate all collisions with other Objects 
         GameObjectList collisions = world.getPhysicsSystem().getCollisions(this);
-        for(int i = 0; i < collisions.size(); i++) {
+        for (int i = 0; i < collisions.size(); i++) {
             GameObject obj = collisions.get(i);
+            QuestState q = ((RPGWorld) world).questState;
             Const.Type type = Const.Type.values()[obj.type()];
             switch (type) {
                 // if Object is a tree, move back one step
-                case WALL:
+                case TREE:
                     this.moveBack();
                     break;
-
-                case TREE:
-                case ROCK:
 
                 case WATER:
-                case GOBLIN:
                     this.moveBack();
-                    break;
-
-                case LAVA:
-                    hit(0.25);
-                    break;
 
                 case CHEST:
-                    this.moveBack();
-                    world.gameState = GameState.DIALOG;
-                    Chest chest = (Chest)obj;
-                    chatBoxText= chest.chestTexts[0];
-                    ((RPGWorld)world).addChatBox(chatBoxText, chest);
-                    obj.isLiving = false;
-                    hasSword = true;
-                    addItem("SWORD", obj);
+                    questChest((Chest)obj);
                     break;
 
                 case PUMPKIN:
-                    this.moveBack();
-                    world.gameState = GameState.DIALOG;
-                    Pumpkin pumpkin = (Pumpkin)obj;
-                    chatBoxText = pumpkin.pumpkinTexts[0];
-                    ((RPGWorld)world).addChatBox(chatBoxText, pumpkin);
-                    obj.isLiving = false;
+                    questPumpkin((Pumpkin)obj);
                     break;
 
                 case NPC:
-                    this.moveBack();
-                    world.gameState = GameState.DIALOG;
-                    NPC npc = (NPC)obj;
-                    chatBoxText = npc.npcTexts[0];
-                    ((RPGWorld)world).addChatBox(chatBoxText, npc);
+                case ANIMAL:
+                    questNPC((NPC)obj);
                     break;
+
+                case GOBLIN:
+                    this.moveBack();
+                    // remove this if statement to make monsters attackable
+                   if (q == QuestState.OLGA_MONSTERS) {
+                        if (weaponTemp <= 0) {
+                            ((EnemyAI) obj).hit();
+                            weaponTemp = COOLDOWN;
+                        }
+                    } else {
+                       world.gameState = GameState.DIALOG;
+                        chatBox = new ChatBoxButton(posXChatBox, posYChatBox, 600, 100, "I'm going to need a weapon", Const.Type.GOBLIN);
+                        world.chatBoxObjects.add(chatBox);
+                    }
+                break;
 
                 // pick up Bones
                 case BONES:
-                    hit(life =1.0);
-                    //world.gameState = GameState.DIALOG;
-                    //chatBox = new ChatBoxButton(posXChatBox, posYChatBox, 600, 100, "Bones picked up", Const.Type.BONES);
-                    //world.chatBoxObjects.add(chatBox);
+                    hit(life = 1.0);
+                    counterBones++;
+                    chatBox = new ChatBoxButton(posXChatBox, posYChatBox, 600, 100, "Bones picked up", Const.Type.BONES);
+                    world.chatBoxObjects.add(chatBox);
+                    if (q == QuestState.OLGA_MONSTERS && counterBones >= 6) {
+                        ((RPGWorld) world).nextQuest();
+                    }
                     obj.isLiving = false;
                     break;
-
             }
-
-
         }
 
         // Hacky, but we can flip the orientation of the avatar by switching the image coordinates to draw from
         int endx = (int)x;
         int endy = (int)y;
+      
         if ((startx < endx && !flippedX) || (startx > endx && flippedX)) {
             int tempx = imageRef.x1;
             imageRef.x1 = imageRef.x2;
@@ -177,8 +170,73 @@ public class Avatar extends CircularGameObject
     public void addItem(String itemType, GameObject item){
         inventory.put(itemType, item);
     }
-        
-    @Override
+       
+
+    public void questPumpkin(Pumpkin pumpkin) {
+        this.moveBack();
+        world.gameState = GameState.DIALOG;
+        QuestState q = ((RPGWorld)world).questState;
+        if (q == QuestState.STEVE_IN_PROGRESS) {
+            pumpkin.setPumpkinText(pumpkin.getPumpkinQuestText());
+            chatBoxText = pumpkin.getPumpkinText(0);
+            ((RPGWorld) world).addChatBox(chatBoxText, pumpkin);
+            pumpkin.isLiving = false;
+            System.out.println("Next! " + ((RPGWorld)world).questState);
+            ((RPGWorld)world).nextQuest();
+        } else {
+            chatBoxText = pumpkin.getPumpkinText(0);
+            ((RPGWorld) world).addChatBox(chatBoxText, pumpkin);
+        }
+    }
+
+    public void questChest(Chest chest) {
+        this.moveBack();
+        world.gameState = GameState.DIALOG;
+        QuestState q = ((RPGWorld)world).questState;
+        if (q == QuestState.OLGA_SWORD_SEARCH) {
+            chest.setChestText(chest.getChestQuestText());
+            chatBoxText = chest.getChestText(0);
+            ((RPGWorld) world).addChatBox(chatBoxText, chest);
+            chest.isLiving = false;
+            hasSword= true;
+            System.out.println("Next! " + ((RPGWorld)world).questState);
+            ((RPGWorld)world).nextQuest();
+        } else {
+            chatBoxText = chest.getChestText(0);
+            ((RPGWorld) world).addChatBox(chatBoxText, chest);
+        }
+    }
+
+    public void questNPC(NPC npc) {
+        this.moveBack();
+        world.gameState = GameState.DIALOG;
+        QuestState q = ((RPGWorld)world).questState;
+        chatBoxText = npc.getNpcQuestText(q, 0);
+        ((RPGWorld)world).addChatBox(chatBoxText, npc);
+    }
+
+    public void questAnimal(NPC animal) {
+        this.moveBack();
+        world.gameState = GameState.DIALOG;
+        QuestState q = ((RPGWorld)world).questState;
+        if (q == QuestState.BOB_IN_PROGRESS_CAT ) {
+            chatBoxText =animal.getNpcQuestText(q,0);
+            ((RPGWorld) world).addChatBox(chatBoxText, animal);
+            animal.isLiving = false;
+            System.out.println("Next! " + ((RPGWorld)world).questState);
+           ((RPGWorld)world).nextQuest();
+        }  else if (q == QuestState.BOB_IN_PROGRESS_DOG ) {
+            chatBoxText =animal.getNpcQuestText(q,0);
+            ((RPGWorld) world).addChatBox(chatBoxText, animal);
+            animal.isLiving = false;
+            System.out.println("Next! " + ((RPGWorld)world).questState);
+           ((RPGWorld)world).nextQuest();
+        }
+        else {
+            chatBoxText =animal.getNpcQuestText(q,0);
+            ((RPGWorld) world).addChatBox(chatBoxText, animal);
+        }
+    }
     public void draw(GraphicSystem gs, long tick) {
         int swordx = (int)Math.round(flippedX ? x : (x-radius)); //-radius*1.5;
         int swordy = (int)Math.round(y - radius * 1.2);

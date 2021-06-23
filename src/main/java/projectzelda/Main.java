@@ -9,8 +9,6 @@ import java.io.IOException;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
-// (c) Thorsten Hasbargen
-
 final class Main {
     private World world = null;
 

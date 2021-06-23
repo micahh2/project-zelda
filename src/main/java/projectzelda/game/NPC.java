@@ -8,7 +8,6 @@ import projectzelda.engine.RectangularGameObject;
 
 public class NPC extends RectangularGameObject {
 
-    String[] npcTexts;
     boolean stuck = true;
     static final double STUCK_COUNTDOWN = 6;
     double stuckTimer;
@@ -16,12 +15,11 @@ public class NPC extends RectangularGameObject {
     double originY;
     boolean flippedX = false;
 
-    public NPC(double x, double y, int width, int height, ImageRef imageRef, String[] npcTexts) {
+    public NPC(double x, double y, int width, int height, ImageRef imageRef) {
         // x, y, alpha, speed, color
         super(x, y, 0, 50, width, height, null);
         this.imageRef = imageRef;
         this.isMoving = true;
-        this.npcTexts = npcTexts;
         Point<Double> newDest = newDestination();
         setDestination(newDest.x, newDest.y);
         originX = x;
@@ -29,6 +27,11 @@ public class NPC extends RectangularGameObject {
         stuckTimer = STUCK_COUNTDOWN*Math.random();
     }
 
+    public String getNpcQuestText(QuestState q, int index) {
+        return getNpcQuestText(q)[index];
+    }
+    public String[] getNpcQuestText(QuestState q) { return new String[] {}; }
+    public boolean progressFromTalk(QuestState q) { return false; }
 
     @Override
     public void move(double diffSeconds) {
@@ -92,11 +95,6 @@ public class NPC extends RectangularGameObject {
 
     public boolean readyForNewDestination() {
         return stuck && stuckTimer < 0;
-    }
-
-
-    public String[] getText() {
-        return npcTexts;
     }
 
     public void hit() { die(); }

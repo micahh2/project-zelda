@@ -1,0 +1,21 @@
+package projectzelda.game;
+
+public enum QuestState {
+    START,
+    OLGA,
+    OLGA_SWORD_SEARCH,
+    OLGA_SWORD_SEARCH_COMPLETED,
+    OLGA_MONSTERS,
+    OLGA_COMPLETED,
+    STEVE,
+    STEVE_START,
+    STEVE_IN_PROGRESS,
+    STEVE_COMPLETED,
+    BOB,
+    BOB_START,
+    BOB_IN_PROGRESS_CAT,
+    BOB_IN_PROGRESS_DOG,
+    BOB_PETS_FOUND,
+    BOB_COMPLETED,
+    BOSS
+}

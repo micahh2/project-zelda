@@ -18,9 +18,9 @@ public class HealthBar extends UIObject {
         super(x_, y_);
         width = width_;
         height = height_;
-        color = Color.LIGHT_GRAY;
+        color = Color.RED;
         outlineColor = Color.BLACK;
-        healthColor = Color.RED;
+        healthColor = Color.GREEN;
     }
 
     @Override
@@ -29,7 +29,7 @@ public class HealthBar extends UIObject {
         if (isHudElement) {
             gs.fillRectScreen(x, y, width, height, color);
             gs.drawRectScreen(x, y, width, height, color);
-            gs.fillRectScreen(x, y, healthWidth, height, healthColor);
+            gs.fillRectScreen(x, y, healthWidth+1,height+1, healthColor);
             return;
         }
 

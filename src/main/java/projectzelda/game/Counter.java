@@ -9,7 +9,7 @@ import java.awt.Color;
 
 class Counter extends TextObject
 {
-  private int number = 1;
+  private int number = 0;
   private String text;
 	
   public Counter(String text, int x, int y) {
@@ -27,7 +27,9 @@ class Counter extends TextObject
   { 
     return text + number;
   }
-  
-  public void increment(){ number++; }
+
+  public int getNumber() { return number; }
+
+    public void increment(){ number++; }
   public void setNumber(int n){ number = n; }
 }
