@@ -50,8 +50,11 @@ public class RPGWorld extends World {
         // add the Avatar
         MapObject playerMO = map.getFirstObject("Player");
         MapObject sword = map.getFirstObject("Swords");
-        swordSwing = map.getFirstObject("Swing").imageRef;
-        avatar = new Avatar(playerMO.x, playerMO.y, playerMO.imageRef, sword.imageRef);
+        ImageRef arrow = map.getFirstObject("Arrow").imageRef;
+        List<ImageRef> bowFrames = map.getAllObjectImageRefs("Bow");
+        ImageRef swor = map.getFirstObject("Swing").imageRef;
+        Bow bow = new Bow(bowFrames, arrow);
+        avatar = new Avatar(playerMO.x, playerMO.y, playerMO.imageRef, sword.imageRef, bow);
         // avatar = new Avatar(100, 50, new ImageRef("Rocks2", 0, 0, 32, 32));
         gameObjects.add(avatar);
 
