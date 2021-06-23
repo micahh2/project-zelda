@@ -5,46 +5,46 @@ import projectzelda.engine.ImageRef;
 public class BobNpc extends NPC {
 
     static String[] bobNpcQuestWaiting = {
-            "*He ignores you*",
-            "Wow that's rude!",
-            "I must find Brutus."
+            "Bob: *Ignores you*",
+            "Adlez: Wow, that's rude!",
+            "Adlez: I must find Brutus."
     };
 
     static String[] bobNpcQuestStartText = {
-            "Hi are you Bob?" ,
-            "Yes I am Bob!",
-            "I heard you lost your pets?",
-            "Yes, sadly I was separated from them..",
-            "..when the monsters attacked.",
-            "That's so sad, any idea where they might be?",
-            "I've looked everywhere except for down south..",
-            "..past the bridge.",
-            "Why haven't you looked past the bridge?",
-            "I'm afraid of water...",
-            "Oh wow.. ok fair enough.",
-            "I'll go find your pets",
-            "Thank you so much!",
+            "Adlez: Hi, are you Bob?" ,
+            "Bob: Yes, I am Bob!",
+            "Adlez: I heard you lost your pets?",
+            "Bob: Yes, sadly I was separated from them..",
+            "Bob: ..when the monsters attacked.",
+            "Adlez: That's so sad. Any idea where they might be?",
+            "Bob: I've looked everywhere except for down south..",
+            "Bob: ..past the bridge.",
+            "Adlez: Why haven't you looked past the bridge?",
+            "Bob: I'm afraid of water...",
+            "Adlez: Oh, wow.. Ok, fair enough.",
+            "Adlez: I'll go find your pets",
+            "Bob: Thank you so much!",
     };
     static String[] bobNpcQuestInProgText = {
-            "Did you find them?",
-            "No, I'm still searching.",
-            "Good luck and thank you."
+            "Bob: Did you find them?",
+            "Adlez: No, I'm still searching.",
+            "Bob: Good luck and thank you."
     };
 
     static String[] bobNpcQuestCompleteText = {
-            "Oh my god you found them!",
-            "Indeed I did!",
-            "Thank you so much it was freaking me out!",
-            "I was so worried",
-            "You're welcome!",
-            "Good bye adventurer!",
+            "Bob: Oh my god you found them!",
+            "Adlez: Indeed I did!",
+            "Bob: Thank you so much it was freaking me out!",
+            "Bob: I was so worried",
+            "Adlez: You're welcome!",
+            "Bob: Goodbye adventurer!",
     };
 
     static String[] bobNpcQuestPostText = {
-            "Oh it's you again!",
-            "Yes, it's me is there anything else I can do?",
-            "No, but perhaps Brutus has something else for you.",
-            "Thanks."
+            "Bob: Oh it's you again!",
+            "Adlez: Yes, it's me. Is there anything else I can help you with?",
+            "Bob: No, but perhaps Brutus has something else for you.",
+            "Adlez: Thanks."
     };
 
     public BobNpc(double x, double y, int width, int height, ImageRef imageRef) {

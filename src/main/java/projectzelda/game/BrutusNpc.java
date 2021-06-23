@@ -5,98 +5,99 @@ import projectzelda.engine.ImageRef;
 public class BrutusNpc extends NPC {
 
     static String[] brutusNpcQuestStartText = {
-            "Hello who are you?" ,
-            "Hello I'm Brutus the mayor of Kratzerville!",
-            "Hi Brutus. " ,
-            "I'm a traveller looking for adventure.",
-            "Is there anything to do around here?",
-            "Funny you say that.",
-            "I do need some help. Could you help me?",
-            "Of course, what do you need?",
-            "Our town used to be a fun happy place.",
-            "However that changed when some monsters settled nearby.",
-            "They raid our houses and occupy the beach.",
-            "We are scared to live our daily lives.",
-            "Please help us! Defeat the monsters and their nest.",
-            "I believe I can help.",
-            "What should I do first?",
-            "Go find Olga she might have something for you.",
-            "Great!",
+            "Adlez: Hello, who are you?" ,
+            "Brutus: Hello. I'm Brutus, the mayor of Kratzerville!",
+            "Adlez: Hi Brutus!" ,
+            "Adlez: I'm a traveller looking for an adventure.",
+            "Adlez: Is there anything to do around here?",
+            "Brutus: Funny you say that.",
+            "Brutus: I do need some help. Could you help me?",
+            "Adlez: Of course, what do you need?",
+            "Brutus: Our town used to be a fun happy place.",
+            "Brutus: However that changed when.ss.",
+            "..some monsters settled nearby.",
+            "Brutus: They raid our houses and occupy the beach.",
+            "Brutus: We are scared to live our daily lives.",
+            "Please, help us! Defeat the monsters and their nest.",
+            "Adlez: I believe I can help.",
+            "Adlez: What should I do first?",
+            "Brutus: Go find Olga. She might have something for you.",
+            "Adlez: Great!",
 
     };
     static String[] brutusNpcQuestOlgaInProgText = {
-            "Did you find Olga?",
-            "No, can you tell me where she is?",
-            "Shes close-by, just south-east of us.",
-            "Ok, thank you"
+            "Brutus: Did you find Olga?",
+            "Adlez: No, can you tell me where she is?",
+            "Brutus: Shes close-by, just south-east of us.",
+            "Adlez: Ok, thank you"
     };
 
 
 
     static String[] brutusNpcQuestOlgaCompleteText = {
-            "I heard you killed the monsters on the beach",
-            "Many thanks to you!",
-            "But theres still more to do!",
-            "My friend Steve is terrified of a pumpkin.",
-            "Go find him to the west and see what you can...",
-            ".. do for him."
+            "Brutus: I heard you killed the monsters on the beach.",
+            "Brutus: Many thanks to you!",
+            "Brutus: But there is still more to do!",
+            "Brutus: My friend Steve is terrified of a pumpkin.",
+            "Brutus: Go find him to the west and see what you can...",
+            "Brutus: .. do for him."
     };
 
     static String[] brutusNpcQuestSteveInProgText = {
-            "Did you find Steve?",
-            "No, can you tell me where he is?",
-            "Hes near, just west of us.",
-            "Ok, thank you"
+            "Brutus: Did you find Steve?",
+            "Adlez: No, can you tell me where he is?",
+            "Brutus: He is near, just west of us.",
+            "Adlez: Ok, thank you!"
     };
 
 
 
     static String[] brutusNpcQuestSteveCompleteText = {
-            "Steve told me you got rid of the pumpkin.",
-            "Much appreciated",
-            "I have another task for you.",
-            "Bob seems to have lost his pets.",
-            "He has a cat and a dog.",
-            "Could you return them to him please?",
-            "Not a problem! I'll be back."
+            "Brutus: Steve told me you got rid of the pumpkin.",
+            "Brutus: Much appreciated!",
+            "Brutus: I have another task for you.",
+            "Brutus: Bob seems to have lost his pets.",
+            "Brutus: He has a cat and a dog.",
+            "Brutus: Could you return them to him, please?",
+            "Adlez: Not a problem! I'll be right back."
     };
 
 
 
     static String[] brutusNpcQuestBobInProgText = {
-            "Did you find Bob?",
-            "No, can you tell me where he is?",
-            "Hes near, just east of us.",
-            "Ok, thank you"
+            "Brutus: Did you find Bob?",
+            "Adlez: No, can you tell me where he is?",
+            "Brutus: He is near, just east of us.",
+            "Adlez: Ok, thank you!"
     };
 
 
 
     static String[] brutusNpcQuestBobCompleted = {
-            "I just saw Bob's cat and dog run around.",
-            "I'm glad you could save them. Thank you!",
-            "They were really close.. Bob was just too scared..",
-            "To walk over the bridge.",
-            "Really? Bob? He's scared of water?",
-            "That's news to me.",
-            "Thank you I'll have a chat with him",
+            "Brutus: I just saw Bob's cat and dog run around.",
+            "Brutus: I'm glad you could save them. Thank you!",
+            "Adlez: They were really close. Bob was just too scared..",
+            "Adlez: to walk over the bridge.",
+            "Brutus: Really? Bob? He's scared of water?",
+            "Brutus: That's news to me.",
+            "Brutus: Thank you! I'll have a chat with him.",
     };
 
 
 
     static String[] brutusNpcQuestCompleteText = {
-            "Did you eat the pumpkin?",
-            "Yes.",
-            "Thank you it was freaking me out!",
-            "You're welcome!",
-            "*What a strange guy..*"
+            "Brutus: Did you eat the pumpkin?",
+            "Adlez: Yes.",
+            "Brutus: Thank you! It was freaking me out!",
+            "Adlez: You're welcome!",
+            "Adlez: *What a strange guy..*"
     };
 
 
 
     static String[] brutusNpcQuestPostText = {
-            "Oh it's you again!",
-            "Thank you for all the help around here!"
+            "Brutus: Oh, it's you again!",
+            "Brutus: Thank you for all the help around here!"
 
     };
 
