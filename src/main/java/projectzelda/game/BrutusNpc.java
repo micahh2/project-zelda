@@ -14,7 +14,7 @@ public class BrutusNpc extends NPC {
             "Brutus: I do need some help. Could you help me?",
             "Adlez: Of course, what do you need?",
             "Brutus: Our town used to be a fun happy place.",
-            "Brutus: However that changed when.ss.",
+            "Brutus: However that changed when..",
             "..some monsters settled nearby.",
             "Brutus: They raid our houses and occupy the beach.",
             "Brutus: We are scared to live our daily lives.",
@@ -28,7 +28,7 @@ public class BrutusNpc extends NPC {
     static String[] brutusNpcQuestOlgaInProgText = {
             "Brutus: Did you find Olga?",
             "Adlez: No, can you tell me where she is?",
-            "Brutus: Shes close-by, just south-east of us.",
+            "Brutus: She is close-by, just south-east of us.",
             "Adlez: Ok, thank you"
     };
 
