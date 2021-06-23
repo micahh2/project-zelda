@@ -4,9 +4,19 @@ import projectzelda.engine.ImageRef;
 
 public class CatNpc extends NPC {
 
-    private String[] catNpcText = {"Hey cat, what`s up?" , "Miau!", "He's so cute..","I want to take him home with me.","But I shouldn't.",
-    "I'm sure his owner loves him."};
-    private String[] catNpcQuestText ={"Well you must be Bob's cat.", "Purrrrr", "Bob misses you a lot.", "Come with me I'll bring you home."};
+    private String[] catNpcText = {
+            "Adlez: Hey cat, what`s up?",
+            "Cat: Miau!", "Adlez: It's so cute..",
+            "Adlez: I want to take it home with me.",
+            "Adlez: But I shouldn't.",
+            "I'm sure its owner loves it."
+    };
+    private String[] catNpcQuestText = {
+            "Adlez: Well, you must be Bob's cat.",
+            "Cat: Purrrrr",
+            "Adlez: Bob misses you a lot.",
+            "Adlez: Come with me. I'll take you home."
+    };
 
     public CatNpc(double x, double y, int width, int height, ImageRef imageRef) {
         super(x, y, width, height, imageRef);
@@ -24,5 +34,7 @@ public class CatNpc extends NPC {
     }
 
     @Override
-    public int type() { return Const.Type.ANIMAL.ordinal(); }
+    public int type() {
+        return Const.Type.ANIMAL.ordinal();
+    }
 }

@@ -5,9 +5,19 @@ import projectzelda.engine.*;
 
 public class Pumpkin extends RectangularGameObject {
 
-    private String[] pumpkinText = {"Whos pumpkin is this?", "Can I eat it?", "It looks very tasty...", "Perhaps I can find out."};
-    private String[] pumpkinQuestText = {"You found a pumpkin...", "It's huge!", "You eat it.", "It's very tasty.",
-            "God I love pumpkin.", "I'd better tell Steve."};
+    private String[] pumpkinText = {
+            "Adlez: Whose pumpkin is this?",
+            "Adlez: Can I eat it?",
+            "Adlez: It looks very tasty...",
+            "Adlez: Perhaps I can find out."
+    };
+    private String[] pumpkinQuestText = {
+            "You found a pumpkin...",
+            "It's huge!",
+            "You eat it.",
+            "It's very tasty.",
+            "Adlez: God, I love pumpkin.",
+            "Adlez: I'd better tell Steve."};
 
     public Pumpkin(double x, double y, int width, int height, ImageRef imageref)
     {

@@ -8,37 +8,37 @@ public class SteveNpc extends NPC {
 
 
     private String[] steveNpcQuestWaiting = {
-            "*He ignores you*",
-            "Wow that's rude!",
-            "I must find Brutus."
+            "Steve: *Ignores you*",
+            "Adlez: Wow, that's rude!",
+            "Adlez: I must find Brutus."
     };
 
     private String[] steveNpcQuestStartText = {
-            "Hi are you Steve?" ,
-            "Yes I am Steve!",
-            "Hello Steve is there anything to do around here?",
-            "There is a pumpkin south of here. EAT IT!!!!",
-            "That's great I love pumpkin. I will take a look!"
+            "Adlez: Hi, are you Steve?" ,
+            "Steve: Yes, I am Steve!",
+            "Adlez: Hello Steve. Is there anything to do around here?",
+            "Steve: There is a pumpkin south of here. EAT IT!!!!",
+            "Adlez: That's great. I love pumpkin. I will take a look!"
     };
     private String[] steveNpcQuestInProgText = {
-            "Did you eat the pumpkin?",
-            "No, can you tell me where it is again?",
-            "Directly south of here, leave now and go eat it!"
+            "Steve: Did you eat the pumpkin?",
+            "Adlez: No, can you tell me where it is again?",
+            "Steve: Directly south of here. Leave now and go eat it!"
     };
 
     private String[] steveNpcQuestCompleteText = {
-            "Did you eat the pumpkin?",
-            "Yes.",
-            "Thank you it was freaking me out!",
-            "You're welcome!",
-            "*What a strange guy..*"
+            "Steve: Did you eat the pumpkin?",
+            "Adlez: Yes.",
+            "Steve: Thank you! It was freaking me out!",
+            "Adlez: You're welcome!",
+            "Adlez: *What a strange guy..*"
     };
 
     private String[] steveNpcQuestPostText = {
-            "Oh it's you again!",
-            "Yes, it's me is there anything else I can do?",
-            "No, but perhaps Brutus has something else for you.",
-            "Thanks."
+            "Steve: Oh, it's you again!",
+            "Adlez: Yes, it's me. Is there anything else I can do?",
+            "Steve: No, but perhaps Brutus has something else for you.",
+            "Adlez: Thanks."
     };
 
     public SteveNpc(double x, double y, int width, int height, ImageRef imageRef) {

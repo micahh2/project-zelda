@@ -169,8 +169,7 @@ public class RPGWorld extends World {
         if (!rock.isLiving) {
             sound.stopBackgroundMusic();
         }
-
-        helpText = new HelpText(400, 450);
+        helpText = new HelpText((int)(0.15 * worldInfo.getPartWidth()), (int) (0.5 * worldInfo.getPartHeight()));
 
         textObjects.add(helpText);
 

@@ -6,13 +6,16 @@ import projectzelda.engine.*;
 public class Chest extends RectangularGameObject {
 
     
-    private String[] chestText = {"Hmm, it's locked.", "Maybe I can find the key somewhere."};
+    private String[] chestText = {
+            "Adlez: Hmm, it's locked.",
+            "Adlez: Maybe I can find the key somewhere."};
 
-    private String[] chestQuestText = {"You open the chest...",
+    private String[] chestQuestText = {
+            "You open the chest...",
             "In it you find...",
-            "A rather large sword and shield!",
-            "Wow! This is exactly what I will need.", "" +
-            "I'll go tell Olga!"};
+            "A rather large sword!",
+            "Adlez: Wow! This is exactly what I will need.",
+            "Adlez: I'll go tell Olga!"};
 
     public Chest(double x, double y, int width, int height, ImageRef imageref)
     {
