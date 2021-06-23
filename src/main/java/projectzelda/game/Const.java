@@ -16,6 +16,7 @@ public final class Const
         PUMPKIN,
         ANIMAL,
         NPC,
+        BOW,
         SWORD_SWING,
         WATER,
         LAVA,

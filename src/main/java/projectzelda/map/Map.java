@@ -306,4 +306,11 @@ public class Map implements MediaInfo, WorldInfo {
         }
         return null; // Not found
     }
+    public List<ImageRef> getAllObjectImageRefs(String groupName) {
+        List<ImageRef> imageRefs = new LinkedList<ImageRef>();
+        for (MapObject mo : getAllObjects(groupName)) {
+            imageRefs.add(mo.imageRef);
+        }
+        return imageRefs;
+    }
 }

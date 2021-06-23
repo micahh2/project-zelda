@@ -15,15 +15,13 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Avatar extends CircularGameObject {
-    private final double COOLDOWN = 0.5;
-    private double weaponTemp = 0;
-
     private boolean flippedX = false;
     private HashMap<String, GameObject> inventory;
-    private ImageRef sword;
     boolean hasSword = false;
+    boolean hasBow = true;
 
-    private SwordSwing swordSwing;
+    private Sword sword;
+    private Bow bow;
 
     private ChatBoxButton chatBox;
     private String chatBoxText;
@@ -38,9 +36,10 @@ public class Avatar extends CircularGameObject {
 
     public double life = 1.0;
     public HealthBar healthBar;
+    Arrow.Dir fireDir = Arrow.Dir.RIGHT;
 
 
-    public Avatar(double x, double y, ImageRef imageRef, ImageRef sword) 
+    public Avatar(double x, double y, ImageRef imageRef, Sword sword, Bow bow) 
     { 
         super(x,y,0,200,15, new Color(96,96,255));
 
@@ -58,6 +57,9 @@ public class Avatar extends CircularGameObject {
         healthBar.isHudElement = true;
         this.imageRef = imageRef;
         this.sword = sword;
+        this.bow = bow;
+        bow.offset((int)x, (int)y);
+        sword.offset((int)x, (int)y);
     }
 
     @Override
@@ -73,8 +75,8 @@ public class Avatar extends CircularGameObject {
             return;
         }
 
-        if (weaponTemp > 0) {
-            weaponTemp -= diffSeconds;
+        if (sword.weaponTemp > 0) {
+            sword.weaponTemp -= diffSeconds;
         }
 
         // Save starting x-pos for calculating orientation
@@ -119,14 +121,8 @@ public class Avatar extends CircularGameObject {
 
                 case GOBLIN:
                     this.moveBack();
-                    // remove this if statement to make monsters attackable
-                   if (q == QuestState.OLGA_MONSTERS) {
-                        if (weaponTemp <= 0) {
-                            ((EnemyAI) obj).hit();
-                            weaponTemp = COOLDOWN;
-                        }
-                    } else {
-                       world.gameState = GameState.DIALOG;
+                    if (!hasSword && !hasBow) {
+                        world.gameState = GameState.DIALOG;
                         chatBox = new ChatBoxButton(posXChatBox, posYChatBox, 600, 100, "I'm going to need a weapon", Const.Type.GOBLIN);
                         world.chatBoxObjects.add(chatBox);
                     }
@@ -155,10 +151,30 @@ public class Avatar extends CircularGameObject {
             imageRef.x1 = imageRef.x2;
             imageRef.x2 = tempx;
             flippedX = !flippedX;
+            bow.flip();
+            sword.flip();
         }
 
-        if (swordSwing != null && (startx != endx || starty != endy)) {
-            swordSwing.offset(endx-startx, endy-starty);
+        int diffx = endx-startx; 
+        int diffy = endy-starty;
+        sword.offset(diffx, diffy);
+        bow.offset(diffx, diffy);
+        if (diffx < 0 && diffy == 0) {
+            fireDir = Arrow.Dir.LEFT;
+        } else if (diffx < 0 && diffy < 0) {
+            fireDir = Arrow.Dir.UP_LEFT;
+        } else if (diffx < 0 && diffy > 0) {
+            fireDir = Arrow.Dir.DOWN_LEFT;
+        } else if (diffx > 0 && diffy == 0) {
+            fireDir = Arrow.Dir.RIGHT;
+        } else if (diffx > 0 && diffy < 0) {
+            fireDir = Arrow.Dir.UP_RIGHT;
+        } else if (diffx > 0 && diffy > 0) {
+            fireDir = Arrow.Dir.DOWN_RIGHT;
+        } else if (diffx == 0 && diffy < 0) {
+            fireDir = Arrow.Dir.UP;
+        } else if (diffx == 0 && diffy > 0) {
+            fireDir = Arrow.Dir.DOWN;
         }
     }
 
@@ -243,27 +259,19 @@ public class Avatar extends CircularGameObject {
         }
     }
     public void draw(GraphicSystem gs, long tick) {
-        int swordx = (int)Math.round(flippedX ? x : (x-radius)); //-radius*1.5;
-        int swordy = (int)Math.round(y - radius * 1.2);
-        int width = (int)Math.round((sword.x2 - sword.x1)*0.8);
-        int height = (int)Math.round((sword.y2 - sword.y1)*0.8);
 
-        if (hasSword && (swordSwing == null || !swordSwing.isLiving)) {
-            gs.drawImage(sword, swordx, swordy, swordx+width, swordy+height);
+        if (hasSword) {
+            sword.draw(gs, tick);
         }
         gs.draw(this);
+        if (hasBow) {
+            bow.draw(gs, tick);
+        }
     }
 
-    public void swingSword(ImageRef imageRef) {
-        if (weaponTemp > 0 || !hasSword) { return; }
-
-        Sound sword = new Sound("/music/sword-sound-1_16bit.wav");
-        sword.setVolume(-30.0f);
-        sword.playSound();
-
-        weaponTemp = COOLDOWN;
-        swordSwing = new SwordSwing(x, y, imageRef, flippedX);
-        world.gameObjects.add(swordSwing);
+    public void fire() {
+        if (hasBow) { bow.fire(fireDir); }
+        if (hasSword) { sword.fire(); }
     }
 
     public int type() { return Const.Type.AVATAR.ordinal(); }
