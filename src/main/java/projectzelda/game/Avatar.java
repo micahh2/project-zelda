@@ -96,8 +96,21 @@ public class Avatar extends CircularGameObject {
                     this.moveBack();
                     break;
 
+                case WALL:
+                    this.moveBack();
+                    break;
+
+                case ROCK:
+                    this.moveBack();
+                    break;
+
+                case LAVA:
+                    hit(0.25);
+                    break;
+
                 case WATER:
                     this.moveBack();
+                    break;
 
                 case CHEST:
                     questChest((Chest)obj);
