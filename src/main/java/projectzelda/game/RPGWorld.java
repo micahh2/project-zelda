@@ -439,11 +439,6 @@ public class RPGWorld extends World {
         chatBoxObjects.add(chatBox);
     }
 
-
-    public Counter getCounterB() {
-        return counterB;
-    }
-
     public void handleDialog(ChatBoxButton chatBox) {
 
         // not ideal

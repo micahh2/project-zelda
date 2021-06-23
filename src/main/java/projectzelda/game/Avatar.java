@@ -32,7 +32,7 @@ public class Avatar extends CircularGameObject {
     private int posXChatBox = world.worldInfo.getPartWidth() / 2 - 300;
     private int posYChatBox = world.worldInfo.getPartHeight() - 100;
 
-    private Counter counterBones;
+    private int counterBones = 0;
     double timeToDie = 2.0;
     boolean dying = false;
 
@@ -88,9 +88,6 @@ public class Avatar extends CircularGameObject {
         GameObjectList collisions = world.getPhysicsSystem().getCollisions(this);
         for (int i = 0; i < collisions.size(); i++) {
             GameObject obj = collisions.get(i);
-
-            counterBones = ((RPGWorld) world).getCounterB();
-
             QuestState q = ((RPGWorld) world).questState;
             Const.Type type = Const.Type.values()[obj.type()];
             switch (type) {
@@ -133,12 +130,11 @@ public class Avatar extends CircularGameObject {
                 // pick up Bones
                 case BONES:
                     hit(life = 1.0);
-                    ((RPGWorld) world).addBones();
+                    counterBones++;
                     chatBox = new ChatBoxButton(posXChatBox, posYChatBox, 600, 100, "Bones picked up", Const.Type.BONES);
                     world.chatBoxObjects.add(chatBox);
-                    if (q == QuestState.OLGA_MONSTERS && counterBones.getNumber() >= 6) {
+                    if (q == QuestState.OLGA_MONSTERS && counterBones >= 6) {
                         ((RPGWorld) world).nextQuest();
-
                     }
                     obj.isLiving = false;
                     break;
