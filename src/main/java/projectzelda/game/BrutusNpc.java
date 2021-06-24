@@ -6,7 +6,7 @@ public class BrutusNpc extends NPC {
 
     static String[] brutusNpcQuestStartText = {
             "Adlez: Hello, who are you?" ,
-            "Brutus: Hello. I'm Brutus, the mayor of Kratzerville!",
+            "Brutus: Hello. I'm Brutus, the mayor of Kratzerburg!",
             "Adlez: Hi Brutus!" ,
             "Adlez: I'm a traveller looking for an adventure.",
             "Adlez: Is there anything to do around here?",
@@ -38,7 +38,7 @@ public class BrutusNpc extends NPC {
             "Brutus: I heard you killed the monsters on the beach.",
             "Brutus: Many thanks to you!",
             "Brutus: But there is still more to do!",
-            "Brutus: My friend Steve is terrified of a pumpkin.",
+            "Brutus: My friend Steve is upset about something.",
             "Brutus: Go find him to the west and see what you can...",
             "Brutus: .. do for him."
     };
@@ -56,9 +56,8 @@ public class BrutusNpc extends NPC {
             "Brutus: Steve told me you got rid of the pumpkin.",
             "Brutus: Much appreciated!",
             "Brutus: I have another task for you.",
-            "Brutus: Bob seems to have lost his pets.",
-            "Brutus: He has a cat and a dog.",
-            "Brutus: Could you return them to him, please?",
+            "Brutus: Bob seems so sad lately.",
+            "Brutus: Maybe you can check in on him?.",
             "Adlez: Not a problem! I'll be right back."
     };
 

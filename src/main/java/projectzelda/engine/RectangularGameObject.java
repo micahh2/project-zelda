@@ -32,8 +32,8 @@ public abstract class RectangularGameObject extends GameObject {
 
     public boolean hasCollision(RectangularGameObject b) {
         RectangularGameObject a = this;
-        double firstWidth = a.x > b.x ? a.width : b.width;
-        double firstHeight = a.y > b.y ? a.height : b.height;
+        double firstWidth = a.x < b.x ? a.width : b.width;
+        double firstHeight = a.y < b.y ? a.height : b.height;
 
         return Math.abs(b.x - a.x) < firstWidth && Math.abs(b.y - a.y) < firstHeight;
     }

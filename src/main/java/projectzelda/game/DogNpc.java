@@ -14,7 +14,8 @@ public class DogNpc extends NPC {
             "Adlez: You must be Bob's dog.",
             "Dog: *Excited Woof*",
             "Adlez: Absolutely sounds like it.",
-            "Adlez: Come on boy, let's go home."
+            "Adlez: Come on boy, let's go home.",
+            "Dog: *follows you*"
     };
 
     public DogNpc(double x, double y, int width, int height, ImageRef imageRef) {
@@ -23,11 +24,8 @@ public class DogNpc extends NPC {
 
     @Override
     public String[] getNpcQuestText(QuestState q) {
-        if (q == QuestState.BOB_IN_PROGRESS_CAT) {
+        if (q == QuestState.BOB_IN_PROGRESS_CAT || q == QuestState.BOB_IN_PROGRESS_DOG) {
             return dogNpcQuestText;
-        } else if (q == QuestState.BOB_IN_PROGRESS_DOG) {
-            return dogNpcQuestText;
-
         }
         return dogNpcText;
     }

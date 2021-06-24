@@ -41,7 +41,7 @@ public class ImageDrawer {
 
                 // Flip the image diagonally
                 if (tile.diagonallyFlipped) { 
-                    trans.rotate(Math.toRadians(180));
+                    trans.rotate(Math.toRadians(270));
                 }
 
                 // Flip the image vertically

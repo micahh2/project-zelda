@@ -47,9 +47,50 @@ public class BobNpc extends NPC {
             "Adlez: Thanks."
     };
 
-    public BobNpc(double x, double y, int width, int height, ImageRef imageRef) {
-        super(x, y, width, height, imageRef);
+    CatNpc cat;
+    DogNpc dog;
+    boolean hasDog = false;
+    boolean hasCat = false;
+    int foundDistance = 128;
 
+    public BobNpc(double x, double y, int width, int height, ImageRef imageRef, CatNpc cat, DogNpc dog) {
+        super(x, y, width, height, imageRef);
+        this.dog = dog;
+        this.cat = cat;
+    }
+
+    @Override
+    public boolean hasQuestProgress(QuestState q) { 
+            if (q == QuestState.BOB_IN_PROGRESS_CAT || q == QuestState.BOB_IN_PROGRESS_DOG) {
+                return minDist() < foundDistance;
+            }
+            return false;
+    }
+
+    public double minDist() {
+        double distCat = world.getPhysicsSystem().distance(x, y, cat.x, cat.y);
+        double distDog = world.getPhysicsSystem().distance(x, y, dog.x, dog.y);
+        if (hasCat && !hasDog) { return distDog; }
+        if (!hasCat && hasDog) { return distCat; }
+        return Math.min(distCat, distDog);
+    }
+
+    @Override
+    public void makeQuestProgress(QuestState q) { 
+            double distDog = world.getPhysicsSystem().distance(x, y, dog.x, dog.y);
+            if (!hasDog && distDog < foundDistance) {
+                hasDog = true;
+                dog.setFollow(null);
+                dog.setOrigin(x, y);
+                return;
+            }
+            double distCat = world.getPhysicsSystem().distance(x, y, cat.x, cat.y);
+            if (!hasCat && distCat < foundDistance) {
+                hasCat = true;
+                cat.setFollow(null);
+                cat.setOrigin(x, y);
+                return;
+            }
     }
 
     @Override

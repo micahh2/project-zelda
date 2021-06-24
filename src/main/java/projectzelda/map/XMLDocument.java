@@ -125,9 +125,9 @@ public class XMLDocument {
             int height = getAsInt(attrs, "height");
 
             String[] strData = getChildNode(layer, "data").getTextContent().split(",");
-            LinkedList<Integer> data = new LinkedList<Integer>();
+            LinkedList<Long> data = new LinkedList<Long>();
             for (String j : strData) {
-                data.add(Integer.parseInt(j.trim()));
+                data.add(Long.parseLong(j.trim()));
             }
             // Create a new layer and add it to our collection
             layers.add(new Layer(id, name, width, height, data));

@@ -43,13 +43,13 @@ public abstract class World {
     
     public GameState gameState = GameState.MAIN_MENU;
 
-    protected World() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
+    protected World() {
     }
 
     //
     // the main GAME LOOP
     //
-    public final void run() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
+    public final void run() {
         long lastTick = System.currentTimeMillis();
 
 
@@ -225,9 +225,9 @@ public abstract class World {
     }
 
 
-    public abstract void init() throws UnsupportedAudioFileException, LineUnavailableException, IOException;
+    public abstract void init();
 
-    public abstract void processUserInput(UserInput input, double diffSec) throws UnsupportedAudioFileException, LineUnavailableException, IOException;
+    public abstract void processUserInput(UserInput input, double diffSec);
 
     public abstract void createNewObjects(double diffSeconds);
 

@@ -18,7 +18,7 @@ public class Avatar extends CircularGameObject {
     private boolean flippedX = false;
     private HashMap<String, GameObject> inventory;
     boolean hasSword = false;
-    boolean hasBow = true;
+    boolean hasBow = false;
 
     private Sword sword;
     private Bow bow;
