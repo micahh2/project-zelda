@@ -250,7 +250,7 @@ public class RPGWorld extends World {
 
                     Shot shot = new Shot(
                             avatar.x, avatar.y, userInput.mouseMovedX + worldPartX, userInput.mouseMovedY + worldPartY);
-                    this.gameObjects.add(shot);
+                    //this.gameObjects.add(shot);
                 }
             }
         }
