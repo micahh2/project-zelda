@@ -78,19 +78,16 @@ public class SteveNpc extends NPC {
     @Override
     public boolean progressFromTalk(QuestState q) {
         switch(q) {
+            case STEVE_START:
+            case STEVE_COMPLETED:
+                return true;
             case OLGA:
             case OLGA_SWORD_SEARCH:
             case OLGA_SWORD_SEARCH_COMPLETED:
             case OLGA_MONSTERS:
             case OLGA_COMPLETED:
             case STEVE:
-                return false;
-            case STEVE_START:
-                return true;
             case STEVE_IN_PROGRESS:
-                return false;
-            case STEVE_COMPLETED:
-                return true;
             case BOB:
             case BOB_START:
             case BOB_IN_PROGRESS_CAT:

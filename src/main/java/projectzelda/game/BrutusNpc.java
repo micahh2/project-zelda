@@ -141,28 +141,22 @@ public class BrutusNpc extends NPC {
     public boolean progressFromTalk(QuestState q) {
         switch(q) {
             case START:
+            case STEVE:
+            case BOB:
+            case BOB_COMPLETED:
                 return true;
             case OLGA:
             case OLGA_SWORD_SEARCH:
             case OLGA_SWORD_SEARCH_COMPLETED:
             case OLGA_MONSTERS:
             case OLGA_COMPLETED:
-                return false;
-            case STEVE:
-                return true;
             case STEVE_START:
             case STEVE_IN_PROGRESS:
             case STEVE_COMPLETED:
-                return false;
-            case BOB:
-                return true;
             case BOB_START:
             case BOB_IN_PROGRESS_CAT:
             case BOB_IN_PROGRESS_DOG:
             case BOB_PETS_FOUND:
-                return false;
-            case BOB_COMPLETED:
-                return true;
             case BOSS:
             default:  // Java's a pretty horrible language, huh? 
                 return false;
