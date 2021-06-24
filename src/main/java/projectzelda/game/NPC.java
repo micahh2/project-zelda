@@ -5,6 +5,8 @@ import projectzelda.engine.Point;
 import projectzelda.engine.GameObject;
 import projectzelda.engine.GameObjectList;
 import projectzelda.engine.RectangularGameObject;
+import projectzelda.engine.GraphicSystem;
+import java.awt.Color;
 
 public class NPC extends RectangularGameObject {
 
@@ -14,6 +16,7 @@ public class NPC extends RectangularGameObject {
     double originX;
     double originY;
     boolean flippedX = false;
+    GameObject followTarget;
 
     public NPC(double x, double y, int width, int height, ImageRef imageRef) {
         // x, y, alpha, speed, color
@@ -35,7 +38,11 @@ public class NPC extends RectangularGameObject {
 
     @Override
     public void move(double diffSeconds) {
-
+        QuestState q = ((RPGWorld)world).questState;
+        if (hasQuestProgress(q)) { 
+            makeQuestProgress(q);
+            ((RPGWorld)world).nextQuest();
+        }
 
         double dist = world.getPhysicsSystem().distance(x, y, destX, destY);
         if (dist < 8) {
@@ -67,10 +74,13 @@ public class NPC extends RectangularGameObject {
                 case TREE:
                 case CHEST:
                 case PUMPKIN:
-                case NPC:
                 case GOBLIN:
                 case BONES:
+                case NPC:
+                case WALL:
+                case LAVA:
                 case WATER:
+                case AVATAR:
                     stuck = true;
                     this.moveBack(); 
                     break;
@@ -87,14 +97,29 @@ public class NPC extends RectangularGameObject {
         }
     }
 
-    public Point newDestination() {
-        double xOff = Math.random() * 128 - 64;
-        double yOff = Math.random() * 128 - 64;
-        return new Point<Double>(originX + xOff, originY+yOff);
+    public void setFollow(GameObject go) {
+        followTarget = go;
     }
 
+    public void setOrigin(double inX, double inY) {
+        originX = inX;
+        originY = inY;
+    }
+
+    public Point newDestination() {
+        if (followTarget == null) {
+            double xOff = Math.random() * 128 - 64;
+            double yOff = Math.random() * 128 - 64;
+            return new Point<Double>(originX + xOff, originY+yOff);
+        }
+        return new Point<Double>(followTarget.x, followTarget.y);
+    }
+
+    public boolean hasQuestProgress(QuestState q) { return false; }
+    public void makeQuestProgress(QuestState q) { return; }
+
     public boolean readyForNewDestination() {
-        return stuck && stuckTimer < 0;
+        return followTarget != null || stuck && stuckTimer < 0;
     }
 
     public void hit() { die(); }

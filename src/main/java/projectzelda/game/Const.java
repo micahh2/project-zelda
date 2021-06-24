@@ -7,6 +7,7 @@ public final class Const
 
     public enum Type {
         AVATAR,
+        ANIMATION,
         TEXT,
         TREE,
         GOBLIN,

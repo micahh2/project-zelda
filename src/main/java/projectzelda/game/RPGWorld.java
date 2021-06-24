@@ -6,10 +6,6 @@ import projectzelda.map.MapObject;
 
 import java.awt.*;
 import java.util.List;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
-import java.io.IOException;
-
 
 public class RPGWorld extends World {
 
@@ -34,13 +30,13 @@ public class RPGWorld extends World {
     private int chatTrack = 1;
     private boolean isEnterKeyPressed = false;
 
-    public RPGWorld(projectzelda.map.Map map) throws UnsupportedAudioFileException, LineUnavailableException, IOException {
+    public RPGWorld(projectzelda.map.Map map) {
         this.map = map;
         worldInfo = map; // Implements world dim
         physicsSystem = new RPGPhysicsSystem(this);
     }
 
-    public void init() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
+    public void init() {
 
         //play the background music
         sound.playBackgroundMusic();
@@ -55,7 +51,10 @@ public class RPGWorld extends World {
         Bow bow = new Bow(bowFrames, arrow);
         Sword sword = new Sword(swordMO.imageRef, swordSwing);
         avatar = new Avatar(playerMO.x, playerMO.y, playerMO.imageRef, sword, bow);
+
         // avatar = new Avatar(100, 50, new ImageRef("Rocks2", 0, 0, 32, 32));
+        StartAnimation startAnimation = new StartAnimation(playerMO.x, playerMO.y, Color.WHITE);
+        gameObjects.add(startAnimation);
         gameObjects.add(avatar);
 
         MapObject bossMo = map.getFirstObject("Boss");
@@ -87,13 +86,13 @@ public class RPGWorld extends World {
         MapObject catMo = npcs.get(1);
         int widthCat = catMo.startingBounds.x2 - catMo.startingBounds.x1;
         int heightCat = catMo.startingBounds.y2 - catMo.startingBounds.y1;
-        NPC cat = new CatNpc(catMo.x, catMo.y, (int)widthCat/2, (int)heightCat/2, catMo.imageRef);
+        CatNpc cat = new CatNpc(catMo.x, catMo.y, (int)widthCat/2, (int)heightCat/2, catMo.imageRef);
         gameObjects.add(cat);
 
         MapObject dogMo = npcs.get(2);
         int widthDog = dogMo.startingBounds.x2 - dogMo.startingBounds.x1;
         int heightDog = dogMo.startingBounds.y2 - dogMo.startingBounds.y1;
-        NPC dog = new DogNpc(dogMo.x, dogMo.y, (int)widthDog/2, (int)heightDog/2, dogMo.imageRef);
+        DogNpc dog = new DogNpc(dogMo.x, dogMo.y, (int)widthDog/2, (int)heightDog/2, dogMo.imageRef);
         gameObjects.add(dog);
 
         MapObject brutusMo = npcs.get(3);
@@ -111,7 +110,7 @@ public class RPGWorld extends World {
         MapObject bobMo = npcs.get(5);
         int widthBob = bobMo.startingBounds.x2 - bobMo.startingBounds.x1;
         int heightBob = bobMo.startingBounds.y2 - bobMo.startingBounds.y1;
-        NPC bob = new BobNpc(bobMo.x, bobMo.y, (int)(widthBob*charScale), (int)(heightBob*charScale), bobMo.imageRef);
+        NPC bob = new BobNpc(bobMo.x, bobMo.y, (int)(widthBob*charScale), (int)(heightBob*charScale), bobMo.imageRef, cat, dog);
         gameObjects.add(bob);
 
         // set WorldPart position
@@ -166,10 +165,12 @@ public class RPGWorld extends World {
         Rock rock = new Rock(RockMo.startingBounds.x1, RockMo.startingBounds.y1, RockMo.imageRef);
         gameObjects.add(rock);
 
-        if (!rock.isLiving) {
-            sound.stopBackgroundMusic();
-        }
-        helpText = new HelpText((int)(0.15 * worldInfo.getPartWidth()), (int) (0.5 * worldInfo.getPartHeight()));
+        // TODO: Move this somewhere relevant (like inside Rock.java)
+        //if (!rock.isLiving) {
+        //    sound.stopBackgroundMusic();
+        //}
+
+        helpText = new HelpText((int)(0.15 * worldInfo.getPartWidth()), (int) (0.3 * worldInfo.getPartHeight()));
 
         textObjects.add(helpText);
 
@@ -208,12 +209,12 @@ public class RPGWorld extends World {
         int itemSlotRadius = (int)(0.02 * worldInfo.getPartWidth());
         hudObjects.add(new ItemSlot(itemSlotX,itemSlotY, itemSlotRadius, (Avatar) avatar, "SWORD", sword.imageRef));
         itemSlotX = (int)(0.95 * worldInfo.getPartWidth());
-        hudObjects.add(new ItemSlot(itemSlotX,itemSlotY, itemSlotRadius, (Avatar) avatar, "BOW", sword.imageRef));
+        hudObjects.add(new ItemSlot(itemSlotX,itemSlotY, itemSlotRadius, (Avatar) avatar, "BOW", bow.imageRef));
 
     }
 
 
-    public void processUserInput(UserInput userInput, double diffSeconds) throws UnsupportedAudioFileException, LineUnavailableException, IOException {
+    public void processUserInput(UserInput userInput, double diffSeconds) {
         // distinguish if Avatar shall move or shoots	  
         int button = userInput.mouseButton;
 
@@ -397,7 +398,7 @@ public class RPGWorld extends World {
         createGrenade(diffSeconds);
 
         // delete HelpText after ... seconds
-        if (helpText != null) {
+        if (helpText != null && gameState == GameState.PLAY) {
             lifeHelpText -= diffSeconds;
             if (lifeHelpText < 0) {
                 textObjects.remove(helpText);
@@ -480,11 +481,12 @@ public class RPGWorld extends World {
                     chatTrack++;
                 } else {
                     if (npc.progressFromTalk(questState)) {
-                        System.out.println("Next! " + questState);
-                        if (!(questState == QuestState.BOB_IN_PROGRESS_CAT || questState == QuestState.BOB_IN_PROGRESS_DOG)){
-                            nextQuest();
-                        }
-
+                        nextQuest();
+                    }
+                    if ((questState == QuestState.BOB_IN_PROGRESS_CAT 
+                                || questState == QuestState.BOB_IN_PROGRESS_CAT) 
+                            && type == Const.Type.ANIMAL) {
+                        npc.setFollow(avatar);
                     }
                     chatTrack = 1;
                     chatBoxObjects.remove(0);
@@ -501,6 +503,8 @@ public class RPGWorld extends World {
 
     public void nextQuest() {
         int ord = questState.ordinal();
+        QuestState old = questState;
         questState = QuestState.values()[ord+1];
+        System.out.println(old + " -> " + questState);
     }
 }

@@ -8,9 +8,9 @@ public class Layer {
     public String name;
     public int width;
     public int height;
-    public List<Integer> data;
+    public List<Long> data;
 
-    public Layer(int id, String name, int width, int height, List<Integer> data) {
+    public Layer(int id, String name, int width, int height, List<Long> data) {
         this.id = id;
         this.name = name;
         this.width = width;

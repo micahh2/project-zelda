@@ -18,7 +18,7 @@ public class OlgaNpc extends NPC {
             "Adlez: To help me defeat the monsters.",
             "Olga: He's right! I do",
             "Olga: My grandfather put his sword..",
-            "Olga: .. in a chest just east of here.",
+            "Olga: .. in a chest just west of here.",
             "Olga: Here's the key for it!",
             "Adlez: Wow perfect, thank you!"
     };

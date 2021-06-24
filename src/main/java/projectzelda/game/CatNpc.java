@@ -15,7 +15,8 @@ public class CatNpc extends NPC {
             "Adlez: Well, you must be Bob's cat.",
             "Cat: Purrrrr",
             "Adlez: Bob misses you a lot.",
-            "Adlez: Come with me. I'll take you home."
+            "Adlez: Come with me. I'll take you home.",
+            "Cat: *follows you*"
     };
 
     public CatNpc(double x, double y, int width, int height, ImageRef imageRef) {
@@ -24,11 +25,8 @@ public class CatNpc extends NPC {
 
     @Override
     public String[] getNpcQuestText(QuestState q) {
-        if (q == QuestState.BOB_IN_PROGRESS_CAT) {
+        if (q == QuestState.BOB_IN_PROGRESS_CAT || q == QuestState.BOB_IN_PROGRESS_DOG) {
             return catNpcQuestText;
-        } else if (q == QuestState.BOB_IN_PROGRESS_DOG) {
-            return catNpcQuestText;
-
         }
         return catNpcText;
     }

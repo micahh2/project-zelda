@@ -243,21 +243,21 @@ public class Map implements MediaInfo, WorldInfo {
         return animTiles;
     }
 
-    public int filterFlipFlags(int val) {
-        return val & ~(FLIPPED_HORIZONTALLY_FLAG | FLIPPED_VERTICALLY_FLAG | FLIPPED_DIAGONALLY_FLAG);
+    public int filterFlipFlags(long val) {
+        return (int)(val & ~(FLIPPED_HORIZONTALLY_FLAG | FLIPPED_VERTICALLY_FLAG | FLIPPED_DIAGONALLY_FLAG));
     }
 
-    public ImageRefTo getTile(Layer l, int i, int val) {
+    public ImageRefTo getTile(Layer l, int i, long val) {
         if (val <= 0) { return null; }
 
-        boolean horizontally = (val & FLIPPED_HORIZONTALLY_FLAG) == 0;
-        boolean vertically = (val & FLIPPED_VERTICALLY_FLAG) == 0;
-        boolean diagonally = (val & FLIPPED_DIAGONALLY_FLAG) == 0;
+        boolean horizontally = (val & FLIPPED_HORIZONTALLY_FLAG) != 0;
+        boolean vertically = (val & FLIPPED_VERTICALLY_FLAG) != 0;
+        boolean diagonally = (val & FLIPPED_DIAGONALLY_FLAG) != 0;
         // Bitwise operators to remove the flags
-        val = filterFlipFlags(val);
+        int filteredVal = filterFlipFlags(val);
 
-        Tileset t = getTilesetFromId(val);
-        ImageRef ir = t.getImageRef(val);
+        Tileset t = getTilesetFromId(filteredVal);
+        ImageRef ir = t.getImageRef(filteredVal);
 
         int toX = (i % l.height) * t.tilewidth;
         int toY = (int)Math.floor(i / l.height)* t.tileheight;
