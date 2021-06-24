@@ -176,36 +176,36 @@ public class Avatar extends CircularGameObject {
                     obj instanceof Chest || obj instanceof Pumpkin).collect(Collectors.toList());
         }
 
-        boolean interact = false;
-        for (int i = 0; i<interactiveObjets.size() && !interact; i++) {
-            RectangularGameObject obj = (RectangularGameObject) interactiveObjets.get(i);
-            Const.Type type = Const.Type.values()[obj.type()];
-            double objX = obj.x + obj.width / 2;
-            double objY = obj.y + obj.height / 2;
+        GameObject closestObject = interactiveObjets.get(0);
+        double shortestDistance = Double.MAX_VALUE;
+        for (GameObject obj : interactiveObjets) {
+            double objX = obj.x + ((RectangularGameObject) obj).width / 2;
+            double objY = obj.y + ((RectangularGameObject) obj).height / 2;
             double distance = world.physicsSystem.distance(x, y, objX, objY);
-            switch (type) {
-                case NPC:
-                case ANIMAL:
-                    if (distance <= 40) {
-                        interact = true;
-                        questNPC((NPC) obj);
-                    }
-                    break;
-                case CHEST:
-                    if (distance <= 35) {
-                        interact = true;
-                        questChest((Chest) obj);
-                    }
-                    break;
-                case PUMPKIN:
-                    if (distance <= 30) {
-                        interact = true;
-                        questPumpkin((Pumpkin) obj);
-                    }
-                    break;
+            if (shortestDistance > distance) {
+                closestObject = obj;
+                shortestDistance = distance;
             }
         }
 
+        switch (Const.Type.values()[closestObject.type()]) {
+            case NPC:
+            case ANIMAL:
+                if (shortestDistance <= 40) {
+                    questNPC((NPC) closestObject);
+                }
+                break;
+            case CHEST:
+                if (shortestDistance <= 35) {
+                    questChest((Chest) closestObject);
+                }
+                break;
+            case PUMPKIN:
+                if (shortestDistance <= 30) {
+                    questPumpkin((Pumpkin) closestObject);
+                }
+                break;
+        }
     }
 
 
