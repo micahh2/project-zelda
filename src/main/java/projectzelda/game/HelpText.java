@@ -14,8 +14,8 @@ class HelpText extends TextObject
   }
   
   public String toString()
-  { String display = "Move: WASD      Shoot: Mouse Left   First objective: Find Brutus   "+
-                     "Attack: Space Bar    Pause: Esc   End: q";
+  { String display = "Move: WASD      Interact: E   First objective: Find Brutus   "+
+                     "Attack: Space Bar    Pause: Esc   End: Q";
     return display;
   }
   

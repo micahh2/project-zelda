@@ -39,9 +39,8 @@ public class Avatar extends CircularGameObject {
     Arrow.Dir fireDir = Arrow.Dir.RIGHT;
 
 
-    public Avatar(double x, double y, ImageRef imageRef, Sword sword, Bow bow) 
-    { 
-        super(x,y,0,200,15, new Color(96,96,255));
+    public Avatar(double x, double y, ImageRef imageRef, Sword sword, Bow bow) {
+        super(x, y, 0, 200, 15, new Color(96, 96, 255));
 
         this.isMoving = false;
 
@@ -58,13 +57,12 @@ public class Avatar extends CircularGameObject {
         this.imageRef = imageRef;
         this.sword = sword;
         this.bow = bow;
-        bow.offset((int)x, (int)y);
-        sword.offset((int)x, (int)y);
+        bow.offset((int) x, (int) y);
+        sword.offset((int) x, (int) y);
     }
 
     @Override
-    public void move(double diffSeconds)
-    {
+    public void move(double diffSeconds) {
         if (dying) {
             if (timeToDie < 0) {
                 isLiving = false;
@@ -80,8 +78,8 @@ public class Avatar extends CircularGameObject {
         }
 
         // Save starting x-pos for calculating orientation
-        int startx = (int)x;
-        int starty = (int)y;
+        int startx = (int) x;
+        int starty = (int) y;
 
         // move Avatar one step forward
         super.move(diffSeconds);
@@ -98,27 +96,16 @@ public class Avatar extends CircularGameObject {
                 case WATER:
                 case ROCK:
                 case WALL:
+                case NPC:
+                case ANIMAL:
+                case CHEST:
+                case PUMPKIN:
                     this.moveBack();
                     break;
-
                 case LAVA:
                     hit(0.1);
                     this.moveBack();
                     break;
-
-                case CHEST:
-                    questChest((Chest)obj);
-                    break;
-
-                case PUMPKIN:
-                    questPumpkin((Pumpkin)obj);
-                    break;
-
-                case NPC:
-                case ANIMAL:
-                    questNPC((NPC)obj);
-                    break;
-
                 case GOBLIN:
                     this.moveBack();
                     if (!hasSword && !hasBow) {
@@ -126,7 +113,7 @@ public class Avatar extends CircularGameObject {
                         chatBox = new ChatBoxButton(posXChatBox, posYChatBox, 600, 100, "I'm going to need a weapon", Const.Type.GOBLIN);
                         world.chatBoxObjects.add(chatBox);
                     }
-                break;
+                    break;
 
                 // pick up Bones
                 case BONES:
@@ -144,9 +131,9 @@ public class Avatar extends CircularGameObject {
         }
 
         // Hacky, but we can flip the orientation of the avatar by switching the image coordinates to draw from
-        int endx = (int)x;
-        int endy = (int)y;
-      
+        int endx = (int) x;
+        int endy = (int) y;
+
         if ((startx < endx && !flippedX) || (startx > endx && flippedX)) {
             int tempx = imageRef.x1;
             imageRef.x1 = imageRef.x2;
@@ -156,8 +143,8 @@ public class Avatar extends CircularGameObject {
             sword.flip();
         }
 
-        int diffx = endx-startx; 
-        int diffy = endy-starty;
+        int diffx = endx - startx;
+        int diffy = endy - starty;
         sword.offset(diffx, diffy);
         bow.offset(diffx, diffy);
         if (diffx < 0 && diffy == 0) {
@@ -179,32 +166,56 @@ public class Avatar extends CircularGameObject {
         }
     }
 
-    public boolean containsItem(String itemType){
-        return inventory.containsKey(itemType);
-    }
+    public void interactWithNpc() {
 
-    public void removeItem(String itemType){
-        if(inventory.containsKey(itemType)){
-            inventory.remove(itemType);
+        for (GameObject obj : world.gameObjects) {
+            Const.Type type = Const.Type.values()[obj.type()];
+            if (obj instanceof NPC || type == Const.Type.CHEST|| type == Const.Type.PUMPKIN) {
+                double objX = obj.x + ((RectangularGameObject) obj).width / 2;
+                double objY = obj.y + ((RectangularGameObject) obj).height / 2;
+                double distance = world.physicsSystem.distance(x, y, objX, objY);
+                switch (type){
+                    case NPC:
+                    case ANIMAL:
+                        if(distance <= 40){
+                            questNPC((NPC) obj);
+                        }
+                        break;
+                    case CHEST:
+                        if(distance <= 35){
+                            questChest((Chest) obj);
+                        }
+                        break;
+                    case PUMPKIN:
+                        if(distance <= 30){
+                            questPumpkin((Pumpkin) obj);
+                        }
+                        break;
+                }
+            }
+
         }
     }
 
-    public void addItem(String itemType, GameObject item){
+    public boolean containsItem(String itemType) {
+        return inventory.containsKey(itemType);
+    }
+
+
+    public void addItem(String itemType, GameObject item) {
         inventory.put(itemType, item);
     }
-       
 
     public void questPumpkin(Pumpkin pumpkin) {
-        this.moveBack();
         world.gameState = GameState.DIALOG;
-        QuestState q = ((RPGWorld)world).questState;
+        QuestState q = ((RPGWorld) world).questState;
         if (q == QuestState.STEVE_IN_PROGRESS) {
             pumpkin.setPumpkinText(pumpkin.getPumpkinQuestText());
             chatBoxText = pumpkin.getPumpkinText(0);
             ((RPGWorld) world).addChatBox(chatBoxText, pumpkin);
             pumpkin.isLiving = false;
-            System.out.println("Next! " + ((RPGWorld)world).questState);
-            ((RPGWorld)world).nextQuest();
+            System.out.println("Next! " + ((RPGWorld) world).questState);
+            ((RPGWorld) world).nextQuest();
         } else {
             chatBoxText = pumpkin.getPumpkinText(0);
             ((RPGWorld) world).addChatBox(chatBoxText, pumpkin);
@@ -212,17 +223,16 @@ public class Avatar extends CircularGameObject {
     }
 
     public void questChest(Chest chest) {
-        this.moveBack();
         world.gameState = GameState.DIALOG;
-        QuestState q = ((RPGWorld)world).questState;
+        QuestState q = ((RPGWorld) world).questState;
         if (q == QuestState.OLGA_SWORD_SEARCH) {
             chest.setChestText(chest.getChestQuestText());
             chatBoxText = chest.getChestText(0);
             ((RPGWorld) world).addChatBox(chatBoxText, chest);
             chest.isLiving = false;
-            hasSword= true;
-            System.out.println("Next! " + ((RPGWorld)world).questState);
-            ((RPGWorld)world).nextQuest();
+            hasSword = true;
+            System.out.println("Next! " + ((RPGWorld) world).questState);
+            ((RPGWorld) world).nextQuest();
         } else {
             chatBoxText = chest.getChestText(0);
             ((RPGWorld) world).addChatBox(chatBoxText, chest);
@@ -230,35 +240,12 @@ public class Avatar extends CircularGameObject {
     }
 
     public void questNPC(NPC npc) {
-        this.moveBack();
         world.gameState = GameState.DIALOG;
-        QuestState q = ((RPGWorld)world).questState;
+        QuestState q = ((RPGWorld) world).questState;
         chatBoxText = npc.getNpcQuestText(q, 0);
-        ((RPGWorld)world).addChatBox(chatBoxText, npc);
+        ((RPGWorld) world).addChatBox(chatBoxText, npc);
     }
 
-    public void questAnimal(NPC animal) {
-        this.moveBack();
-        world.gameState = GameState.DIALOG;
-        QuestState q = ((RPGWorld)world).questState;
-        if (q == QuestState.BOB_IN_PROGRESS_CAT ) {
-            chatBoxText =animal.getNpcQuestText(q,0);
-            ((RPGWorld) world).addChatBox(chatBoxText, animal);
-            animal.isLiving = false;
-            System.out.println("Next! " + ((RPGWorld)world).questState);
-           ((RPGWorld)world).nextQuest();
-        }  else if (q == QuestState.BOB_IN_PROGRESS_DOG ) {
-            chatBoxText =animal.getNpcQuestText(q,0);
-            ((RPGWorld) world).addChatBox(chatBoxText, animal);
-            animal.isLiving = false;
-            System.out.println("Next! " + ((RPGWorld)world).questState);
-           ((RPGWorld)world).nextQuest();
-        }
-        else {
-            chatBoxText =animal.getNpcQuestText(q,0);
-            ((RPGWorld) world).addChatBox(chatBoxText, animal);
-        }
-    }
     public void draw(GraphicSystem gs, long tick) {
 
         if (hasSword) {
@@ -271,11 +258,17 @@ public class Avatar extends CircularGameObject {
     }
 
     public void fire() {
-        if (hasBow) { bow.fire(fireDir); }
-        if (hasSword) { sword.fire(); }
+        if (hasBow) {
+            bow.fire(fireDir);
+        }
+        if (hasSword) {
+            sword.fire();
+        }
     }
 
-    public int type() { return Const.Type.AVATAR.ordinal(); }
+    public int type() {
+        return Const.Type.AVATAR.ordinal();
+    }
 
     public void hit(double val) {
         // every hit decreases life
@@ -283,14 +276,17 @@ public class Avatar extends CircularGameObject {
         life = Math.min(1.0, life);
         healthBar.health = life;
 
-        if (life <= 0) { die(); }
+        if (life <= 0) {
+            die();
+        }
     }
+
     public void hit() {
         hit(0.05);
     }
 
     public void die() {
         dying = true;
-        ((RPGWorld)world).throwGrenade(x, y);
+        ((RPGWorld) world).throwGrenade(x, y);
     }
 }

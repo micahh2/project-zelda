@@ -126,6 +126,9 @@ public class BobNpc extends NPC {
     @Override
     public boolean progressFromTalk(QuestState q) {
         switch(q) {
+            case BOB_START:
+            case BOB_PETS_FOUND:
+                return true;
             case START:
             case OLGA:
             case OLGA_SWORD_SEARCH:
@@ -137,14 +140,8 @@ public class BobNpc extends NPC {
             case STEVE_IN_PROGRESS:
             case STEVE_COMPLETED:
             case BOB:
-                return false;
-            case BOB_START:
-                return true;
             case BOB_IN_PROGRESS_CAT:
             case BOB_IN_PROGRESS_DOG:
-                return false;
-            case BOB_PETS_FOUND:
-                return true;
             case BOB_COMPLETED:
             case BOSS:
             default:  // Java's a pretty horrible language, huh? 

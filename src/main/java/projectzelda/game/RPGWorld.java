@@ -5,6 +5,7 @@ import projectzelda.engine.*;
 import projectzelda.map.MapObject;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class RPGWorld extends World {
@@ -29,6 +30,8 @@ public class RPGWorld extends World {
 
     private int chatTrack = 1;
     private boolean isEnterKeyPressed = false;
+
+    private List<MapObject> npcs = new ArrayList<>();
 
     public RPGWorld(projectzelda.map.Map map) {
         this.map = map;
@@ -74,43 +77,43 @@ public class RPGWorld extends World {
         gameObjects.add(pumpkin);
 
         // Get a list of NPCs
-        List<MapObject> npcs = map.getAllObjects("Npcs");
+        npcs = map.getAllObjects("Npcs");
         double charScale = 0.7;
 
         MapObject steveMo = npcs.get(0);
         int widthSteve = steveMo.startingBounds.x2 - steveMo.startingBounds.x1;
         int heightSteve = steveMo.startingBounds.y2 - steveMo.startingBounds.y1;
-        NPC steve = new SteveNpc(steveMo.x, steveMo.y, (int)(widthSteve*charScale), (int)(heightSteve*charScale), steveMo.imageRef);
+        NPC steve = new SteveNpc(steveMo.x, steveMo.y, (int) (widthSteve * charScale), (int) (heightSteve * charScale), steveMo.imageRef);
         gameObjects.add(steve);
 
         MapObject catMo = npcs.get(1);
         int widthCat = catMo.startingBounds.x2 - catMo.startingBounds.x1;
         int heightCat = catMo.startingBounds.y2 - catMo.startingBounds.y1;
-        CatNpc cat = new CatNpc(catMo.x, catMo.y, (int)widthCat/2, (int)heightCat/2, catMo.imageRef);
+        CatNpc cat = new CatNpc(catMo.x, catMo.y, (int) widthCat / 2, (int) heightCat / 2, catMo.imageRef);
         gameObjects.add(cat);
 
         MapObject dogMo = npcs.get(2);
         int widthDog = dogMo.startingBounds.x2 - dogMo.startingBounds.x1;
         int heightDog = dogMo.startingBounds.y2 - dogMo.startingBounds.y1;
-        DogNpc dog = new DogNpc(dogMo.x, dogMo.y, (int)widthDog/2, (int)heightDog/2, dogMo.imageRef);
+        DogNpc dog = new DogNpc(dogMo.x, dogMo.y, (int) widthDog / 2, (int) heightDog / 2, dogMo.imageRef);
         gameObjects.add(dog);
 
         MapObject brutusMo = npcs.get(3);
         int widthBrutus = brutusMo.startingBounds.x2 - brutusMo.startingBounds.x1;
         int heightBrutus = brutusMo.startingBounds.y2 - brutusMo.startingBounds.y1;
-        NPC brutus = new BrutusNpc(brutusMo.x, brutusMo.y, (int)(widthBrutus*charScale), (int)(heightBrutus*charScale), brutusMo.imageRef);
+        NPC brutus = new BrutusNpc(brutusMo.x, brutusMo.y, (int) (widthBrutus * charScale), (int) (heightBrutus * charScale), brutusMo.imageRef);
         gameObjects.add(brutus);
 
         MapObject olgaMo = npcs.get(4);
         int widthOlga = olgaMo.startingBounds.x2 - olgaMo.startingBounds.x1;
         int heightOlga = olgaMo.startingBounds.y2 - olgaMo.startingBounds.y1;
-        NPC olga = new OlgaNpc(olgaMo.x, olgaMo.y, (int)(widthOlga*charScale), (int)(heightOlga*charScale), olgaMo.imageRef);
+        NPC olga = new OlgaNpc(olgaMo.x, olgaMo.y, (int) (widthOlga * charScale), (int) (heightOlga * charScale), olgaMo.imageRef);
         gameObjects.add(olga);
 
         MapObject bobMo = npcs.get(5);
         int widthBob = bobMo.startingBounds.x2 - bobMo.startingBounds.x1;
         int heightBob = bobMo.startingBounds.y2 - bobMo.startingBounds.y1;
-        NPC bob = new BobNpc(bobMo.x, bobMo.y, (int)(widthBob*charScale), (int)(heightBob*charScale), bobMo.imageRef, cat, dog);
+        NPC bob = new BobNpc(bobMo.x, bobMo.y, (int) (widthBob * charScale), (int) (heightBob * charScale), bobMo.imageRef, cat, dog);
         gameObjects.add(bob);
 
         // set WorldPart position
@@ -170,7 +173,7 @@ public class RPGWorld extends World {
         //    sound.stopBackgroundMusic();
         //}
 
-        helpText = new HelpText((int)(0.15 * worldInfo.getPartWidth()), (int) (0.3 * worldInfo.getPartHeight()));
+        helpText = new HelpText((int) (0.15 * worldInfo.getPartWidth()), (int) (0.3 * worldInfo.getPartHeight()));
 
         textObjects.add(helpText);
 
@@ -192,11 +195,11 @@ public class RPGWorld extends World {
 
         // add the death menu buttons
         deathMenuObjects.add(new UIButton(relX, relY, buttonWidth, buttonHeight, "Restart"));
-        relY = (int)(0.6 * worldInfo.getPartHeight());
+        relY = (int) (0.6 * worldInfo.getPartHeight());
         deathMenuObjects.add(new UIButton(relX, relY, buttonWidth, buttonHeight, "Quit"));
 
         // initialize the background and add it to different screens
-        Background background = new Background(0, 0, map.getPartWidth(), map.getHeight(), new Color(1f,1f,1f,0.2f ));
+        Background background = new Background(0, 0, map.getPartWidth(), map.getHeight(), new Color(1f, 1f, 1f, 0.2f));
         pauseMenuObjects.add(background);
         mainMenuObjects.add(background);
         deathMenuObjects.add(background);
@@ -204,12 +207,12 @@ public class RPGWorld extends World {
         // add the hud elements
         hudObjects.add(((Avatar) avatar).healthBar);
 
-        int itemSlotX = (int)(0.9 * worldInfo.getPartWidth());
-        int itemSlotY = (int)(0.045 * worldInfo.getPartHeight());
-        int itemSlotRadius = (int)(0.02 * worldInfo.getPartWidth());
-        hudObjects.add(new ItemSlot(itemSlotX,itemSlotY, itemSlotRadius, (Avatar) avatar, "SWORD", sword.imageRef));
-        itemSlotX = (int)(0.95 * worldInfo.getPartWidth());
-        hudObjects.add(new ItemSlot(itemSlotX,itemSlotY, itemSlotRadius, (Avatar) avatar, "BOW", bow.imageRef));
+        int itemSlotX = (int) (0.9 * worldInfo.getPartWidth());
+        int itemSlotY = (int) (0.045 * worldInfo.getPartHeight());
+        int itemSlotRadius = (int) (0.02 * worldInfo.getPartWidth());
+        hudObjects.add(new ItemSlot(itemSlotX, itemSlotY, itemSlotRadius, (Avatar) avatar, "SWORD", sword.imageRef));
+        itemSlotX = (int) (0.95 * worldInfo.getPartWidth());
+        hudObjects.add(new ItemSlot(itemSlotX, itemSlotY, itemSlotRadius, (Avatar) avatar, "BOW", bow.imageRef));
 
     }
 
@@ -231,12 +234,12 @@ public class RPGWorld extends World {
                 if (userInput.mouseMovedX >= resumeButton.x && userInput.mouseMovedX <= resumeButton.getMaxX()
                         && (userInput.mouseMovedY >= resumeButton.y && userInput.mouseMovedY <= resumeButton.getMaxY())) {
                     gameState = GameState.PLAY;
-                        }
+                }
 
                 if (userInput.mouseMovedX >= quitButton.x && userInput.mouseMovedX <= quitButton.getMaxX()
                         && (userInput.mouseMovedY >= quitButton.y && userInput.mouseMovedY <= quitButton.getMaxY())) {
                     System.exit(0);
-                        }
+                }
 
             } else {
                 // only 1 shot every ... seconds:
@@ -259,11 +262,8 @@ public class RPGWorld extends World {
             if (userInput.mouseMovedX >= playButton.x && userInput.mouseMovedX <= playButton.getMaxX()
                     && (userInput.mouseMovedY >= playButton.y && userInput.mouseMovedY <= playButton.getMaxY())) {
                 gameState = GameState.PLAY;
-                    }
+            }
         }
-
-
-
 
 
         if (this.gameState == GameState.DEATH && userInput.isMousePressed) {
@@ -273,12 +273,12 @@ public class RPGWorld extends World {
             if (userInput.mouseMovedX >= restartButton.x && userInput.mouseMovedX <= restartButton.getMaxX()
                     && (userInput.mouseMovedY >= restartButton.y && userInput.mouseMovedY <= restartButton.getMaxY())) {
                 gameState = GameState.MAIN_MENU;
-                    }
+            }
 
             if (userInput.mouseMovedX >= quitButton.x && userInput.mouseMovedX <= quitButton.getMaxX()
                     && (userInput.mouseMovedY >= quitButton.y && userInput.mouseMovedY <= quitButton.getMaxY())) {
                 System.exit(0);
-                    }
+            }
         }
 
 
@@ -308,7 +308,7 @@ public class RPGWorld extends World {
                         handleDialog(chatBox);
 
                     } else {
-                        ((Avatar)avatar).fire();
+                        ((Avatar) avatar).fire();
                     }
 
                     break;
@@ -342,16 +342,18 @@ public class RPGWorld extends World {
                      * */
                     if (!chatBoxObjects.isEmpty()) {
                         ChatBoxButton chatBoxButton = (ChatBoxButton) chatBoxObjects.get(0);
-                        if(chatBoxButton.obj != null) {
+                        if (chatBoxButton.obj != null) {
                             gameState = GameState.DIALOG;
                         }
 
                     } else {
                         gameState = GameState.PLAY;
                     }
-
-                default:
-                  //  System.out.println("Unknown key code " + userInput.keyPressed);
+                    break;
+                case 'e':
+                    if (gameState == GameState.PLAY) {
+                        ((Avatar) avatar).interactWithNpc();
+                    }
                     break;
             }
 
@@ -435,9 +437,9 @@ public class RPGWorld extends World {
 
 
     public void addChatBox(String text, GameObject obj) {
-        int posXChatBox = worldInfo.getPartWidth()/2-300;
-        int posYChatBox = worldInfo.getPartHeight()-100;
-        ChatBoxButton chatBox = new ChatBoxButton(posXChatBox, posYChatBox,600,100, text, obj);
+        int posXChatBox = worldInfo.getPartWidth() / 2 - 300;
+        int posYChatBox = worldInfo.getPartHeight() - 100;
+        ChatBoxButton chatBox = new ChatBoxButton(posXChatBox, posYChatBox, 600, 100, text, obj);
         chatBoxObjects.add(chatBox);
     }
 
@@ -445,12 +447,12 @@ public class RPGWorld extends World {
 
         // not ideal
         Const.Type type = chatBox.obj != null
-            ?  Const.Type.values()[chatBox.obj.type()]
-            :  chatBox.objID;
+                ? Const.Type.values()[chatBox.obj.type()]
+                : chatBox.objID;
 
         switch (type) {
             case CHEST:
-                Chest chestForText = (Chest)chatBox.obj;
+                Chest chestForText = (Chest) chatBox.obj;
                 if (chestForText.getChestText().length > chatTrack) {
                     chatBox.setText(chestForText.getChestText()[chatTrack]);
                     chatTrack++;
@@ -461,7 +463,7 @@ public class RPGWorld extends World {
                 }
                 break;
             case PUMPKIN:
-                Pumpkin pumpkinForText = (Pumpkin)chatBox.obj;
+                Pumpkin pumpkinForText = (Pumpkin) chatBox.obj;
                 if (pumpkinForText.getPumpkinText().length > chatTrack) {
                     chatBox.setText(pumpkinForText.getPumpkinText()[chatTrack]);
                     chatTrack++;
@@ -475,7 +477,7 @@ public class RPGWorld extends World {
 
             case NPC:
             case ANIMAL:
-                NPC npc = (NPC)chatBox.obj;
+                NPC npc = (NPC) chatBox.obj;
                 if (npc.getNpcQuestText(questState).length > chatTrack) {
                     chatBox.setText(npc.getNpcQuestText(questState, chatTrack));
                     chatTrack++;
@@ -483,8 +485,8 @@ public class RPGWorld extends World {
                     if (npc.progressFromTalk(questState)) {
                         nextQuest();
                     }
-                    if ((questState == QuestState.BOB_IN_PROGRESS_CAT 
-                                || questState == QuestState.BOB_IN_PROGRESS_CAT) 
+                    if ((questState == QuestState.BOB_IN_PROGRESS_CAT
+                            || questState == QuestState.BOB_IN_PROGRESS_CAT)
                             && type == Const.Type.ANIMAL) {
                         npc.setFollow(avatar);
                     }
@@ -504,7 +506,7 @@ public class RPGWorld extends World {
     public void nextQuest() {
         int ord = questState.ordinal();
         QuestState old = questState;
-        questState = QuestState.values()[ord+1];
+        questState = QuestState.values()[ord + 1];
         System.out.println(old + " -> " + questState);
     }
 }

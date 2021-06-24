@@ -109,15 +109,11 @@ public class OlgaNpc extends NPC {
     public boolean progressFromTalk(QuestState q) {
         switch(q) {
             case OLGA:
-                return true;
-            case OLGA_SWORD_SEARCH:
-                return false;
             case OLGA_SWORD_SEARCH_COMPLETED:
-                return true;
-            case OLGA_MONSTERS:
-                return false;
             case OLGA_COMPLETED:
                 return true;
+            case OLGA_SWORD_SEARCH:
+            case OLGA_MONSTERS:
             case STEVE:
             case STEVE_START:
             case STEVE_IN_PROGRESS:
