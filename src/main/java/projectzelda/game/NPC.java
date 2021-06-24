@@ -77,6 +77,7 @@ public class NPC extends RectangularGameObject {
                 case GOBLIN:
                 case BONES:
                 case NPC:
+                case ANIMAL:
                 case WALL:
                 case LAVA:
                 case WATER:

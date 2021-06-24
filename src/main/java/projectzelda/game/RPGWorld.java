@@ -209,10 +209,9 @@ public class RPGWorld extends World {
 
         int itemSlotX = (int) (0.9 * worldInfo.getPartWidth());
         int itemSlotY = (int) (0.045 * worldInfo.getPartHeight());
-        int itemSlotRadius = (int) (0.02 * worldInfo.getPartWidth());
-        hudObjects.add(new ItemSlot(itemSlotX, itemSlotY, itemSlotRadius, (Avatar) avatar, "SWORD", sword.imageRef));
+        hudObjects.add(new ItemSlot(itemSlotX, itemSlotY, (Avatar) avatar, "SWORD", sword.imageRef));
         itemSlotX = (int) (0.95 * worldInfo.getPartWidth());
-        hudObjects.add(new ItemSlot(itemSlotX, itemSlotY, itemSlotRadius, (Avatar) avatar, "BOW", bow.imageRef));
+        hudObjects.add(new ItemSlot(itemSlotX, itemSlotY, (Avatar) avatar, "BOW", bow.imageRef));
 
     }
 

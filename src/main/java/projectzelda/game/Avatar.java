@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Avatar extends CircularGameObject {
     private boolean flippedX = false;
@@ -25,6 +26,8 @@ public class Avatar extends CircularGameObject {
 
     private ChatBoxButton chatBox;
     private String chatBoxText;
+
+    private List<GameObject> interactiveObjets;
 
     // place of chatbox
     private int posXChatBox = world.worldInfo.getPartWidth() / 2 - 300;
@@ -59,6 +62,7 @@ public class Avatar extends CircularGameObject {
         this.bow = bow;
         bow.offset((int) x, (int) y);
         sword.offset((int) x, (int) y);
+
     }
 
     @Override
@@ -167,35 +171,43 @@ public class Avatar extends CircularGameObject {
     }
 
     public void interactWithNpc() {
-
-        for (GameObject obj : world.gameObjects) {
-            Const.Type type = Const.Type.values()[obj.type()];
-            if (obj instanceof NPC || type == Const.Type.CHEST|| type == Const.Type.PUMPKIN) {
-                double objX = obj.x + ((RectangularGameObject) obj).width / 2;
-                double objY = obj.y + ((RectangularGameObject) obj).height / 2;
-                double distance = world.physicsSystem.distance(x, y, objX, objY);
-                switch (type){
-                    case NPC:
-                    case ANIMAL:
-                        if(distance <= 40){
-                            questNPC((NPC) obj);
-                        }
-                        break;
-                    case CHEST:
-                        if(distance <= 35){
-                            questChest((Chest) obj);
-                        }
-                        break;
-                    case PUMPKIN:
-                        if(distance <= 30){
-                            questPumpkin((Pumpkin) obj);
-                        }
-                        break;
-                }
-            }
-
+        if (interactiveObjets == null) {
+            interactiveObjets = world.gameObjects.stream().filter(obj -> obj instanceof NPC ||
+                    obj instanceof Chest || obj instanceof Pumpkin).collect(Collectors.toList());
         }
+
+        boolean interact = false;
+        for (int i = 0; i<interactiveObjets.size() && !interact; i++) {
+            RectangularGameObject obj = (RectangularGameObject) interactiveObjets.get(i);
+            Const.Type type = Const.Type.values()[obj.type()];
+            double objX = obj.x + obj.width / 2;
+            double objY = obj.y + obj.height / 2;
+            double distance = world.physicsSystem.distance(x, y, objX, objY);
+            switch (type) {
+                case NPC:
+                case ANIMAL:
+                    if (distance <= 40) {
+                        interact = true;
+                        questNPC((NPC) obj);
+                    }
+                    break;
+                case CHEST:
+                    if (distance <= 35) {
+                        interact = true;
+                        questChest((Chest) obj);
+                    }
+                    break;
+                case PUMPKIN:
+                    if (distance <= 30) {
+                        interact = true;
+                        questPumpkin((Pumpkin) obj);
+                    }
+                    break;
+            }
+        }
+
     }
+
 
     public boolean containsItem(String itemType) {
         return inventory.containsKey(itemType);
