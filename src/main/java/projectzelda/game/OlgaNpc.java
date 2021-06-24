@@ -63,7 +63,7 @@ public class OlgaNpc extends NPC {
     private String[] olgaNpcPostQuestText = {
             "Adlez: Is there anything else I can do for you?",
             "Olga: No, you've done more than enough. Thank you!",
-            "Olga: Maybe Brutus has some more things for you to do though!",
+            "Olga: Maybe Brutus has something for you to do.",
             "Adlez: Ok, thank you! Goodbye!",
             "Olga: Goodbye adventurer!"
     };
