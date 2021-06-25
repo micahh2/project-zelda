@@ -27,10 +27,12 @@ public abstract class EnemyAI extends CircularGameObject {
 
     public HealthBar healthBar;
 
-    public EnemyAI(double x, double y, WorldInfo worldInfo) {
+    public ImageRef bones;
+
+    public EnemyAI(double x, double y, ImageRef bones , WorldInfo worldInfo) {
         super(x, y, 0, 60, 15, new Color(160, 80, 40));
-        this.imageRef = imageRef;
         this.worldInfo = worldInfo;
+        this.bones = bones;
         isMoving = true;
         state = State.FREE;
         healthBar = new HealthBar(0, 0, 50, 5);
@@ -71,7 +73,7 @@ public abstract class EnemyAI extends CircularGameObject {
 
     public void die() {
         this.isLiving = false;
-        this.world.gameObjects.add(new Bones(x, y));
+        this.world.gameObjects.add(new Bones(x, y, bones));
     }
 
 

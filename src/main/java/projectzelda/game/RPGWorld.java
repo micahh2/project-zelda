@@ -12,7 +12,7 @@ public class RPGWorld extends World {
     private double timePassed = 0;
     private double timeSinceLastShot = 0;
 
-    private boolean isMusicPlaying = true;
+    private boolean isMusicPlaying = false;
 
     private HelpText helpText;
 
@@ -57,8 +57,10 @@ public class RPGWorld extends World {
         gameObjects.add(startAnimation);
         gameObjects.add(avatar);
 
+        ImageRef bones = map.getFirstObject("Bones").imageRef;
+
         MapObject bossMo = map.getFirstObject("Boss");
-        Boss boss = new Boss(bossMo.x, bossMo.y, bossMo.imageRef, (Avatar) avatar);
+        Boss boss = new Boss(bossMo.x, bossMo.y, bossMo.imageRef, bones, (Avatar) avatar);
         gameObjects.add(boss);
 
         MapObject chestMo = map.getFirstObject("Chests");
@@ -72,6 +74,7 @@ public class RPGWorld extends World {
         int heightP = pumpkinMo.startingBounds.y2 - pumpkinMo.startingBounds.y1;
         Pumpkin pumpkin = new Pumpkin(pumpkinMo.x, pumpkinMo.y, widthP, heightP, pumpkinMo.imageRef);
         gameObjects.add(pumpkin);
+
 
         // Get a list of NPCs
         List<MapObject> npcs = map.getAllObjects("Npcs");
@@ -156,19 +159,21 @@ public class RPGWorld extends World {
 
         // create some monsters!
         List<MapObject> monsters = map.getAllObjects("Monsters");
+
         for (MapObject monster : monsters) {
-            gameObjects.add(new Monster(monster.startingBounds.x1, monster.startingBounds.y1, monster.imageRef, (Avatar) avatar));
+            gameObjects.add(new Monster(monster.startingBounds.x1, monster.startingBounds.y1, monster.imageRef, bones,  (Avatar) avatar));
+
         }
+
+
 
         // got have rock
         MapObject RockMo = map.getFirstObject("DestroyableRocks");
         Rock rock = new Rock(RockMo.startingBounds.x1, RockMo.startingBounds.y1, RockMo.imageRef);
         gameObjects.add(rock);
 
-        // TODO: Move this somewhere relevant (like inside Rock.java)
-        //if (!rock.isLiving) {
-        //    sound.stopBackgroundMusic();
-        //}
+
+
 
         helpText = new HelpText((int)(0.15 * worldInfo.getPartWidth()), (int) (0.3 * worldInfo.getPartHeight()));
 

@@ -221,6 +221,7 @@ public class Avatar extends CircularGameObject {
             ((RPGWorld) world).addChatBox(chatBoxText, chest);
             chest.isLiving = false;
             hasSword= true;
+
             System.out.println("Next! " + ((RPGWorld)world).questState);
             ((RPGWorld)world).nextQuest();
         } else {
