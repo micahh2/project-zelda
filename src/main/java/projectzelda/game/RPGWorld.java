@@ -178,7 +178,9 @@ public class RPGWorld extends World {
 
 
 
-        helpText = new HelpText((int) (0.15 * worldInfo.getPartWidth()), (int) (0.3 * worldInfo.getPartHeight()));
+        int worldWidth = worldInfo.getPartWidth();
+        int worldHeight = worldInfo.getPartHeight();
+        helpText = new HelpText((int) (0.15 * worldInfo.getPartWidth()), (int) (0.85 * worldInfo.getPartHeight()));
 
         textObjects.add(helpText);
 
@@ -195,8 +197,10 @@ public class RPGWorld extends World {
         pauseMenuObjects.add(new UIButton(relX, relY, buttonWidth, buttonHeight, "Quit"));
 
         // add the main menu buttons
-        relY = (int) (0.45 * worldInfo.getPartHeight());
+        relY = (int) (0.65 * worldHeight);
         mainMenuObjects.add(new UIButton(relX, relY, buttonWidth, buttonHeight, "Play"));
+        ImageRef logoRef = new ImageRef("/images/logo.png", 0, 0, 1438, 510);
+        mainMenuObjects.add(new UIImage(worldWidth/2-logoRef.x2/2, (int)(worldHeight*0.1), logoRef));
 
         // add the death menu buttons
         deathMenuObjects.add(new UIButton(relX, relY, buttonWidth, buttonHeight, "Restart"));

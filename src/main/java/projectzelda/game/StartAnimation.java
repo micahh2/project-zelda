@@ -26,8 +26,8 @@ class StartAnimation extends CircularGameObject
     @Override
     public void draw(GraphicSystem gs, long tick) {
         if (world.gameState != GameState.PLAY) { return; }
-        gs.drawOval((int)x-radius, (int)y-radius, radius*2, radius*2, color);
-        gs.drawOval((int)x-radius/2, (int)y-radius/2, radius, radius, color);
+        gs.drawOval((int)x-radius, (int)y-radius, radius*2, radius*2, 5, color);
+        gs.drawOval((int)x-radius/2, (int)y-radius/2, radius, radius, 10, color);
         gs.fillOval((int)x-radius/4, (int)y-radius/4, radius/2, radius/2, color);
     }
 

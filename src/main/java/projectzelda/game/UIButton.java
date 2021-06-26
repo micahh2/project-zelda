@@ -37,8 +37,8 @@ public class UIButton extends UIObject {
 
     @Override
     public void draw(GraphicSystem gs, long tick) {
-        gs.fillRectScreen(x, y, width, height, color);
-        gs.drawRectScreen(x, y, width, height, outlineColor);
+        gs.fillRoundRectScreen(x, y, width, height, 5, 5, color);
+        gs.drawRoundRectScreen(x, y, width, height, 5, 5, 2, outlineColor);
 
         gs.drawCenteredTextScreen(x, y, width, height, textColor, textFont, text);
     }

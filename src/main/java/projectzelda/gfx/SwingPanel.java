@@ -31,7 +31,7 @@ class SwingPanel extends JPanel implements GraphicSystem {
             GraphicsEnvironment.getLocalGraphicsEnvironment().
                     getDefaultScreenDevice().getDefaultConfiguration();
     private BufferedImage imageBuffer;
-    private Graphics graphics;
+    private Graphics2D graphics;
 
     // Images
     private MediaTracker tracker;
@@ -55,8 +55,12 @@ class SwingPanel extends JPanel implements GraphicSystem {
         this.setSize(width, height);
         imageBuffer = graphicsConf.createCompatibleImage(
                 this.getWidth(), this.getHeight());
-        graphics = imageBuffer.getGraphics();
-        clearTransform = ((Graphics2D)graphics).getTransform();
+        graphics = (Graphics2D)imageBuffer.getGraphics();
+        graphics.setRenderingHint(
+                RenderingHints.KEY_ANTIALIASING, 
+                RenderingHints.VALUE_ANTIALIAS_ON
+        );
+        clearTransform = graphics.getTransform();
 
         // initialize Listeners
         this.addMouseListener(inputSystem);
@@ -150,10 +154,10 @@ class SwingPanel extends JPanel implements GraphicSystem {
     }
 
     // For drawing with absolute world coordinates
-    public void drawRect(int xAbs, int yAbs, int width, int height, Color color) {
+    public void drawRect(int xAbs, int yAbs, int width, int height, int strokeWidth, Color color) {
         int x = (int) (xAbs - world.worldPartX);
         int y = (int) (yAbs - world.worldPartY);
-        drawRectScreen(x, y, width, height, color);
+        drawRectScreen(x, y, width, height, strokeWidth, color);
     }
 
     public void fillRect(int xAbs, int yAbs, int width, int height, Color color) {
@@ -162,16 +166,38 @@ class SwingPanel extends JPanel implements GraphicSystem {
         fillRectScreen(x, y, width, height, color);
     }
 
-    public void drawOval(int xAbs, int yAbs, int r1, int r2, Color color) {
+    public void drawRoundRect(int xAbs, int yAbs, int width, int height, int arcWidth, int arcHeight, int strokeWidth, Color color) {
         int x = (int) (xAbs - world.worldPartX);
         int y = (int) (yAbs - world.worldPartY);
-        drawOvalScreen(x, y, r1, r2, color);
+        drawRoundRectScreen(x, y, width, height, arcWidth, arcHeight, strokeWidth, color);
+    }
+
+    public void fillRoundRect(int xAbs, int yAbs, int width, int height, int arcWidth, int arcHeight, Color color) {
+        int x = (int) (xAbs - world.worldPartX);
+        int y = (int) (yAbs - world.worldPartY);
+        fillRoundRectScreen(x, y, width, height, arcWidth, arcHeight, color);
+    }
+
+    public void drawOval(int xAbs, int yAbs, int r1, int r2, int strokeWidth, Color color) {
+        int x = (int) (xAbs - world.worldPartX);
+        int y = (int) (yAbs - world.worldPartY);
+        drawOvalScreen(x, y, r1, r2, strokeWidth, color);
     }
 
     public void fillOval(int xAbs, int yAbs, int r1, int r2, Color color) {
         int x = (int) (xAbs - world.worldPartX);
         int y = (int) (yAbs - world.worldPartY);
         fillOvalScreen(x, y, r1, r2, color);
+    }
+
+    public int getTextWidth(String text) {
+        FontMetrics metrics = graphics.getFontMetrics(font);
+        return metrics.stringWidth(text);
+    }
+
+    public int getTextHeight() {
+        FontMetrics metrics = graphics.getFontMetrics(font);
+        return metrics.getHeight();
     }
 
     public void drawCenteredText(int xAbs, int yAbs, int width, int height, Color color, Font font, String text) {
@@ -192,9 +218,16 @@ class SwingPanel extends JPanel implements GraphicSystem {
     }
 
     // For drawing with relative screen coordinates
-    public void drawRectScreen(int x, int y, int width, int height, Color color) {
+    public void drawRectScreen(int x, int y, int width, int height, int strokeWidth, Color color) {
         graphics.setColor(color);
+        graphics.setStroke(new BasicStroke(strokeWidth));
         graphics.drawRect(x, y, width, height);
+    }
+
+    public void drawRoundRectScreen(int x, int y, int width, int height, int arcWidth, int arcHeight, int strokeWidth, Color color) {
+        graphics.setColor(color);
+        graphics.setStroke(new BasicStroke(strokeWidth));
+        graphics.drawRoundRect(x, y, width, height, arcWidth, arcHeight);
     }
 
     public void fillRectScreen(int x, int y, int width, int height, Color color) {
@@ -202,8 +235,14 @@ class SwingPanel extends JPanel implements GraphicSystem {
         graphics.fillRect(x, y, width, height);
     }
 
-    public void drawOvalScreen(int x, int y, int r1, int r2, Color color) {
+    public void fillRoundRectScreen(int x, int y, int width, int height, int arcWidth, int arcHeight, Color color) {
         graphics.setColor(color);
+        graphics.fillRoundRect(x, y, width, height, arcWidth, arcHeight);
+    }
+
+    public void drawOvalScreen(int x, int y, int r1, int r2, int strokeWidth, Color color) {
+        graphics.setColor(color);
+        graphics.setStroke(new BasicStroke(strokeWidth));
         graphics.drawOval(x, y, r1, r2);
     }
 
@@ -240,20 +279,22 @@ class SwingPanel extends JPanel implements GraphicSystem {
         drawImageScreen(imageRef, x1, y1, x2, y2, 0f);
     }
     public final void drawImageScreen(ImageRef imageRef, int x1, int y1, int x2, int y2, float rotation) {
-        Graphics2D gfx = (Graphics2D)graphics;
         Image img = images.get(imageRef.name);
-        int centerx = x1 + (int)((x2-x1)/2);
-        int centery = y1 + (int)((y2-y1)/2);
-        AffineTransform trans = AffineTransform.getTranslateInstance(centerx, centery);
-        trans.rotate(Math.PI*2*rotation);
+        if (rotation != 0) {
+            int centerx = x1 + (x2-x1)/2;
+            int centery = y1 + (y2-y1)/2;
+            AffineTransform trans = AffineTransform.getTranslateInstance(centerx, centery);
+            trans.rotate(Math.PI*2*rotation);
 
-        trans.translate(-centerx, -centery);
-        gfx.transform(trans);
-        gfx.drawImage(img,
-                x1, y1, x2, y2,
-                imageRef.x1, imageRef.y1, imageRef.x2, imageRef.y2,
-                this);
-        gfx.setTransform(clearTransform);
+            trans.translate(-centerx, -centery);
+            graphics.transform(trans);
+
+            graphics.drawImage(img, x1, y1, x2, y2, imageRef.x1, imageRef.y1, imageRef.x2, imageRef.y2, this);
+
+            graphics.setTransform(clearTransform);
+            return;
+        }
+        graphics.drawImage(img, x1, y1, x2, y2, imageRef.x1, imageRef.y1, imageRef.x2, imageRef.y2, this);
     }
 
     public void redraw() {
