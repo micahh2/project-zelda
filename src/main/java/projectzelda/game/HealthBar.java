@@ -27,14 +27,14 @@ public class HealthBar extends UIObject {
     public void draw(GraphicSystem gs, long tick) {
         int healthWidth = (int) (health * width);
         if (isHudElement) {
-            gs.fillRectScreen(x, y, width, height, color);
-            gs.drawRectScreen(x, y, width, height, color);
-            gs.fillRectScreen(x, y, healthWidth+1,height+1, healthColor);
+            gs.fillRoundRectScreen(x, y, width, height, 5, 5, color);
+            gs.fillRoundRectScreen(x, y, healthWidth+1, height, 5, 5, healthColor);
+            gs.drawRoundRectScreen(x, y, width, height, 5, 5, 2, outlineColor);
             return;
         }
 
-        gs.fillRect(x, y, width, height, color);
-        gs.drawRect(x, y, width, height, outlineColor);
-        gs.fillRect(x, y, healthWidth, height, healthColor);
+        gs.fillRoundRect(x, y, width, height, 2, 2, color);
+        gs.fillRoundRect(x, y, healthWidth, height, 2, 2, healthColor);
+        gs.drawRoundRect(x, y, width, height, 2, 2, 1, outlineColor);
     }
 }

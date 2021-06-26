@@ -20,4 +20,8 @@ public abstract class TextObject
   public abstract String toString();
   
   public static void setWorld(World w){world=w;}
+
+  public void draw(GraphicSystem gs, long tick) {
+      gs.draw(this);
+  }
 }

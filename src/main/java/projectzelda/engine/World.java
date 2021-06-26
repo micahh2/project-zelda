@@ -128,7 +128,7 @@ public abstract class World {
 
             // draw all TextObjects
             for (int i = 0; i < textObjects.size(); i++) {
-                graphicSystem.draw(textObjects.get(i));
+                textObjects.get(i).draw(graphicSystem, currentTick);
             }
 
             if (gameState == GameState.PAUSE) {

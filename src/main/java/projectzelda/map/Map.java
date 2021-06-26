@@ -121,6 +121,7 @@ public class Map implements MediaInfo, WorldInfo {
         for (Tileset t : tilesets) {
             sources.add(t.imageSource);
         }
+        sources.add("/images/logo.png");
         return sources;
     }
 
