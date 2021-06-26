@@ -6,9 +6,10 @@ public class Boss extends EnemyAI
 {
     public Avatar avatar;
 
-    public Boss(double x, double y, ImageRef imageRef, Avatar avatar)
+
+    public Boss(double x, double y, ImageRef imageRef, ImageRef bones , Avatar avatar)
     {
-        super(x, y, null);
+        super(x, y, bones,null);
         this.imageRef = imageRef;
         this.avatar = avatar;
     }

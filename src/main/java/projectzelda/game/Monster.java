@@ -5,12 +5,14 @@ import projectzelda.engine.*;
 public class Monster extends EnemyAI
 {
     public Avatar avatar;
+    public ImageRef bones;
 
-    public Monster(double x, double y, ImageRef imageRef, Avatar avatar)
+    public Monster(double x, double y, ImageRef imageRef, ImageRef bones,  Avatar avatar)
     {
-        super(x, y, null);
+        super(x, y, bones, null);
         this.imageRef = imageRef;
         this.avatar = avatar;
+        this.bones = bones;
     }
 
     @Override

@@ -3,6 +3,7 @@ package projectzelda.game;
 import projectzelda.engine.GraphicSystem;
 import projectzelda.engine.RectangularGameObject;
 import projectzelda.engine.ImageRef;
+import projectzelda.engine.Sound;
 
 import java.awt.*;
 
@@ -52,6 +53,7 @@ public class Rock extends RectangularGameObject
         // if Goblin is dead, delete it
         if (life <= 0) {
             die();
+
         }
     }
 
@@ -59,6 +61,13 @@ public class Rock extends RectangularGameObject
 
 
         this.isLiving = false;
+    }
+
+    public boolean isDead () {
+        if (life <= 0) {
+            return true;
+        }
+        return false;
     }
 
 }
