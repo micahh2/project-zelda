@@ -98,12 +98,6 @@ class Arrow extends CircularGameObject
                 case TREE:
                     this.isLiving = false;
                     break;
-                case ANIMAL:
-                case NPC:
-                    this.isLiving = false;
-                    NPC guy = (NPC)obj;
-                    guy.hit();
-                    break;
                 case GOBLIN:
                     this.isLiving = false;
                     EnemyAI bad = (EnemyAI)obj;
