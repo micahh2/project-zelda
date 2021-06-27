@@ -5,7 +5,8 @@ import projectzelda.engine.*;
 public class Boss extends EnemyAI
 {
     public GameObject taget;
-
+    private int posXChatBox = world.worldInfo.getPartWidth() / 2 - 300;
+    private int posYChatBox = world.worldInfo.getPartHeight() - 100;
 
     public Boss(double x, double y, ImageRef imageRef, GameObject taget)
     {
@@ -74,7 +75,35 @@ public class Boss extends EnemyAI
         }
 
     }
+    public void hit() {
+        if (!isLiving) { return; }
+        // every hit decreases life
 
+
+        if (world.weaponState == WeaponState.SWORD) {
+
+            world.gameState = GameState.DIALOG;
+            ChatBoxButton chatBox = new ChatBoxButton(posXChatBox, posYChatBox, 600, 100, "Adlez: His armour is too thick!",this);
+            world.chatBoxObjects.add(chatBox);
+        } else {
+            life -= 0.21;
+            healthBar.health = life;
+            color = REDDER;
+            colorCooldown = COLOR_COOLDOWN;
+
+            // if Goblin is dead, delete it
+            if (life <= 0) {
+                die();
+            }
+        }
+
+    }
+
+    public void die() {
+        this.isLiving = false;
+        ((RPGWorld)world).addBones(x, y);
+        world.gameState = GameState.COMPLETE;
+    }
 
 }
 

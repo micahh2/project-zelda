@@ -3,11 +3,8 @@
 
 package projectzelda.engine;
 
-import projectzelda.*;
+import projectzelda.game.WeaponState;
 
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public abstract class World {
@@ -38,12 +35,15 @@ public abstract class World {
     public ArrayList<UIObject> mainMenuObjects = new ArrayList<>();
     public ArrayList<UIObject> deathMenuObjects = new ArrayList<>();
     public ArrayList<UIObject> hudObjects = new ArrayList<>();
+    public ArrayList<UIObject> completeGameMenuObjects = new ArrayList<>();
+
 
     public boolean dumpPerf = false;
 
 
     
     public GameState gameState = GameState.MAIN_MENU;
+    public WeaponState weaponState = WeaponState.NONE;
 
     protected World() {
     }
@@ -174,6 +174,11 @@ public abstract class World {
             if (gameState == GameState.MAIN_MENU) {
                 for (int i = 0; i < mainMenuObjects.size(); i++) {
                     mainMenuObjects.get(i).draw(graphicSystem, currentTick);
+                }
+            }
+            if (gameState == GameState.COMPLETE) {
+                for (int i = 0; i < completeGameMenuObjects.size(); i++) {
+                    completeGameMenuObjects.get(i).draw(graphicSystem, currentTick);
                 }
             }
 

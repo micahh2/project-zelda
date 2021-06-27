@@ -1,9 +1,6 @@
 package projectzelda.game;
 
-import projectzelda.engine.GraphicSystem;
-import projectzelda.engine.RectangularGameObject;
-import projectzelda.engine.ImageRef;
-import projectzelda.engine.Sound;
+import projectzelda.engine.*;
 
 import java.awt.*;
 
@@ -17,6 +14,17 @@ public class Rock extends RectangularGameObject
     protected static final Color REDDER = new Color(160, 40, 20);
     protected static final double COLOR_COOLDOWN = 0.2;
     protected double colorCooldown = 0;
+    private int posXChatBox = world.worldInfo.getPartWidth() / 2 - 300;
+    private int posYChatBox = world.worldInfo.getPartHeight() - 100;
+
+    private String[] rockText = {
+            "Adlez: I wonder what's behind there."
+    };
+    private String[] rockQuestText = {
+            "Adlez: I think I can see their king..",
+            "Adlez: ..I must break this down now..",
+            "Adlez: .. and save this town!"
+    };
 
     public Rock(double x, double y, ImageRef imageref)
         {
@@ -45,16 +53,24 @@ public class Rock extends RectangularGameObject
 
     public void hit() {
         // every hit decreases life
-        life -= 0.21;
-        healthBar.health = life;
-        color = REDDER;
-        colorCooldown = COLOR_COOLDOWN;
+        if (((RPGWorld) world).questState == QuestState.BOSS) {
+            life -= 0.21;
+            healthBar.health = life;
+            color = REDDER;
+            colorCooldown = COLOR_COOLDOWN;
 
-        // if Goblin is dead, delete it
-        if (life <= 0) {
-            die();
+            // if Goblin is dead, delete it
+            if (life <= 0) {
+                die();
 
+            }
+        } else {
+            world.gameState = GameState.DIALOG;
+            // if const.type is rock game freezes, using bones or goblin seems to work ok though
+            ChatBoxButton chatBox = new ChatBoxButton(posXChatBox, posYChatBox, 600, 100, "It might be bad idea to break this.",this);
+            world.chatBoxObjects.add(chatBox);
         }
+
     }
 
     public void die() {
@@ -69,5 +85,13 @@ public class Rock extends RectangularGameObject
         }
         return false;
     }
+
+    public String[] getRockText() { return rockText; }
+
+    public String getRockText(int index) { return rockText[index]; }
+
+    public void setRockText(String[] rockText) { this.rockText = rockText; }
+
+    public String[] getRockQuestText() { return rockQuestText; }
 
 }
