@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 public class Avatar extends CircularGameObject {
     private boolean flippedX = false;
     private HashMap<String, GameObject> inventory;
-    public WeaponState weaponState;
+
 
     private Sword sword;
     private Bow bow;
@@ -52,7 +52,7 @@ public class Avatar extends CircularGameObject {
         this.imageRef = imageRef;
         this.sword = sword;
         this.bow = bow;
-        weaponState = WeaponState.NONE;
+        //weaponState = ((RPGWorld) world).weaponState;
         bow.offset((int) x, (int) y);
         sword.offset((int) x, (int) y);
     }
@@ -90,23 +90,29 @@ public class Avatar extends CircularGameObject {
                 // if Object is a tree, move back one step
                 case TREE:
                 case WATER:
-                case ROCK:
                 case WALL:
-                case NPC:
                 case ANIMAL:
-                case CHEST:
+                case NPC:
                 case PUMPKIN:
+                case ROCK:
+                    this.moveBack();break;
+                case CHEST:
                     this.moveBack();
+
+                    addItem("SWORD",sword);
+                    world.weaponState = WeaponState.SWORD;
+                    ((RPGWorld) world).questState = QuestState.BOB_COMPLETED;
+                    System.out.println(world.weaponState);
                     break;
                 case LAVA:
                     hit(0.1);
                     this.moveBack();
                     break;
-                case GOBLIN:
+                    case GOBLIN:
                     this.moveBack();
-                    if (weaponState == WeaponState.NONE) {
+                    if (world.weaponState == WeaponState.NONE) {
                         world.gameState = GameState.DIALOG;
-                        chatBox = new ChatBoxButton(posXChatBox, posYChatBox, 600, 100, "I'm going to need a weapon", Const.Type.GOBLIN);
+                        chatBox = new ChatBoxButton(posXChatBox, posYChatBox, 600, 100, "Adlez: I'm going to need a weapon.", Const.Type.GOBLIN);
                         world.chatBoxObjects.add(chatBox);
                     }
                     break;
@@ -165,7 +171,7 @@ public class Avatar extends CircularGameObject {
     public void interactWithNpc() {
         List<GameObject> interactiveObjects = 
             world.gameObjects.stream().filter(obj -> obj instanceof NPC ||
-                obj instanceof Chest || obj instanceof Pumpkin).collect(Collectors.toList());
+                obj instanceof Chest || obj instanceof Pumpkin || obj instanceof Rock).collect(Collectors.toList());
 
         GameObject closestObject = interactiveObjects.get(0);
         double shortestDistance = Double.MAX_VALUE;
@@ -200,6 +206,10 @@ public class Avatar extends CircularGameObject {
                     questPumpkin((Pumpkin) closestObject);
                 }
                 break;
+            case ROCK:
+                if (shortestDistance <= 100) {
+                   questRock((Rock) closestObject);
+                }
         }
     }
 
@@ -228,7 +238,19 @@ public class Avatar extends CircularGameObject {
             ((RPGWorld) world).addChatBox(chatBoxText, pumpkin);
         }
     }
+    public void questRock(Rock rock) {
+        world.gameState = GameState.DIALOG;
+        QuestState q = ((RPGWorld) world).questState;
+        if (q != QuestState.BOSS) {
+            chatBoxText = rock.getRockText(0);
+            ((RPGWorld) world).addChatBox(chatBoxText, rock);
+        } else if (q == QuestState.BOSS) {
+          rock.setRockText(rock.getRockQuestText());
+          chatBoxText = rock.getRockText(0);
+            ((RPGWorld) world).addChatBox(chatBoxText, rock);
 
+        }
+    }
     public void questChest(Chest chest) {
         world.gameState = GameState.DIALOG;
         QuestState q = ((RPGWorld) world).questState;
@@ -237,7 +259,7 @@ public class Avatar extends CircularGameObject {
             chatBoxText = chest.getChestText(0);
             ((RPGWorld) world).addChatBox(chatBoxText, chest);
             chest.isLiving = false;
-            weaponState = WeaponState.SWORD;
+            world.weaponState = WeaponState.SWORD;
             addItem("SWORD", sword);
             System.out.println("Next! " + ((RPGWorld) world).questState);
             ((RPGWorld) world).nextQuest();
@@ -250,29 +272,33 @@ public class Avatar extends CircularGameObject {
     public void questNPC(NPC npc) {
         world.gameState = GameState.DIALOG;
         QuestState q = ((RPGWorld) world).questState;
+        if (q == QuestState.BOB_COMPLETED) {
+            addItem("BOW", bow);
+           // world.weaponState = WeaponState.BOW;
+        }
         chatBoxText = npc.getNpcQuestText(q, 0);
         ((RPGWorld) world).addChatBox(chatBoxText, npc);
     }
 
     public void draw(GraphicSystem gs, long tick) {
 
-        if (weaponState == WeaponState.SWORD) {
+        if (world.weaponState == WeaponState.SWORD) {
             sword.draw(gs, tick);
-        } else if (weaponState == WeaponState.BOW) {
+        } else if (world.weaponState == WeaponState.BOW) {
             bow.draw(gs, tick);
         }
         gs.draw(this);
     }
 
     public void switchWeapon(WeaponState weaponState){
-        this.weaponState = weaponState;
+        this.world.weaponState = weaponState;
     }
 
     public void fire() {
-        if (weaponState == WeaponState.BOW) {
+        if (world.weaponState == WeaponState.BOW) {
             bow.fire(fireDir);
         }
-        if (weaponState == WeaponState.SWORD) {
+        if (world.weaponState == WeaponState.SWORD) {
             sword.fire();
         }
     }

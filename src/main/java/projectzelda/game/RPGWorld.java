@@ -1,6 +1,5 @@
 package projectzelda.game;
 
-import projectzelda.*;
 import projectzelda.engine.*;
 import projectzelda.map.MapObject;
 
@@ -209,11 +208,17 @@ public class RPGWorld extends World {
         relY = (int) (0.6 * worldHeight);
         deathMenuObjects.add(new UIButton(relX, relY, buttonWidth, buttonHeight, "Quit"));
 
+        // add screen upon completion
+        relY = (int) (0.65 * worldHeight);
+        completeGameMenuObjects.add(new UIButton(relX, relY, buttonWidth, buttonHeight, "You win the game!"));
+
+
         // initialize the background and add it to different screens
         Background background = new Background(0, 0, map.getPartWidth(), map.getHeight(), new Color(1f, 1f, 1f, 0.2f));
         pauseMenuObjects.add(background);
         mainMenuObjects.add(background);
         deathMenuObjects.add(background);
+        completeGameMenuObjects.add(background);
 
         // add the hud elements
         hudObjects.add(((Avatar) avatar).healthBar);
@@ -245,7 +250,7 @@ public class RPGWorld extends World {
         // Mouse still pressed?
         //
         if (userInput.isMousePressed && button == 1) {
-            if (this.gameState == GameState.PAUSE) {
+            if (this.gameState == GameState.PAUSE ||this.gameState == GameState.COMPLETE) {
                 UIButton resumeButton = (UIButton) pauseMenuObjects.get(0);
                 UIButton quitButton = (UIButton) pauseMenuObjects.get(1);
 
@@ -301,23 +306,7 @@ public class RPGWorld extends World {
         }
 
 
-        // clicking chatbox (mouse press goes through all the dialog instantly)
-        /* if (!chatBoxObjects.isEmpty()) {
-           ChatBoxButton chatBox = (ChatBoxButton) chatBoxObjects.get(0);
-           if (userInput.isMousePressed) {
-           if (userInput.mouseMovedX >= chatBox.x && userInput.mouseMovedX <= chatBox.getMaxX()
-           && (userInput.mouseMovedY >= chatBox.y && userInput.mouseMovedY <= chatBox.getMaxY())) {
-           handleDialog(chatBox);
-           }
 
-           }
-
-           } */
-
-
-        //
-        // Keyboard events
-        //
         if (userInput.isKeyEvent) {
             switch (userInput.keyPressed) {
                 case ' ':
@@ -325,6 +314,7 @@ public class RPGWorld extends World {
                     if (!chatBoxObjects.isEmpty()) {
                         ChatBoxButton chatBox = (ChatBoxButton) chatBoxObjects.get(0);
                         handleDialog(chatBox);
+
 
                     } else {
                         ((Avatar) avatar).fire();
@@ -348,7 +338,13 @@ public class RPGWorld extends World {
 
                     //this.gameState = this.gameState == GameState.PAUSE ? GameState.PLAY : GameState.PAUSE;
                     break;
+              /*  case (char) 10:
+                    if (!chatBoxObjects.isEmpty()) {
+                        ChatBoxButton chatBox = (ChatBoxButton) chatBoxObjects.get(0);
+                        handleDialog(chatBox);
 
+                    }
+                    break; */
                 case 'w':
                 case 'a':
                 case 's':
@@ -359,15 +355,20 @@ public class RPGWorld extends World {
                      *                          > if left out accidental dialog is forced upon user upon collision
                      * fixes chatloop > game frozen until wasd pressed after chatbox is cleared
                      * */
-                    if (!chatBoxObjects.isEmpty()) {
-                        ChatBoxButton chatBoxButton = (ChatBoxButton) chatBoxObjects.get(0);
-                        if (chatBoxButton.obj != null) {
-                            gameState = GameState.DIALOG;
-                        }
 
-                    } else {
-                        gameState = GameState.PLAY;
+                    // can't close menus with movement keys
+                 if (gameState != GameState.PAUSE && gameState != GameState.MAIN_MENU && gameState != GameState.COMPLETE) {
+                        if (!chatBoxObjects.isEmpty()) {
+                            ChatBoxButton chatBoxButton = (ChatBoxButton) chatBoxObjects.get(0);
+                            if (chatBoxButton.obj != null) {
+                                gameState = GameState.DIALOG;
+                            }
+
+                        } else {
+                            gameState = GameState.PLAY;
+                        }
                     }
+
                     break;
                 case 'e':
                     if (gameState == GameState.PLAY) {
@@ -387,24 +388,27 @@ public class RPGWorld extends World {
             }
         }
 
-        int vert = 0;
-        int horz = 0;
-        if (userInput.keysPressed.contains('w')) {
-            vert -= 10;
-        }
-        if (userInput.keysPressed.contains('a')) {
-            horz -= 10;
-        }
-        if (userInput.keysPressed.contains('s')) {
-            vert += 10;
-        }
-        if (userInput.keysPressed.contains('d')) {
-            horz += 10;
-        }
-        // Move character
-        if (horz != 0 || vert != 0) {
-            avatar.setDestination(avatar.x + horz, avatar.y + vert);
-        }
+            int vert = 0;
+            int horz = 0;
+            if (userInput.keysPressed.contains('w')) {
+                vert -= 10;
+            }
+            if (userInput.keysPressed.contains('a')) {
+                horz -= 10;
+            }
+            if (userInput.keysPressed.contains('s')) {
+                vert += 10;
+            }
+            if (userInput.keysPressed.contains('d')) {
+                horz += 10;
+            }
+            // Move character
+
+            if (horz != 0 || vert != 0) {
+                avatar.setDestination(avatar.x + horz, avatar.y + vert);
+            }
+
+
 
 
     }
@@ -500,7 +504,17 @@ public class RPGWorld extends World {
 
                 }
                 break;
+            case ROCK:
+               Rock rockForText = (Rock) chatBox.obj;
+                if (rockForText.getRockText().length > chatTrack) {
+                    chatBox.setText(rockForText.getRockText()[chatTrack]);
+                    chatTrack++;
+                } else {
+                    chatTrack = 1;
+                    chatBoxObjects.remove(0);
 
+                }
+                break;
 
             case NPC:
             case ANIMAL:

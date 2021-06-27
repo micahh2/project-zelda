@@ -5,5 +5,6 @@ public enum GameState {
     PLAY,
     PAUSE,
     DIALOG,
-    DEATH
+    DEATH,
+    COMPLETE
 }

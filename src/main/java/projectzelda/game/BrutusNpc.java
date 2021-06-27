@@ -79,26 +79,37 @@ public class BrutusNpc extends NPC {
             "Adlez: to walk over the bridge.",
             "Brutus: Really? Bob? He's scared of water?",
             "Brutus: That's news to me.",
-            "Brutus: Thank you! I'll have a chat with him.",
+            "Brutus: Thank you! I'll have a chat with him..",
+            "Brutus: .. I've only known him to be brave. ",
+            "Brutus: In that case I don't think I can..",
+            "Brutus: .. rely on him for the next task.",
+            "Brutus: I have one last thing to ask of you.",
+            "Brutus: We recently found the monster's lair..",
+            "Brutus: .. I believe their king lives there and ..",
+            "Brutus: .. if he's killed the monsters will disappear.",
+            "Brutus: Can you please deal with it?",
+            "Adlez: After all I've already done I don't think.. ",
+            "Adlez: .. that'll be an issue!",
+            "Brutus: Before you go, take this.",
+            "Brutus: *hands you a bow and some arrows*",
+            "Adlez: What's this for?",
+            "Brutus: A gift. It belonged to my grandfather.",
+            "Brutus: The arrows are made of a special metal..",
+            "Brutus: ..perhaps they'll be of use to you.",
+            "Brutus: I'm too old to use it nowadays.",
+            "Adlez: Thank you very much. I'll make good use of it.",
+            "Brutus: You're a true hero, thank you.",
+    };
+
+    static String[] brutusNpcQuestBoss = {
+            "Brutus: Did you kill it yet?",
+            "Adlez: No, not yet.",
+            "Adlez: I forgot where to go.",
+            "Brutus: Just south-west of us. Please hurry!"
+
     };
 
 
-
-    static String[] brutusNpcQuestCompleteText = {
-            "Brutus: Did you eat the pumpkin?",
-            "Adlez: Yes.",
-            "Brutus: Thank you! It was freaking me out!",
-            "Adlez: You're welcome!",
-            "Adlez: *What a strange guy..*"
-    };
-
-
-
-    static String[] brutusNpcQuestPostText = {
-            "Brutus: Oh, it's you again!",
-            "Brutus: Thank you for all the help around here!"
-
-    };
 
     public BrutusNpc(double x, double y, int width, int height, ImageRef imageRef) {
         super(x, y, width, height, imageRef);
@@ -133,13 +144,16 @@ public class BrutusNpc extends NPC {
 
             case BOSS:
             default:  // Java's a pretty horrible language, huh? 
-                return brutusNpcQuestPostText;
+                return brutusNpcQuestBoss;
+          /*  default:
+                return brutusNpcQuestPostText; */
         }
     }
 
     @Override
     public boolean progressFromTalk(QuestState q) {
         switch(q) {
+
             case START:
             case STEVE:
             case BOB:
@@ -160,6 +174,12 @@ public class BrutusNpc extends NPC {
             case BOSS:
             default:  // Java's a pretty horrible language, huh? 
                 return false;
+
+
+           /* case BOB_PETS_FOUND:
+                return true;
+            default:
+                return false;*/
         }
     }
 }
