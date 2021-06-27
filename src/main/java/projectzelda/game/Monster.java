@@ -6,6 +6,9 @@ public class Monster extends EnemyAI
 {
     public GameObject target;
 
+    private int posXChatBox = world.worldInfo.getPartWidth() / 2 - 300;
+    private int posYChatBox = world.worldInfo.getPartHeight() - 100;
+
     public Monster(double x, double y, ImageRef imageRef,  GameObject target)
     {
         super(x, y, null);
@@ -33,6 +36,27 @@ public class Monster extends EnemyAI
         healthBar.draw(gs, tick);
     }
 
+    public void hit() {
+        if (!isLiving) { return; }
+        if (((RPGWorld) world).questState == QuestState.OLGA_MONSTERS) {
+            // every hit decreases life
+            life -= 0.21;
+            healthBar.health = life;
+            color = REDDER;
+            colorCooldown = COLOR_COOLDOWN;
+
+            // if Goblin is dead, delete it
+            if (life <= 0) {
+                die();
+            }
+        } else {
+            //world.gameState = GameState.DIALOG;
+            // if const.type is rock game freezes, using bones or goblin seems to work ok though
+            ChatBoxButton chatBox = new ChatBoxButton(posXChatBox, posYChatBox, 600, 100, "I should talk to someone before fighting this.",this);
+            world.chatBoxObjects.add(chatBox);
+        }
+
+    }
     public void move(double diffSeconds) {
         if (hitCooldown >= 0) { hitCooldown -= diffSeconds; }
         if (colorCooldown >= 0) {
