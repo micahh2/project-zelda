@@ -4,19 +4,19 @@ import projectzelda.engine.*;
 
 public class Boss extends EnemyAI
 {
-    public Avatar avatar;
+    public GameObject taget;
 
 
-    public Boss(double x, double y, ImageRef imageRef, ImageRef bones , Avatar avatar)
+    public Boss(double x, double y, ImageRef imageRef, GameObject taget)
     {
-        super(x, y, bones,null);
+        super(x, y, null);
         this.imageRef = imageRef;
-        this.avatar = avatar;
+        this.taget = taget;
     }
 
     @Override
     public Point newDestination() {
-        return new Point<Double>(avatar.x, avatar.y);
+        return new Point<Double>(taget.x, taget.y);
     }
 
     @Override
@@ -24,7 +24,7 @@ public class Boss extends EnemyAI
 
         double dist = world
                 .getPhysicsSystem()
-                .distance(x, y, avatar.x, avatar.y);
+                .distance(x, y, taget.x, taget.y);
         return dist < 160;
     }
 
@@ -58,7 +58,7 @@ public class Boss extends EnemyAI
 
             Const.Type type = Const.Type.values()[obj.type()];
 
-            // if object is avatar, we're being attacked
+            // if object is taget, we're being attacked
             switch (type) {
                 case AVATAR:
                 case TREE:

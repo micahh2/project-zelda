@@ -39,6 +39,8 @@ public abstract class World {
     public ArrayList<UIObject> deathMenuObjects = new ArrayList<>();
     public ArrayList<UIObject> hudObjects = new ArrayList<>();
 
+    public boolean dumpPerf = false;
+
 
     
     public GameState gameState = GameState.MAIN_MENU;
@@ -51,6 +53,13 @@ public abstract class World {
     //
     public final void run() {
         long lastTick = System.currentTimeMillis();
+        long lastStatDump = lastTick;
+        long timeDrawingGO = 0;
+        long timeDrawingOther = 0;
+        long timeRedrawing = 0;
+        long timeMoving = 0;
+        long timeInputs = 0;
+        long frames = 0;
 
 
         userInput = inputSystem.getUserInput();
@@ -59,6 +68,22 @@ public abstract class World {
             //
             long currentTick = System.currentTimeMillis();
             long millisDiff = currentTick - lastTick;
+            if (dumpPerf && currentTick - lastStatDump >= 1000) {
+                System.out.print("Drawing GOs: " + timeDrawingGO + "ms");
+                System.out.print("\tDrawing Other: " + timeDrawingOther + "ms");
+                System.out.print("\tRedrawing: " + timeRedrawing + "ms");
+                System.out.print("\tMoving: " + timeMoving + "ms");
+                System.out.print("\tInputs: " + timeInputs + "ms");
+                System.out.println("\tFPS: " + frames);
+                System.out.println("\tGO Size: " + gameObjects.size());
+                timeDrawingGO = 0;
+                timeDrawingOther = 0;
+                timeRedrawing = 0;
+                timeMoving = 0;
+                timeInputs = 0;
+                frames = 0;
+                lastStatDump = currentTick;
+            }
 
             // don't run faster then MINIMUM_DIFF_SECONDS per frame
             //
@@ -74,17 +99,20 @@ public abstract class World {
             lastTick = currentTick;
 
 
+            long startUserInput = System.currentTimeMillis();
             // process User Input
             synchronized (userInput) {
                 processUserInput(userInput, millisDiff / 1000.0);
                 userInput.clear();
             }
+            timeInputs += System.currentTimeMillis() - startUserInput;
 
             // no actions if game is over
             if (gameOver) {
                 continue;
             }
 
+            long startMove = System.currentTimeMillis();
             int gameSize = gameObjects.size();
             if (gameState == GameState.PLAY) {
                 // move all Objects, maybe collide them etc...
@@ -111,14 +139,18 @@ public abstract class World {
                 // adjust displayed pane of the world
                 this.adjustWorldPart();
             }
+            timeMoving += System.currentTimeMillis() - startMove;
 
+            long startDrawGO = System.currentTimeMillis();
             // draw all Objects
             graphicSystem.clear(currentTick);
             for (int i = 0; i < gameSize; i++) {
                 gameObjects.get(i).draw(graphicSystem, currentTick);
             }
             graphicSystem.drawForeground(currentTick);
+            timeDrawingGO += System.currentTimeMillis() - startDrawGO;
 
+            long startDrawOther = System.currentTimeMillis();
             // draw all Chatboxes
            // if (gameState == GameState.DIALOG)  {
                 for (int i = 0; i < chatBoxObjects.size(); i++) {
@@ -157,12 +189,18 @@ public abstract class World {
                 hudObjects.get(i).draw(graphicSystem, currentTick);
             }
 
+            timeDrawingOther += System.currentTimeMillis() - startDrawOther;
 
+            long startRedraw = System.currentTimeMillis();
             // redraw everything
             graphicSystem.redraw();
 
+            timeRedrawing += System.currentTimeMillis() - startRedraw;
+
             // create new objects if needed
             createNewObjects(millisDiff / 1000.0);
+
+            frames++;
         }
     }
 

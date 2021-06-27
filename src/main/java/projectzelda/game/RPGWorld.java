@@ -39,6 +39,9 @@ public class RPGWorld extends World {
         physicsSystem = new RPGPhysicsSystem(this);
     }
 
+    ImageRef bonesImage;
+    ImageRef monsterImage;
+
     public void init() {
 
         //play the background music
@@ -60,10 +63,10 @@ public class RPGWorld extends World {
         gameObjects.add(startAnimation);
         gameObjects.add(avatar);
 
-        ImageRef bones = map.getFirstObject("Bones").imageRef;
+        bonesImage = map.getFirstObject("Bones").imageRef;
 
         MapObject bossMo = map.getFirstObject("Boss");
-        Boss boss = new Boss(bossMo.x, bossMo.y, bossMo.imageRef, bones, (Avatar) avatar);
+        Boss boss = new Boss(bossMo.x, bossMo.y, bossMo.imageRef, avatar);
         gameObjects.add(boss);
 
         MapObject chestMo = map.getFirstObject("Chests");
@@ -164,11 +167,9 @@ public class RPGWorld extends World {
         List<MapObject> monsters = map.getAllObjects("Monsters");
 
         for (MapObject monster : monsters) {
-            gameObjects.add(new Monster(monster.startingBounds.x1, monster.startingBounds.y1, monster.imageRef, bones,  (Avatar) avatar));
-
+            monsterImage = monster.imageRef;
+            addMonster(monster.startingBounds.x1, monster.startingBounds.y1);
         }
-
-
 
         // got have rock
         MapObject RockMo = map.getFirstObject("DestroyableRocks");
@@ -189,11 +190,11 @@ public class RPGWorld extends World {
         int buttonHeight = (int) (0.1 * worldInfo.getPartHeight());
 
         // add the pause menu buttons
-        int relX = (int) (0.4 * worldInfo.getPartWidth());
-        int relY = (int) (0.3 * worldInfo.getPartHeight());
+        int relX = (int) (0.4 * worldWidth);
+        int relY = (int) (0.3 * worldHeight);
 
         pauseMenuObjects.add(new UIButton(relX, relY, buttonWidth, buttonHeight, "Resume"));
-        relY = (int) (0.6 * worldInfo.getPartHeight());
+        relY = (int) (0.6 * worldHeight);
         pauseMenuObjects.add(new UIButton(relX, relY, buttonWidth, buttonHeight, "Quit"));
 
         // add the main menu buttons
@@ -203,8 +204,9 @@ public class RPGWorld extends World {
         mainMenuObjects.add(new UIImage(worldWidth/2-logoRef.x2/2, (int)(worldHeight*0.1), logoRef));
 
         // add the death menu buttons
+        relY = (int) (0.4 * worldHeight);
         deathMenuObjects.add(new UIButton(relX, relY, buttonWidth, buttonHeight, "Restart"));
-        relY = (int) (0.6 * worldInfo.getPartHeight());
+        relY = (int) (0.6 * worldHeight);
         deathMenuObjects.add(new UIButton(relX, relY, buttonWidth, buttonHeight, "Quit"));
 
         // initialize the background and add it to different screens
@@ -222,6 +224,14 @@ public class RPGWorld extends World {
         itemSlotX = (int) (0.33 * worldInfo.getPartWidth());
         hudObjects.add(new ItemSlot(itemSlotX, itemSlotY, (Avatar) avatar, "BOW", bow.imageRef));
 
+    }
+
+    public void addMonster(double x, double y) {
+        gameObjects.add(new Monster(x, y, monsterImage, avatar));
+    }
+
+    public void addBones(double x, double y) {
+        gameObjects.addFirst(new Bones(x, y, bonesImage));
     }
 
 
@@ -281,6 +291,7 @@ public class RPGWorld extends World {
             if (userInput.mouseMovedX >= restartButton.x && userInput.mouseMovedX <= restartButton.getMaxX()
                     && (userInput.mouseMovedY >= restartButton.y && userInput.mouseMovedY <= restartButton.getMaxY())) {
                 gameState = GameState.MAIN_MENU;
+                init();
             }
 
             if (userInput.mouseMovedX >= quitButton.x && userInput.mouseMovedX <= quitButton.getMaxX()
@@ -401,7 +412,7 @@ public class RPGWorld extends World {
 
     public void throwGrenade(double x, double y) {
         // throw grenade
-        for (int i = 0; i < 2000; i++) {
+        for (int i = 0; i < 500; i++) {
             double alfa = Math.random() * Math.PI * 2;
             double speed = 50 + Math.random() * 200;
             double time = 0.2 + Math.random() * 7.4;

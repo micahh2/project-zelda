@@ -4,27 +4,25 @@ import projectzelda.engine.*;
 
 public class Monster extends EnemyAI
 {
-    public Avatar avatar;
-    public ImageRef bones;
+    public GameObject target;
 
-    public Monster(double x, double y, ImageRef imageRef, ImageRef bones,  Avatar avatar)
+    public Monster(double x, double y, ImageRef imageRef,  GameObject target)
     {
-        super(x, y, bones, null);
+        super(x, y, null);
         this.imageRef = imageRef;
-        this.avatar = avatar;
-        this.bones = bones;
+        this.target = target;
     }
 
     @Override
     public Point newDestination() {
-        return new Point<Double>(avatar.x, avatar.y);
+        return new Point<Double>(target.x, target.y);
     }
 
     @Override
     public boolean readyForNewDestination() {
         double dist = world
                 .getPhysicsSystem()
-                .distance(x, y, avatar.x, avatar.y);
+                .distance(x, y, target.x, target.y);
 
         return dist < 160;
     }

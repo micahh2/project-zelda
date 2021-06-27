@@ -11,12 +11,13 @@ class Shot extends CircularGameObject
 
     public Shot(double x, double y, double xDest, double yDest)
     {
-        super(x,y,Math.atan2(yDest-y, xDest-x),500,4,Color.YELLOW);
+        super(x,y,Math.atan2(yDest-y, xDest-x),500,4,Color.WHITE);
         this.isMoving = true;
     }
 
     public Shot(double x, double y, double a, double s, double time)
-    { super(x,y,a,s,4,Color.YELLOW);
+    { 
+        super(x,y,a,s,4,Color.WHITE);
         lifeTime = time;
         this.isMoving = true;
     }
@@ -40,22 +41,23 @@ class Shot extends CircularGameObject
             switch(type) {
                 case WALL:
                 case TREE:
-                    this.isLiving = false;
-                    break;
                 case NPC:
                     this.isLiving = false;
-                    //NPC guy = (NPC)obj;
-                    //guy.hit();
-                    break;
+                    return;
                 case GOBLIN:
                     this.isLiving = false;
                     EnemyAI bad = (EnemyAI)obj;
                     bad.hit();
-                    break;
+                    return;
             }  
         }
 
         super.move(diffSeconds);
+    }
+
+    @Override
+    public void draw(GraphicSystem gs, long tick) {
+        gs.fillOval((int)x, (int)y, radius, radius, color);
     }
 
     public final int type() { return Const.Type.SHOT.ordinal();}
