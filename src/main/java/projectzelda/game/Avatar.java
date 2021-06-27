@@ -224,6 +224,8 @@ public class Avatar extends CircularGameObject {
             chatBoxText = pumpkin.getPumpkinText(0);
             ((RPGWorld) world).addChatBox(chatBoxText, pumpkin);
             pumpkin.isLiving = false;
+            life = 1.0;
+            healthBar.health = life;
             System.out.println("Next! " + ((RPGWorld) world).questState);
             ((RPGWorld) world).nextQuest();
         } else {
