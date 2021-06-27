@@ -216,10 +216,10 @@ public class RPGWorld extends World {
         // add the hud elements
         hudObjects.add(((Avatar) avatar).healthBar);
 
-        int itemSlotX = (int) (0.9 * worldInfo.getPartWidth());
-        int itemSlotY = (int) (0.045 * worldInfo.getPartHeight());
+        int itemSlotX = (int) (0.31 * worldInfo.getPartWidth());
+        int itemSlotY = (int) (0.01 * worldInfo.getPartHeight());
         hudObjects.add(new ItemSlot(itemSlotX, itemSlotY, (Avatar) avatar, "SWORD", sword.imageRef));
-        itemSlotX = (int) (0.95 * worldInfo.getPartWidth());
+        itemSlotX = (int) (0.33 * worldInfo.getPartWidth());
         hudObjects.add(new ItemSlot(itemSlotX, itemSlotY, (Avatar) avatar, "BOW", bow.imageRef));
 
     }
@@ -363,10 +363,18 @@ public class RPGWorld extends World {
                         ((Avatar) avatar).interactWithNpc();
                     }
                     break;
+                case '1':
+                    if(((Avatar)avatar).containsItem("SWORD")){
+                        ((Avatar)avatar).switchWeapon(WeaponState.SWORD);
+                    }
+                    break;
+                case '2':
+                    if(((Avatar)avatar).containsItem("BOW")){
+                        ((Avatar)avatar).switchWeapon(WeaponState.BOW);
+                    }
+                    break;
             }
-
         }
-
 
         int vert = 0;
         int horz = 0;

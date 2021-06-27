@@ -1,5 +1,6 @@
 package projectzelda.game;
 
+import projectzelda.engine.GameState;
 import projectzelda.engine.UIObject;
 import projectzelda.engine.GraphicSystem;
 
@@ -25,16 +26,18 @@ public class HealthBar extends UIObject {
 
     @Override
     public void draw(GraphicSystem gs, long tick) {
-        int healthWidth = (int) (health * width);
-        if (isHudElement) {
-            gs.fillRoundRectScreen(x, y, width, height, 5, 5, color);
-            gs.fillRoundRectScreen(x, y, healthWidth+1, height, 5, 5, healthColor);
-            gs.drawRoundRectScreen(x, y, width, height, 5, 5, 2, outlineColor);
-            return;
-        }
+        if(world.gameState != GameState.MAIN_MENU) {
+            int healthWidth = (int) (health * width);
+            if (isHudElement) {
+                gs.fillRoundRectScreen(x, y, width, height, 5, 5, color);
+                gs.fillRoundRectScreen(x, y, healthWidth + 1, height, 5, 5, healthColor);
+                gs.drawRoundRectScreen(x, y, width, height, 5, 5, 2, outlineColor);
+                return;
+            }
 
-        gs.fillRoundRect(x, y, width, height, 2, 2, color);
-        gs.fillRoundRect(x, y, healthWidth, height, 2, 2, healthColor);
-        gs.drawRoundRect(x, y, width, height, 2, 2, 1, outlineColor);
+            gs.fillRoundRect(x, y, width, height, 2, 2, color);
+            gs.fillRoundRect(x, y, healthWidth, height, 2, 2, healthColor);
+            gs.drawRoundRect(x, y, width, height, 2, 2, 1, outlineColor);
+        }
     }
 }

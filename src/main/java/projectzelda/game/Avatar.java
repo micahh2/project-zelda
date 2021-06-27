@@ -3,14 +3,9 @@
 
 package projectzelda.game;
 
-import projectzelda.*;
 import projectzelda.engine.*;
-import projectzelda.map.MapObject;
 
-
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,8 +13,7 @@ import java.util.stream.Collectors;
 public class Avatar extends CircularGameObject {
     private boolean flippedX = false;
     private HashMap<String, GameObject> inventory;
-    boolean hasSword = false;
-    boolean hasBow = false;
+    public WeaponState weaponState;
 
     private Sword sword;
     private Bow bow;
@@ -50,19 +44,19 @@ public class Avatar extends CircularGameObject {
         inventory = new HashMap<>();
 
         //imageRef = new ImageRef("Rocks2", 0, 0, 32, 32);
-
         int healthBarWidth = (int) (0.3 * world.worldInfo.getPartWidth());
         int healthBarHeight = (int) (0.03 * world.worldInfo.getPartHeight());
         int healthBarX = (int) (0.005 * world.worldInfo.getPartWidth());
         int healthBarY = (int) (0.01 * world.worldInfo.getPartHeight());
         healthBar = new HealthBar(healthBarX, healthBarY, healthBarWidth, healthBarHeight);
+        healthBar.world = world;
         healthBar.isHudElement = true;
         this.imageRef = imageRef;
         this.sword = sword;
         this.bow = bow;
+        weaponState = WeaponState.NONE;
         bow.offset((int) x, (int) y);
         sword.offset((int) x, (int) y);
-
     }
 
     @Override
@@ -112,7 +106,7 @@ public class Avatar extends CircularGameObject {
                     break;
                 case GOBLIN:
                     this.moveBack();
-                    if (!hasSword && !hasBow) {
+                    if (weaponState == WeaponState.NONE) {
                         world.gameState = GameState.DIALOG;
                         chatBox = new ChatBoxButton(posXChatBox, posYChatBox, 600, 100, "I'm going to need a weapon", Const.Type.GOBLIN);
                         world.chatBoxObjects.add(chatBox);
@@ -242,7 +236,8 @@ public class Avatar extends CircularGameObject {
             chatBoxText = chest.getChestText(0);
             ((RPGWorld) world).addChatBox(chatBoxText, chest);
             chest.isLiving = false;
-            hasSword = true;
+            weaponState = WeaponState.SWORD;
+            addItem("SWORD", sword);
             System.out.println("Next! " + ((RPGWorld) world).questState);
             ((RPGWorld) world).nextQuest();
         } else {
@@ -260,20 +255,23 @@ public class Avatar extends CircularGameObject {
 
     public void draw(GraphicSystem gs, long tick) {
 
-        if (hasSword) {
+        if (weaponState == WeaponState.SWORD) {
             sword.draw(gs, tick);
-        }
-        gs.draw(this);
-        if (hasBow) {
+        } else if (weaponState == WeaponState.BOW) {
             bow.draw(gs, tick);
         }
+        gs.draw(this);
+    }
+
+    public void switchWeapon(WeaponState weaponState){
+        this.weaponState = weaponState;
     }
 
     public void fire() {
-        if (hasBow) {
+        if (weaponState == WeaponState.BOW) {
             bow.fire(fireDir);
         }
-        if (hasSword) {
+        if (weaponState == WeaponState.SWORD) {
             sword.fire();
         }
     }
