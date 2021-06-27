@@ -5,14 +5,12 @@ import projectzelda.map.MapObject;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class RPGWorld extends World {
 
-    private double timePassed = 0;
     private double timeSinceLastShot = 0;
-
-    private boolean isMusicPlaying = false;
 
     private HelpText helpText;
 
@@ -25,12 +23,11 @@ public class RPGWorld extends World {
 
     private Sound sound = new Sound("/music/Forest_Ventures.wav");
 
-    QuestState questState = QuestState.START;
+    QuestState questState;
 
     private int chatTrack = 1;
-    private boolean isEnterKeyPressed = false;
 
-    private List<MapObject> npcs = new ArrayList<>();
+    private List<MapObject> npcs;
 
     public RPGWorld(projectzelda.map.Map map) {
         this.map = map;
@@ -121,6 +118,8 @@ public class RPGWorld extends World {
         NPC bob = new BobNpc(bobMo.x, bobMo.y, (int) (widthBob * charScale), (int) (heightBob * charScale), bobMo.imageRef, cat, dog);
         gameObjects.add(bob);
 
+        npcs = new ArrayList<>();
+
         // set WorldPart position
         worldPartX = 0;
         worldPartY = 0;
@@ -176,8 +175,6 @@ public class RPGWorld extends World {
         gameObjects.add(rock);
 
 
-
-
         int worldWidth = worldInfo.getPartWidth();
         int worldHeight = worldInfo.getPartHeight();
         helpText = new HelpText((int) (0.15 * worldInfo.getPartWidth()), (int) (0.85 * worldInfo.getPartHeight()));
@@ -200,7 +197,7 @@ public class RPGWorld extends World {
         relY = (int) (0.65 * worldHeight);
         mainMenuObjects.add(new UIButton(relX, relY, buttonWidth, buttonHeight, "Play"));
         ImageRef logoRef = new ImageRef("/images/logo.png", 0, 0, 1438, 510);
-        mainMenuObjects.add(new UIImage(worldWidth/2-logoRef.x2/2, (int)(worldHeight*0.1), logoRef));
+        mainMenuObjects.add(new UIImage(worldWidth / 2 - logoRef.x2 / 2, (int) (worldHeight * 0.1), logoRef));
 
         // add the death menu buttons
         relY = (int) (0.4 * worldHeight);
@@ -229,6 +226,23 @@ public class RPGWorld extends World {
         itemSlotX = (int) (0.33 * worldInfo.getPartWidth());
         hudObjects.add(new ItemSlot(itemSlotX, itemSlotY, (Avatar) avatar, "BOW", bow.imageRef));
 
+        questState = QuestState.START;
+
+    }
+
+    @Override
+    public void reset() {
+        gameObjects.clear();
+        textObjects.clear();
+        pauseMenuObjects.clear();
+        chatBoxObjects.clear();
+        mainMenuObjects.clear();
+        deathMenuObjects.clear();
+        hudObjects.clear();
+        completeGameMenuObjects.clear();
+        gameState = GameState.MAIN_MENU;
+        weaponState = WeaponState.NONE;
+        init();
     }
 
     public void addMonster(double x, double y) {
@@ -250,7 +264,7 @@ public class RPGWorld extends World {
         // Mouse still pressed?
         //
         if (userInput.isMousePressed && button == 1) {
-            if (this.gameState == GameState.PAUSE ||this.gameState == GameState.COMPLETE) {
+            if (this.gameState == GameState.PAUSE || this.gameState == GameState.COMPLETE) {
                 UIButton resumeButton = (UIButton) pauseMenuObjects.get(0);
                 UIButton quitButton = (UIButton) pauseMenuObjects.get(1);
 
@@ -295,8 +309,7 @@ public class RPGWorld extends World {
 
             if (userInput.mouseMovedX >= restartButton.x && userInput.mouseMovedX <= restartButton.getMaxX()
                     && (userInput.mouseMovedY >= restartButton.y && userInput.mouseMovedY <= restartButton.getMaxY())) {
-                gameState = GameState.MAIN_MENU;
-                init();
+                reset();
             }
 
             if (userInput.mouseMovedX >= quitButton.x && userInput.mouseMovedX <= quitButton.getMaxX()
@@ -304,7 +317,6 @@ public class RPGWorld extends World {
                 System.exit(0);
             }
         }
-
 
 
         if (userInput.isKeyEvent) {
@@ -357,7 +369,7 @@ public class RPGWorld extends World {
                      * */
 
                     // can't close menus with movement keys
-                 if (gameState != GameState.PAUSE && gameState != GameState.MAIN_MENU && gameState != GameState.COMPLETE) {
+                    if (gameState != GameState.PAUSE && gameState != GameState.MAIN_MENU && gameState != GameState.COMPLETE) {
                         if (!chatBoxObjects.isEmpty()) {
                             ChatBoxButton chatBoxButton = (ChatBoxButton) chatBoxObjects.get(0);
                             if (chatBoxButton.obj != null) {
@@ -376,39 +388,37 @@ public class RPGWorld extends World {
                     }
                     break;
                 case '1':
-                    if(((Avatar)avatar).containsItem("SWORD")){
-                        ((Avatar)avatar).switchWeapon(WeaponState.SWORD);
+                    if (((Avatar) avatar).containsItem("SWORD")) {
+                        ((Avatar) avatar).switchWeapon(WeaponState.SWORD);
                     }
                     break;
                 case '2':
-                    if(((Avatar)avatar).containsItem("BOW")){
-                        ((Avatar)avatar).switchWeapon(WeaponState.BOW);
+                    if (((Avatar) avatar).containsItem("BOW")) {
+                        ((Avatar) avatar).switchWeapon(WeaponState.BOW);
                     }
                     break;
             }
         }
 
-            int vert = 0;
-            int horz = 0;
-            if (userInput.keysPressed.contains('w')) {
-                vert -= 10;
-            }
-            if (userInput.keysPressed.contains('a')) {
-                horz -= 10;
-            }
-            if (userInput.keysPressed.contains('s')) {
-                vert += 10;
-            }
-            if (userInput.keysPressed.contains('d')) {
-                horz += 10;
-            }
-            // Move character
+        int vert = 0;
+        int horz = 0;
+        if (userInput.keysPressed.contains('w')) {
+            vert -= 10;
+        }
+        if (userInput.keysPressed.contains('a')) {
+            horz -= 10;
+        }
+        if (userInput.keysPressed.contains('s')) {
+            vert += 10;
+        }
+        if (userInput.keysPressed.contains('d')) {
+            horz += 10;
+        }
+        // Move character
 
-            if (horz != 0 || vert != 0) {
-                avatar.setDestination(avatar.x + horz, avatar.y + vert);
-            }
-
-
+        if (horz != 0 || vert != 0) {
+            avatar.setDestination(avatar.x + horz, avatar.y + vert);
+        }
 
 
     }
@@ -505,7 +515,7 @@ public class RPGWorld extends World {
                 }
                 break;
             case ROCK:
-               Rock rockForText = (Rock) chatBox.obj;
+                Rock rockForText = (Rock) chatBox.obj;
                 if (rockForText.getRockText().length > chatTrack) {
                     chatBox.setText(rockForText.getRockText()[chatTrack]);
                     chatTrack++;

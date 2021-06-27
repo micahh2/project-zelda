@@ -87,7 +87,6 @@ public class Avatar extends CircularGameObject {
             QuestState q = ((RPGWorld) world).questState;
             Const.Type type = Const.Type.values()[obj.type()];
             switch (type) {
-                // if Object is a tree, move back one step
                 case TREE:
                 case WATER:
                 case WALL:
@@ -95,14 +94,8 @@ public class Avatar extends CircularGameObject {
                 case NPC:
                 case PUMPKIN:
                 case ROCK:
-                    this.moveBack();break;
                 case CHEST:
                     this.moveBack();
-
-                    addItem("SWORD",sword);
-                    world.weaponState = WeaponState.SWORD;
-                    ((RPGWorld) world).questState = QuestState.BOB_COMPLETED;
-                    System.out.println(world.weaponState);
                     break;
                 case LAVA:
                     hit(0.1);

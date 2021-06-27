@@ -270,6 +270,8 @@ public abstract class World {
 
     public abstract void init();
 
+    public abstract void reset();
+
     public abstract void processUserInput(UserInput input, double diffSec);
 
     public abstract void createNewObjects(double diffSeconds);
