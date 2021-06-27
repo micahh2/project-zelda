@@ -21,8 +21,6 @@ public class Avatar extends CircularGameObject {
     private ChatBoxButton chatBox;
     private String chatBoxText;
 
-    private List<GameObject> interactiveObjets;
-
     // place of chatbox
     private int posXChatBox = world.worldInfo.getPartWidth() / 2 - 300;
     private int posYChatBox = world.worldInfo.getPartHeight() - 100;
@@ -165,16 +163,19 @@ public class Avatar extends CircularGameObject {
     }
 
     public void interactWithNpc() {
-        if (interactiveObjets == null) {
-            interactiveObjets = world.gameObjects.stream().filter(obj -> obj instanceof NPC ||
-                    obj instanceof Chest || obj instanceof Pumpkin).collect(Collectors.toList());
-        }
+        List<GameObject> interactiveObjects = 
+            world.gameObjects.stream().filter(obj -> obj instanceof NPC ||
+                obj instanceof Chest || obj instanceof Pumpkin).collect(Collectors.toList());
 
-        GameObject closestObject = interactiveObjets.get(0);
+        GameObject closestObject = interactiveObjects.get(0);
         double shortestDistance = Double.MAX_VALUE;
-        for (GameObject obj : interactiveObjets) {
-            double objX = obj.x + ((RectangularGameObject) obj).width / 2;
-            double objY = obj.y + ((RectangularGameObject) obj).height / 2;
+        for (GameObject obj : interactiveObjects) {
+            double objX = obj.x;
+            double objY = obj.y;
+            if (obj instanceof RectangularGameObject) {
+                objX += ((RectangularGameObject)obj).width / 2;
+                objY += ((RectangularGameObject)obj).height / 2;
+            }
             double distance = world.physicsSystem.distance(x, y, objX, objY);
             if (shortestDistance > distance) {
                 closestObject = obj;
@@ -281,6 +282,7 @@ public class Avatar extends CircularGameObject {
     }
 
     public void hit(double val) {
+        if (dying) { return; }
         // every hit decreases life
         life -= val;
         life = Math.min(1.0, life);
