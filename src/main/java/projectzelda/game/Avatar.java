@@ -1,6 +1,3 @@
-
-// (c) Thorsten Hasbargen
-
 package projectzelda.game;
 
 import projectzelda.engine.*;
@@ -258,10 +255,11 @@ public class Avatar extends CircularGameObject {
 
         if (weaponState == WeaponState.SWORD) {
             sword.draw(gs, tick);
-        } else if (weaponState == WeaponState.BOW) {
-            bow.draw(gs, tick);
         }
         gs.draw(this);
+        if (weaponState == WeaponState.BOW) {
+            bow.draw(gs, tick);
+        }
     }
 
     public void switchWeapon(WeaponState weaponState){

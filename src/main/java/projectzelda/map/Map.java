@@ -122,6 +122,8 @@ public class Map implements MediaInfo, WorldInfo {
             sources.add(t.imageSource);
         }
         sources.add("/images/logo.png");
+        sources.add("/images/game-complete.png");
+        sources.add("/images/game-over.png");
         return sources;
     }
 
