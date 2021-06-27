@@ -15,7 +15,7 @@ public class Avatar extends CircularGameObject {
     private HashMap<String, GameObject> inventory;
 
 
-    private Sword sword;
+    private Sword  sword;
     private Bow bow;
 
     private ChatBoxButton chatBox;
@@ -105,7 +105,7 @@ public class Avatar extends CircularGameObject {
                     this.moveBack();
                     if (world.weaponState == WeaponState.NONE) {
                         world.gameState = GameState.DIALOG;
-                        chatBox = new ChatBoxButton(posXChatBox, posYChatBox, 600, 100, "Adlez: I'm going to need a weapon.", Const.Type.GOBLIN);
+                        chatBox = new ChatBoxButton(posXChatBox, posYChatBox, 600, 100, "Adlez: I should talk to someone before fighting this.", Const.Type.GOBLIN);
                         world.chatBoxObjects.add(chatBox);
                     }
                     break;
@@ -305,12 +305,14 @@ public class Avatar extends CircularGameObject {
     public void hit(double val) {
         if (dying) { return; }
         // every hit decreases life
-        life -= val;
-        life = Math.min(1.0, life);
-        healthBar.health = life;
+        if (((RPGWorld)world).questState == QuestState.BOSS || ((RPGWorld)world).questState == QuestState.OLGA_MONSTERS) {
+            life -= val;
+            life = Math.min(1.0, life);
+            healthBar.health = life;
 
-        if (life <= 0) {
-            die();
+            if (life <= 0) {
+                die();
+            }
         }
     }
 
