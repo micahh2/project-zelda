@@ -31,14 +31,19 @@ public class RPGWorld extends World {
 
     private List<MapObject> npcs;
 
+    ImageRef bonesImage;
+    ImageRef monsterImage;
+
+    int posXChatBox;
+    int posYChatBox;
+
     public RPGWorld(projectzelda.map.Map map) {
         this.map = map;
         worldInfo = map; // Implements world dim
         physicsSystem = new RPGPhysicsSystem(this);
+        posXChatBox = worldInfo.getPartWidth() / 2 - 300;
+        posYChatBox = worldInfo.getPartHeight() - 100;
     }
-
-    ImageRef bonesImage;
-    ImageRef monsterImage;
 
     public void init() {
 
@@ -175,14 +180,6 @@ public class RPGWorld extends World {
         Rock rock = new Rock(RockMo.startingBounds.x1, RockMo.startingBounds.y1, RockMo.imageRef);
         gameObjects.add(rock);
 
-        // UNCOMMENT TO SKIP TO END
-        //((Avatar)avatar).addItem("SWORD", sword);
-        //((Avatar)avatar).addItem("BOW", bow);
-        //((Avatar)avatar).switchWeapon(WeaponState.BOW);
-        //questState = QuestState.BOSS;
-        //// 
-
-
         int worldWidth = worldInfo.getPartWidth();
         int worldHeight = worldInfo.getPartHeight();
         helpText = new HelpText((int) (0.15 * worldInfo.getPartWidth()), (int) (0.85 * worldInfo.getPartHeight()));
@@ -236,6 +233,13 @@ public class RPGWorld extends World {
 
         questState = QuestState.START;
 
+        // UNCOMMENT TO SKIP TO END
+        // ((Avatar)avatar).addItem("SWORD", sword);
+        // ((Avatar)avatar).addItem("BOW", bow);
+        // ((Avatar)avatar).switchWeapon(WeaponState.BOW);
+        // questState = QuestState.BOSS;
+        //// 
+
     }
 
     @Override
@@ -243,7 +247,7 @@ public class RPGWorld extends World {
         gameObjects.clear();
         textObjects.clear();
         pauseMenuObjects.clear();
-        chatBoxObjects.clear();
+        chatBox = null;
         mainMenuObjects.clear();
         deathMenuObjects.clear();
         hudObjects.clear();
@@ -260,6 +264,7 @@ public class RPGWorld extends World {
     public void addBones(double x, double y) {
         gameObjects.addFirst(new Bones(x, y, bonesImage));
     }
+
 
 
     public void processUserInput(UserInput userInput, double diffSeconds) {
@@ -331,11 +336,8 @@ public class RPGWorld extends World {
             switch (userInput.keyPressed) {
                 case ' ':
                     // go through dialog via spacebar
-                    if (!chatBoxObjects.isEmpty()) {
-                        ChatBoxButton chatBox = (ChatBoxButton) chatBoxObjects.get(0);
-                        handleDialog(chatBox);
-
-
+                    if (chatBox != null && ((ChatBoxButton)chatBox).isBlocking) {
+                        handleDialog((ChatBoxButton)chatBox);
                     } else {
                         ((Avatar) avatar).fire();
                     }
@@ -378,8 +380,8 @@ public class RPGWorld extends World {
 
                     // can't close menus with movement keys
                     if (gameState != GameState.PAUSE && gameState != GameState.MAIN_MENU && gameState != GameState.COMPLETE) {
-                        if (!chatBoxObjects.isEmpty()) {
-                            ChatBoxButton chatBoxButton = (ChatBoxButton) chatBoxObjects.get(0);
+                        if (chatBox != null) {
+                            ChatBoxButton chatBoxButton = (ChatBoxButton)chatBox;
                             if (chatBoxButton.obj != null) {
                                 gameState = GameState.DIALOG;
                             }
@@ -445,100 +447,84 @@ public class RPGWorld extends World {
 
 
     public void createNewObjects(double diffSeconds) {
-        // createZombie(diffSeconds);
-        createGrenade(diffSeconds);
 
-        // delete HelpText after ... seconds
-        if (helpText != null && gameState == GameState.PLAY) {
-            lifeHelpText -= diffSeconds;
-            if (lifeHelpText < 0) {
-                textObjects.remove(helpText);
-                helpText = null;
+        // clear chatBox
+        if (gameState == GameState.PLAY) {
+            if (chatBox != null && chatBox instanceof Notification) {
+                Notification not = (Notification)chatBox;
+                not.life -= diffSeconds;
+                if (not.life < 0) { chatBox = null; }
+            }
+
+            // delete HelpText after ... seconds
+            if (helpText != null) {
+                lifeHelpText -= diffSeconds;
+                if (lifeHelpText < 0) {
+                    textObjects.remove(helpText);
+                    helpText = null;
+                }
             }
         }
 
-
     }
-
-
-    private void createGrenade(double diffSeconds) {
-        final double INTERVAL = Const.SPAWN_GRENADE;
-
-        spawnGrenade += diffSeconds;
-        if (spawnGrenade > INTERVAL) {
-            spawnGrenade -= INTERVAL;
-
-            // create new Grenade
-            double x = worldPartX + Math.random() * worldInfo.getPartWidth();
-            double y = worldPartY + Math.random() * worldInfo.getPartHeight();
-
-            // if too close to Avatar, cancel
-            double dx = x - avatar.x;
-            double dy = y - avatar.y;
-            if (dx * dx + dy * dy < 200 * 200) {
-                spawnGrenade = INTERVAL;
-                return;
-            }
-
-        }
-
-    }
-
 
     public void addChatBox(String text, GameObject obj) {
-        int posXChatBox = worldInfo.getPartWidth() / 2 - 300;
-        int posYChatBox = worldInfo.getPartHeight() - 100;
+        System.out.println("Add chat box");
         ChatBoxButton chatBox = new ChatBoxButton(posXChatBox, posYChatBox, 600, 100, text, obj);
-        chatBoxObjects.add(chatBox);
+        this.chatBox = chatBox;
     }
 
-    public void handleDialog(ChatBoxButton chatBox) {
+    public void addNotification(String text) {
+        Notification note = new Notification(posXChatBox, posYChatBox, 600, 100, text);
+        this.chatBox = note;
+    }
+
+    public void handleDialog(ChatBoxButton box) {
 
         // not ideal
-        Const.Type type = chatBox.obj != null
-                ? Const.Type.values()[chatBox.obj.type()]
-                : chatBox.objID;
+        Const.Type type = box.obj != null
+                ? Const.Type.values()[box.obj.type()]
+                : box.objID;
 
         switch (type) {
             case CHEST:
-                Chest chestForText = (Chest) chatBox.obj;
+                Chest chestForText = (Chest) box.obj;
                 if (chestForText.getChestText().length > chatTrack) {
-                    chatBox.setText(chestForText.getChestText()[chatTrack]);
+                    box.setText(chestForText.getChestText()[chatTrack]);
                     chatTrack++;
                 } else {
                     chatTrack = 1;
-                    chatBoxObjects.remove(0);
+                    chatBox = null;
 
                 }
                 break;
             case PUMPKIN:
-                Pumpkin pumpkinForText = (Pumpkin) chatBox.obj;
+                Pumpkin pumpkinForText = (Pumpkin) box.obj;
                 if (pumpkinForText.getPumpkinText().length > chatTrack) {
-                    chatBox.setText(pumpkinForText.getPumpkinText()[chatTrack]);
+                    box.setText(pumpkinForText.getPumpkinText()[chatTrack]);
                     chatTrack++;
                 } else {
                     chatTrack = 1;
-                    chatBoxObjects.remove(0);
+                    chatBox = null;
 
                 }
                 break;
             case ROCK:
-                Rock rockForText = (Rock) chatBox.obj;
+                Rock rockForText = (Rock) box.obj;
                 if (rockForText.getRockText().length > chatTrack) {
-                    chatBox.setText(rockForText.getRockText()[chatTrack]);
+                    box.setText(rockForText.getRockText()[chatTrack]);
                     chatTrack++;
                 } else {
                     chatTrack = 1;
-                    chatBoxObjects.remove(0);
-
+                    chatBox = null;
                 }
                 break;
 
             case NPC:
             case ANIMAL:
-                NPC npc = (NPC) chatBox.obj;
+                NPC npc = (NPC) box.obj;
                 if (npc.getNpcQuestText(questState).length > chatTrack) {
-                    chatBox.setText(npc.getNpcQuestText(questState, chatTrack));
+                    box.setText(npc.getNpcQuestText(questState, chatTrack));
                     chatTrack++;
                 } else {
                     if (npc.progressFromTalk(questState)) {
@@ -550,13 +536,13 @@ public class RPGWorld extends World {
                         npc.setFollow(avatar);
                     }
                     chatTrack = 1;
-                    chatBoxObjects.remove(0);
+                    chatBox = null;
                 }
                 break;
 
             case BONES:
             case GOBLIN:
-                chatBoxObjects.remove(0);
+                chatBox = null;
                 break;
         }
 

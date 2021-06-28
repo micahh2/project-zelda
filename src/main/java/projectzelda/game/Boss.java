@@ -6,8 +6,6 @@ public class Boss extends EnemyAI
 {
 
     public GameObject target;
-    private int posXChatBox = world.worldInfo.getPartWidth() / 2 - 300;
-    private int posYChatBox = world.worldInfo.getPartHeight() - 100;
 
     double voidCannonCooldown = 2.2;
     double VOID_CANNON_THRESHOLD = 1;
@@ -47,7 +45,8 @@ public class Boss extends EnemyAI
     @Override
     public void draw(GraphicSystem gs, long tick) {
         if (colorCooldown > 0 && tick % 3 == 0) {
-            gs.setWorldOffset((int)(Math.random()*15)-7, (int)(Math.random()*15)-7);
+            int shake = (int)(Math.random()*10)+3;
+            gs.setWorldOffset(shake, shake);
         } else {
             gs.setWorldOffset(0, 0);
         }
@@ -125,8 +124,7 @@ public class Boss extends EnemyAI
         if (((RPGWorld)world).weaponState == WeaponState.SWORD) {
 
             world.gameState = GameState.DIALOG;
-            ChatBoxButton chatBox = new ChatBoxButton(posXChatBox, posYChatBox, 600, 100, "Adlez: His armour is too thick!",this);
-            world.chatBoxObjects.add(chatBox);
+            ((RPGWorld)world).addChatBox("Adlez: His armour is too thick!", this);
         } else {
             life -= 0.08;
             healthBar.health = life;
@@ -140,7 +138,9 @@ public class Boss extends EnemyAI
     public void die() {
         this.isLiving = false;
         ((RPGWorld)world).addBones(x, y);
-        world.gameState = GameState.COMPLETE;
+        if (!((Avatar)world.avatar).dying) {
+            world.gameState = GameState.COMPLETE;
+        }
     }
 }
 

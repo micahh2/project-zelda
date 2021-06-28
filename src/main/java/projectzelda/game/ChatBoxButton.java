@@ -17,6 +17,7 @@ public class ChatBoxButton extends UIObject {
     public Color textColor;
     public GameObject obj;
     public Const.Type objID;
+    public boolean isBlocking = true;
 
     public ChatBoxButton(int x_, int y_, int width_, int height_, String text_, GameObject obj_) {
         super(x_, y_);
@@ -25,7 +26,7 @@ public class ChatBoxButton extends UIObject {
         text = text_;
         obj = obj_;
         helpText = "(spacebar to continue)";
-        nameText = obj.toString();
+        nameText = obj != null ? obj.toString() : "";
         textFont = new Font("BUTTON FONT", Font.ROMAN_BASELINE, 23);
         helpFont = new Font("BUTTON FONT", Font.ROMAN_BASELINE, 14);
         color = Color.WHITE;
