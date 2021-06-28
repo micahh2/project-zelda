@@ -237,10 +237,10 @@ public class RPGWorld extends World {
         questState = QuestState.START;
 
         // UNCOMMENT TO SKIP TO END
-         ((Avatar)avatar).addItem("SWORD", sword);
+       //  ((Avatar)avatar).addItem("SWORD", sword);
         //((Avatar)avatar).addItem("BOW", bow);
         //((Avatar)avatar).switchWeapon(WeaponState.BOW);
-        questState = QuestState.BOB_COMPLETED;
+      //  questState = QuestState.BOB_COMPLETED;
         //// 
 
     }
@@ -276,36 +276,45 @@ public class RPGWorld extends World {
         double charScale = 0.7;
 
         MapObject steveMo = npcs.get(0);
+        MapObject catMo = npcs.get(1);
+        MapObject dogMo = npcs.get(2);
+        MapObject brutusMo = npcs.get(3);
+        MapObject olgaMo = npcs.get(4);
+        MapObject bobMo = npcs.get(5);
+
+
         int widthSteve = steveMo.startingBounds.x2 - steveMo.startingBounds.x1;
         int heightSteve = steveMo.startingBounds.y2 - steveMo.startingBounds.y1;
         NPC steve = new SteveNpc(steveMo.x, steveMo.y, (int) (widthSteve * charScale), (int) (heightSteve * charScale), steveMo.imageRef);
         gameObjects.add(steve);
 
-        MapObject catMo = npcs.get(1);
+
+
+
         int widthCat = catMo.startingBounds.x2 - catMo.startingBounds.x1;
         int heightCat = catMo.startingBounds.y2 - catMo.startingBounds.y1;
-        CatNpc cat = new CatNpc(catMo.x, catMo.y, (int) widthCat / 2, (int) heightCat / 2, catMo.imageRef);
+        CatNpc cat = new CatNpc(bobMo.x + 50, bobMo.y + 50, (int) widthCat / 2, (int) heightCat / 2, catMo.imageRef);
         gameObjects.add(cat);
 
-        MapObject dogMo = npcs.get(2);
+
         int widthDog = dogMo.startingBounds.x2 - dogMo.startingBounds.x1;
         int heightDog = dogMo.startingBounds.y2 - dogMo.startingBounds.y1;
-        DogNpc dog = new DogNpc(dogMo.x, dogMo.y, (int) widthDog / 2, (int) heightDog / 2, dogMo.imageRef);
+        DogNpc dog = new DogNpc(bobMo.x + 75, bobMo.y + 75, (int) widthDog / 2, (int) heightDog / 2, dogMo.imageRef);
         gameObjects.add(dog);
 
-        MapObject brutusMo = npcs.get(3);
+
         int widthBrutus = brutusMo.startingBounds.x2 - brutusMo.startingBounds.x1;
         int heightBrutus = brutusMo.startingBounds.y2 - brutusMo.startingBounds.y1;
         NPC brutus = new BrutusNpc(brutusMo.x, brutusMo.y, (int) (widthBrutus * charScale), (int) (heightBrutus * charScale), brutusMo.imageRef);
         gameObjects.add(brutus);
 
-        MapObject olgaMo = npcs.get(4);
+
         int widthOlga = olgaMo.startingBounds.x2 - olgaMo.startingBounds.x1;
         int heightOlga = olgaMo.startingBounds.y2 - olgaMo.startingBounds.y1;
         NPC olga = new OlgaNpc(olgaMo.x, olgaMo.y, (int) (widthOlga * charScale), (int) (heightOlga * charScale), olgaMo.imageRef);
         gameObjects.add(olga);
 
-        MapObject bobMo = npcs.get(5);
+
         int widthBob = bobMo.startingBounds.x2 - bobMo.startingBounds.x1;
         int heightBob = bobMo.startingBounds.y2 - bobMo.startingBounds.y1;
         NPC bob = new BobNpc(bobMo.x, bobMo.y, (int) (widthBob * charScale), (int) (heightBob * charScale), bobMo.imageRef, cat, dog);
