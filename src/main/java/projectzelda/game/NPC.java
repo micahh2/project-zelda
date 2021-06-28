@@ -21,7 +21,7 @@ public class NPC extends RectangularGameObject {
     public NPC(double x, double y, int width, int height, ImageRef imageRef) {
         // x, y, alpha, speed, color
         super(x, y, 0, 50, width, height, null);
-        this.imageRef = imageRef;
+        this.imageRef = imageRef.clone();
         this.isMoving = true;
         Point<Double> newDest = newDestination();
         setDestination(newDest.x, newDest.y);

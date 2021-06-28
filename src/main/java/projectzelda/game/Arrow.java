@@ -6,7 +6,7 @@ import java.awt.Color;
 
 class Arrow extends CircularGameObject
 { 
-    private double lifeTime = 5;
+    private double lifeTime = 1;
 
     public enum Dir {
         LEFT,

@@ -42,7 +42,7 @@ public class BobNpc extends NPC {
 
     static String[] bobNpcQuestPostText = {
             "Bob: Oh it's you again!",
-            "Adlez: Yes, it's me. Is there anything else I can help you with?",
+            "Adlez: Yes. Is there anything else I can help you with?",
             "Bob: No, but perhaps Brutus has something else for you.",
             "Adlez: Thanks."
     };
