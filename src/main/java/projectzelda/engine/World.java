@@ -42,7 +42,7 @@ public abstract class World {
 
 
     
-    public GameState gameState = GameState.DEATH;
+    public GameState gameState = GameState.COMPLETE;
     public WeaponState weaponState = WeaponState.NONE;
 
     protected World() {
