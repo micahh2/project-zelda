@@ -2,6 +2,7 @@ package projectzelda.game;
 
 import projectzelda.engine.*;
 import java.awt.Color;
+import java.awt.Font;
 
 class HelpText extends TextObject
 {
@@ -10,10 +11,12 @@ class HelpText extends TextObject
     int height;
     int rectX;
     int rectY;
+    Font font;
 
     public HelpText(int x, int y)
     { 
-        super(x,y, new Color(255,255,255,255));
+        super(x,y, Color.BLACK);
+        font = new Font("TEXT FONT", Font.ROMAN_BASELINE, 23);
     }
 
     public String toString()
@@ -31,9 +34,9 @@ class HelpText extends TextObject
                 rectX = x - 25;
                 rectY = y - height / 2 - 10;
             }
-            gs.fillRoundRectScreen(rectX, rectY, width, height, 5, 5, Color.GRAY);
-            gs.drawRoundRectScreen(rectX, rectY, width, height, 5, 5, 2, Color.WHITE);
-            gs.draw(this);
+            gs.fillRoundRectScreen(rectX, rectY, width, height, 5, 5, Color.WHITE);
+            gs.drawRoundRectScreen(rectX, rectY, width, height, 5, 5, 2, Color.BLACK);
+            gs.drawCenteredTextScreen(rectX, rectY+4, width, height, color, font, toString());
         }
     }
 

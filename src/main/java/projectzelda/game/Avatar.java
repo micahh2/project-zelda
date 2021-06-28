@@ -18,10 +18,6 @@ public class Avatar extends CircularGameObject {
     private ChatBoxButton chatBox;
     private String chatBoxText;
 
-    // place of chatbox
-    private int posXChatBox = world.worldInfo.getPartWidth() / 2 - 300;
-    private int posYChatBox = world.worldInfo.getPartHeight() - 100;
-
     private int counterBones = 0;
     double timeToDie = 2.0;
     public boolean dying = false;
@@ -48,7 +44,7 @@ public class Avatar extends CircularGameObject {
         healthBar = new HealthBar(healthBarX, healthBarY, healthBarWidth, healthBarHeight);
         healthBar.world = world;
         healthBar.isHudElement = true;
-        this.imageRef = imageRef;
+        this.imageRef = imageRef.clone();
         this.sword = sword;
         this.bow = bow;
         //weaponState = ((RPGWorld) world).weaponState;

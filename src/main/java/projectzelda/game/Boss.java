@@ -11,7 +11,7 @@ public class Boss extends EnemyAI
     double VOID_CANNON_THRESHOLD = 1;
     double voidCannonTemp = 0;
 
-    double monsterCannonCooldown = 2.2;
+    double monsterCannonCooldown = 3.2;
     double MONSTER_CANNON_THRESHOLD = 1;
     double monsterCannonTemp = 0;
 
@@ -74,7 +74,7 @@ public class Boss extends EnemyAI
                 voidCannonTemp += voidCannonCooldown;
             }
             if (life < 0.7 && monsterCannonTemp < MONSTER_CANNON_THRESHOLD) {
-                world.gameObjects.add(new MonsterOrb(x, y, target.x, target.y));
+                world.gameObjects.add(new MonsterOrb(x, y, target));
                 monsterCannonTemp += monsterCannonCooldown;
             }
             if (life < 0.3 && teleCannonTemp < TELE_CANNON_THRESHOLD) {

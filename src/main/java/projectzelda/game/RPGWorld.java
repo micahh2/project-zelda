@@ -227,9 +227,9 @@ public class RPGWorld extends World {
 
         int itemSlotX = (int) (0.31 * worldInfo.getPartWidth());
         int itemSlotY = (int) (0.01 * worldInfo.getPartHeight());
-        hudObjects.add(new ItemSlot(itemSlotX, itemSlotY, (Avatar) avatar, "SWORD", sword.imageRef));
+        hudObjects.add(new ItemSlot(itemSlotX, itemSlotY, (Avatar) avatar, "SWORD", WeaponState.SWORD, "1", sword.imageRef));
         itemSlotX = (int) (0.33 * worldInfo.getPartWidth());
-        hudObjects.add(new ItemSlot(itemSlotX, itemSlotY, (Avatar) avatar, "BOW", bow.imageRef));
+        hudObjects.add(new ItemSlot(itemSlotX, itemSlotY, (Avatar) avatar, "BOW", WeaponState.BOW, "2", bow.imageRef));
 
         questState = QuestState.START;
 
@@ -469,7 +469,6 @@ public class RPGWorld extends World {
     }
 
     public void addChatBox(String text, GameObject obj) {
-        System.out.println("Add chat box");
         ChatBoxButton chatBox = new ChatBoxButton(posXChatBox, posYChatBox, 600, 100, text, obj);
         this.chatBox = chatBox;
     }
