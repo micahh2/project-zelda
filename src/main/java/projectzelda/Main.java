@@ -19,7 +19,7 @@ final class Main {
         System.out.println(map);
 
         // Map implements multiple interfaces
-        Frame frame = new SwingFrame(map, map); 
+        Frame frame = new SwingFrame(map, map, screenInfo); 
         frame.displayOnScreen();
 
         world = new RPGWorld(map);

@@ -6,12 +6,15 @@ import java.awt.Color;
 
 class MonsterOrb extends CircularGameObject
 { 
-    private double lifeTime = 5;
+    private double lifeTime = 10;
 
-    public MonsterOrb(double x, double y, double xDest, double yDest)
+    GameObject target;
+
+    public MonsterOrb(double x, double y, GameObject target)
     {
-        super(x,y,Math.atan2(yDest-y, xDest-x), 100, 10, Color.YELLOW);
+        super(x,y,Math.atan2(target.y-y, target.x-x), 75, 12, new Color(230, 191, 0));
         this.isMoving = true;
+        this.target= target;
     }
 
     public void move(double diffSeconds)
@@ -21,6 +24,7 @@ class MonsterOrb extends CircularGameObject
             this.isLiving=false; 
             return;
         }
+        alfa = Math.atan2(target.y-y, target.x-x);
 
         GameObjectList collisions = world.getPhysicsSystem().getCollisions(this);
         for(int i=0; i<collisions.size(); i++)
@@ -50,7 +54,7 @@ class MonsterOrb extends CircularGameObject
     @Override
     public void draw(GraphicSystem gs, long tick) {
         gs.fillOval((int)x, (int)y, radius, radius, color);
-        gs.drawOval((int)x, (int)y, radius, radius, 1, Color.GRAY);
+        gs.drawOval((int)x, (int)y, radius, radius, 1, Color.BLACK);
     }
 
     public final int type() { return Const.Type.SHOT.ordinal();}
