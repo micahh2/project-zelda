@@ -256,8 +256,8 @@ public class RPGWorld extends World {
         //
         if (userInput.isMousePressed && button == 1) {
             if (this.gameState == GameState.PAUSE ||this.gameState == GameState.COMPLETE) {
-                UIButton resumeButton = (UIButton) pauseMenuObjects.get(1);
-                UIButton quitButton = (UIButton) pauseMenuObjects.get(2);
+                UIButton resumeButton = (UIButton) pauseMenuObjects.get(0);
+                UIButton quitButton = (UIButton) pauseMenuObjects.get(1);
 
                 if (userInput.mouseMovedX >= resumeButton.x && userInput.mouseMovedX <= resumeButton.getMaxX()
                         && (userInput.mouseMovedY >= resumeButton.y && userInput.mouseMovedY <= resumeButton.getMaxY())) {
@@ -331,15 +331,16 @@ public class RPGWorld extends World {
                     break;
                 case (char) 27:
 
-                    if (this.gameState != GameState.PAUSE) {
+                    if (this.gameState == GameState.PLAY) {
                         this.gameState = GameState.PAUSE;
                         sound.setVolume(-40.0f);
-                    } else {
+                        
+                    } else if (this.gameState == GameState.PAUSE){
                         //sound.setVolume(-20.0f);
                         this.gameState = GameState.PLAY;
                         sound.setVolume(-20.0f);
 
-                    }
+                    } 
 
                     //this.gameState = this.gameState == GameState.PAUSE ? GameState.PLAY : GameState.PAUSE;
                     break;
