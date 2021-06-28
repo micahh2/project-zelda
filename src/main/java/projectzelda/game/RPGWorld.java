@@ -295,8 +295,8 @@ public class RPGWorld extends World {
 
 
         if (this.gameState == GameState.DEATH && userInput.isMousePressed) {
-            UIButton restartButton = (UIButton) deathMenuObjects.get(0);
-            UIButton quitButton = (UIButton) deathMenuObjects.get(1);
+            UIButton restartButton = (UIButton) deathMenuObjects.get(1);
+            UIButton quitButton = (UIButton) deathMenuObjects.get(2);
 
             if (userInput.mouseMovedX >= restartButton.x && userInput.mouseMovedX <= restartButton.getMaxX()
                     && (userInput.mouseMovedY >= restartButton.y && userInput.mouseMovedY <= restartButton.getMaxY())) {
