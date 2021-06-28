@@ -12,8 +12,8 @@ public class Chest extends RectangularGameObject {
 
     private String[] chestQuestText = {
             "*You open the chest...*",
-            "*In it you find...*",
-            "*A rather large sword!*",
+            "*In it, you find...*",
+            "*..a rather large sword!*",
             "Adlez: Wow! This is exactly what I will need.",
             "Adlez: I'll go tell Olga!"};
 

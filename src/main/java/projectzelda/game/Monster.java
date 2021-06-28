@@ -40,7 +40,7 @@ public class Monster extends EnemyAI
     public void hit() {
         if (!isLiving) { return; }
         // every hit decreases life
-        if (((RPGWorld) world).questState == QuestState.OLGA_MONSTERS || ((RPGWorld) world).questState == QuestState.BOSS) {
+        if (((RPGWorld) world).questState == QuestState.OLGA_MONSTERS ) {
             // every hit decreases life
             life -= 0.21;
             healthBar.health = life;
@@ -51,9 +51,20 @@ public class Monster extends EnemyAI
             if (life <= 0) {
                 die();
             }
-        } else {
+            // make monsters easier to kill during bossfight > can quickly stack up and become too chaotic?
+        } else if (((RPGWorld) world).questState == QuestState.BOSS) {
             //world.gameState = GameState.DIALOG;
             // if const.type is rock game freezes, using bones or goblin seems to work ok though
+            life -= 1.0;
+            healthBar.health = life;
+            color = REDDER;
+            colorCooldown = COLOR_COOLDOWN;
+
+            // if Goblin is dead, delete it
+            if (life <= 0) {
+                die();
+            }
+        } else {
             ((RPGWorld) world).addChatBox("Adlez: I should talk to someone before fighting this.", this);
         }
 

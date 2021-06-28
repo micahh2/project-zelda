@@ -102,7 +102,7 @@ public class BrutusNpc extends NPC {
     };
 
     static String[] brutusNpcQuestBoss = {
-            "Brutus: Did you kill it yet?",
+            "Brutus: Did you kill their king yet?",
             "Adlez: No, not yet.",
             "Adlez: I forgot where to go.",
             "Brutus: Just south-west of us. Please hurry!"
