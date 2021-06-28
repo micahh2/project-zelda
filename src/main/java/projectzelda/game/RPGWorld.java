@@ -202,7 +202,12 @@ public class RPGWorld extends World {
         relY = (int) (0.65 * worldHeight);
         mainMenuObjects.add(new UIButton(relX, relY, buttonWidth, buttonHeight, "Play"));
         ImageRef logoRef = new ImageRef("/images/logo.png", 0, 0, 1438, 510);
-        mainMenuObjects.add(new UIImage(worldWidth / 2 - logoRef.x2 / 2, (int) (worldHeight * 0.1), logoRef));
+        ImageRef gameOverRef = new ImageRef("/images/game-over.png", 0, 0, 1103, 437);
+        ImageRef gameCompleteRef = new ImageRef("/images/game-complete.png", 0, 0, 1103, 437);
+        mainMenuObjects.add(new UIImage(worldWidth/2-logoRef.x2/2, (int)(worldHeight*0.1), logoRef));
+        deathMenuObjects.add(new UIImage(worldWidth/2-gameOverRef.x2/2, (int)(worldHeight*0.1), gameOverRef));
+        completeGameMenuObjects.add(new UIImage(worldWidth/2-gameCompleteRef.x2/2, (int)(worldHeight*0.1), gameCompleteRef));
+
 
         // add the death menu buttons
         relY = (int) (0.4 * worldHeight);
@@ -317,8 +322,8 @@ public class RPGWorld extends World {
 
 
         if (this.gameState == GameState.DEATH && userInput.isMousePressed) {
-            UIButton restartButton = (UIButton) deathMenuObjects.get(0);
-            UIButton quitButton = (UIButton) deathMenuObjects.get(1);
+            UIButton restartButton = (UIButton) deathMenuObjects.get(1);
+            UIButton quitButton = (UIButton) deathMenuObjects.get(2);
 
             if (userInput.mouseMovedX >= restartButton.x && userInput.mouseMovedX <= restartButton.getMaxX()
                     && (userInput.mouseMovedY >= restartButton.y && userInput.mouseMovedY <= restartButton.getMaxY())) {
@@ -348,15 +353,16 @@ public class RPGWorld extends World {
                     break;
                 case (char) 27:
 
-                    if (this.gameState != GameState.PAUSE) {
+                    if (this.gameState == GameState.PLAY) {
                         this.gameState = GameState.PAUSE;
                         sound.setVolume(-40.0f);
-                    } else {
+                        
+                    } else if (this.gameState == GameState.PAUSE){
                         //sound.setVolume(-20.0f);
                         this.gameState = GameState.PLAY;
                         sound.setVolume(-20.0f);
 
-                    }
+                    } 
 
                     //this.gameState = this.gameState == GameState.PAUSE ? GameState.PLAY : GameState.PAUSE;
                     break;

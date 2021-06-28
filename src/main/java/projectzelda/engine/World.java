@@ -38,8 +38,6 @@ public abstract class World {
 
     public boolean dumpPerf = false;
 
-
-    
     public GameState gameState = GameState.MAIN_MENU;
 
     protected World() {
@@ -177,7 +175,7 @@ public abstract class World {
                 }
             }
 
-            // draw play button of death_menu
+            // draw death_menu objects
             if (gameState == GameState.DEATH) {
                 for (int i = 0; i < deathMenuObjects.size(); i++) {
                     deathMenuObjects.get(i).draw(graphicSystem, currentTick);
