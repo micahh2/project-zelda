@@ -121,17 +121,11 @@ public class Boss extends EnemyAI
 
         lineOfSight = Math.min(lineOfSight*1.1, 1000);
 
-        if (((RPGWorld)world).weaponState == WeaponState.SWORD) {
+        life -= 0.08;
+        healthBar.health = life;
+        colorCooldown = COLOR_COOLDOWN;
 
-            world.gameState = GameState.DIALOG;
-            ((RPGWorld)world).addChatBox("Adlez: His armour is too thick!", this);
-        } else {
-            life -= 0.08;
-            healthBar.health = life;
-            colorCooldown = COLOR_COOLDOWN;
-
-            if (life <= 0) { die(); }
-        }
+        if (life <= 0) { die(); }
 
     }
 
