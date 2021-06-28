@@ -8,6 +8,7 @@ public class Monster extends EnemyAI
 
     private int posXChatBox = world.worldInfo.getPartWidth() / 2 - 300;
     private int posYChatBox = world.worldInfo.getPartHeight() - 100;
+    boolean hasHadFreeMove = false;
 
     public Monster(double x, double y, ImageRef imageRef,  GameObject target)
     {
@@ -38,22 +39,15 @@ public class Monster extends EnemyAI
 
     public void hit() {
         if (!isLiving) { return; }
-        if (((RPGWorld) world).questState == QuestState.OLGA_MONSTERS) {
-            // every hit decreases life
-            life -= 0.21;
-            healthBar.health = life;
-            color = REDDER;
-            colorCooldown = COLOR_COOLDOWN;
+        // every hit decreases life
+        life -= 0.21;
+        healthBar.health = life;
+        color = REDDER;
+        colorCooldown = COLOR_COOLDOWN;
 
-            // if Goblin is dead, delete it
-            if (life <= 0) {
-                die();
-            }
-        } else {
-            //world.gameState = GameState.DIALOG;
-            // if const.type is rock game freezes, using bones or goblin seems to work ok though
-            ChatBoxButton chatBox = new ChatBoxButton(posXChatBox, posYChatBox, 600, 100, "I should talk to someone before fighting this.",this);
-            world.chatBoxObjects.add(chatBox);
+        // if Goblin is dead, delete it
+        if (life <= 0) {
+            die();
         }
 
     }
@@ -78,6 +72,7 @@ public class Monster extends EnemyAI
 
         // handle collisions of the zombie
         GameObjectList collisions = world.getPhysicsSystem().getCollisions(this);
+        hasHadFreeMove = hasHadFreeMove || collisions.size() == 0;
         for (int i = 0; i < collisions.size(); i++) {
             GameObject obj = collisions.get(i);
 
@@ -93,8 +88,17 @@ public class Monster extends EnemyAI
                         hitCooldown = hitCooldownSeconds;
                     }
                     break;
-                case TREE:
+                case NPC:
                 case GOBLIN:
+                    if (!hasHadFreeMove) { break; }
+                    isMoving = false;
+                    state = State.STUCK;
+                    moveBack();
+                    break;
+                case TREE:
+                case WALL:
+                case WATER:
+                case LAVA:
                     isMoving = false;
                     state = State.STUCK;
                     moveBack();

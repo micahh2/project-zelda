@@ -1,6 +1,3 @@
-
-// (c) Thorsten Hasbargen
-
 package projectzelda.game;
 
 import projectzelda.engine.*;
@@ -33,6 +30,8 @@ public class Avatar extends CircularGameObject {
     public HealthBar healthBar;
     Arrow.Dir fireDir = Arrow.Dir.RIGHT;
 
+    double ELEMENT_HIT_COOLDOWN = 0.2;
+    double elementHitTimeout = 0;
 
     public Avatar(double x, double y, ImageRef imageRef, Sword sword, Bow bow) {
         super(x, y, 0, 200, 15, new Color(96, 96, 255));
@@ -72,6 +71,9 @@ public class Avatar extends CircularGameObject {
         if (sword.weaponTemp > 0) {
             sword.weaponTemp -= diffSeconds;
         }
+        if (elementHitTimeout > 0) {
+            elementHitTimeout -= diffSeconds;
+        }
 
         // Save starting x-pos for calculating orientation
         int startx = (int) x;
@@ -98,28 +100,28 @@ public class Avatar extends CircularGameObject {
                     this.moveBack();
                     break;
                 case LAVA:
-                    hit(0.1);
+                    if (elementHitTimeout <= 0) {
+                        hit(0.1);
+                        elementHitTimeout = ELEMENT_HIT_COOLDOWN;
+                    }
                     this.moveBack();
                     break;
-                    case GOBLIN:
+                case GOBLIN:
                     this.moveBack();
-                    if (world.weaponState == WeaponState.NONE) {
+                    if (((RPGWorld)world).weaponState == WeaponState.NONE) {
                         world.gameState = GameState.DIALOG;
                         chatBox = new ChatBoxButton(posXChatBox, posYChatBox, 600, 100, "Adlez: I should talk to someone before fighting this.", Const.Type.GOBLIN);
                         world.chatBoxObjects.add(chatBox);
                     }
                     break;
 
-                // pick up Bones
+                    // pick up Bones
                 case BONES:
                     hit(-0.25);
 
                     counterBones++;
                     chatBox = new ChatBoxButton(posXChatBox, posYChatBox, 600, 100, "Bones picked up", Const.Type.BONES);
                     world.chatBoxObjects.add(chatBox);
-                    if (q == QuestState.OLGA_MONSTERS && counterBones >= 6) {
-                        ((RPGWorld) world).nextQuest();
-                    }
                     obj.isLiving = false;
                     break;
             }
@@ -212,6 +214,15 @@ public class Avatar extends CircularGameObject {
     }
 
 
+    public void teleport(int toX, int toY) {
+        bow.offset(toX-(int)x, toY-(int)y);
+        sword.offset(toX-(int)x, toY-(int)y);
+        x = toX;
+        y = toY;
+        destX = toX;
+        destY = toY;
+    }
+
     public void addItem(String itemType, GameObject item) {
         inventory.put(itemType, item);
     }
@@ -254,7 +265,7 @@ public class Avatar extends CircularGameObject {
             chatBoxText = chest.getChestText(0);
             ((RPGWorld) world).addChatBox(chatBoxText, chest);
             chest.isLiving = false;
-            world.weaponState = WeaponState.SWORD;
+            ((RPGWorld)world).weaponState = WeaponState.SWORD;
             addItem("SWORD", sword);
             System.out.println("Next! " + ((RPGWorld) world).questState);
             ((RPGWorld) world).nextQuest();
@@ -277,23 +288,25 @@ public class Avatar extends CircularGameObject {
 
     public void draw(GraphicSystem gs, long tick) {
 
-        if (world.weaponState == WeaponState.SWORD) {
+        if (((RPGWorld)world).weaponState == WeaponState.SWORD) {
             sword.draw(gs, tick);
-        } else if (world.weaponState == WeaponState.BOW) {
+        }         
+        gs.draw(this);
+        if (((RPGWorld)world).weaponState == WeaponState.BOW) {
             bow.draw(gs, tick);
         }
-        gs.draw(this);
+
     }
 
     public void switchWeapon(WeaponState weaponState){
-        this.world.weaponState = weaponState;
+        ((RPGWorld)world).weaponState = weaponState;
     }
 
     public void fire() {
-        if (world.weaponState == WeaponState.BOW) {
+        if (((RPGWorld)world).weaponState == WeaponState.BOW) {
             bow.fire(fireDir);
         }
-        if (world.weaponState == WeaponState.SWORD) {
+        if (((RPGWorld)world).weaponState == WeaponState.SWORD) {
             sword.fire();
         }
     }
@@ -305,14 +318,12 @@ public class Avatar extends CircularGameObject {
     public void hit(double val) {
         if (dying) { return; }
         // every hit decreases life
-        if (((RPGWorld)world).questState == QuestState.BOSS || ((RPGWorld)world).questState == QuestState.OLGA_MONSTERS) {
-            life -= val;
-            life = Math.min(1.0, life);
-            healthBar.health = life;
+        life -= val;
+        life = Math.min(1.0, life);
+        healthBar.health = life;
 
-            if (life <= 0) {
-                die();
-            }
+        if (life <= 0) {
+            die();
         }
     }
 

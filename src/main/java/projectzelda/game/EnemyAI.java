@@ -11,7 +11,7 @@ public abstract class EnemyAI extends CircularGameObject {
 
     protected static final Color NORMAL_COLOR = new Color(160, 80, 40);
     protected static final Color REDDER = new Color(160, 40, 20);
-    protected static final double COLOR_COOLDOWN = 0.2;
+    protected static final double COLOR_COOLDOWN = 2;
     protected double colorCooldown = 0;
     protected WorldInfo worldInfo;
 
@@ -49,10 +49,6 @@ public abstract class EnemyAI extends CircularGameObject {
                 .distance(x, y, destX, destY);
         return state == State.STUCK || dist < 8;
     }
-
-
-
-
 
     // inform goblin it is hit
     public void hit() {

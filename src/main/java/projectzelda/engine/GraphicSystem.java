@@ -59,6 +59,7 @@ public interface GraphicSystem
 
     void drawCenteredTextScreenWithSub(int x, int y, int width, int height, Color color, Font font,Font helpFont, String text, String helpText);
 
+    void setWorldOffset(int x, int y);
 
     void drawImageScreen(ImageRef imageRef, int x1, int y1, int x2, int y2);
     void drawImageScreen(ImageRef imageRef, int x1, int y1, int x2, int y2, float rotation);

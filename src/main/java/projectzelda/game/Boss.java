@@ -4,20 +4,35 @@ import projectzelda.engine.*;
 
 public class Boss extends EnemyAI
 {
-    public GameObject taget;
+
+    public GameObject target;
     private int posXChatBox = world.worldInfo.getPartWidth() / 2 - 300;
     private int posYChatBox = world.worldInfo.getPartHeight() - 100;
 
-    public Boss(double x, double y, ImageRef imageRef, GameObject taget)
+    double voidCannonCooldown = 2.2;
+    double VOID_CANNON_THRESHOLD = 1;
+    double voidCannonTemp = 0;
+
+    double monsterCannonCooldown = 2.2;
+    double MONSTER_CANNON_THRESHOLD = 1;
+    double monsterCannonTemp = 0;
+
+    double teleCannonCooldown = 2.2;
+    double TELE_CANNON_THRESHOLD = 1;
+    double teleCannonTemp = 0;
+
+    double lineOfSight = 400;
+
+    public Boss(double x, double y, ImageRef imageRef, GameObject target)
     {
         super(x, y, null);
         this.imageRef = imageRef;
-        this.taget = taget;
+        this.target = target;
     }
 
     @Override
     public Point newDestination() {
-        return new Point<Double>(taget.x, taget.y);
+        return new Point<Double>(target.x, target.y);
     }
 
     @Override
@@ -25,28 +40,48 @@ public class Boss extends EnemyAI
 
         double dist = world
                 .getPhysicsSystem()
-                .distance(x, y, taget.x, taget.y);
+                .distance(x, y, target.x, target.y);
         return dist < 160;
     }
 
     @Override
     public void draw(GraphicSystem gs, long tick) {
+        if (colorCooldown > 0 && tick % 3 == 0) {
+            gs.setWorldOffset((int)(Math.random()*15)-7, (int)(Math.random()*15)-7);
+        } else {
+            gs.setWorldOffset(0, 0);
+        }
         gs.draw(this);
         healthBar.draw(gs, tick);
     }
 
     public void move(double diffSeconds) {
-        if (colorCooldown >= 0) {
-            colorCooldown -= diffSeconds;
-        } else {
-            color = NORMAL_COLOR;
-        }
+        if (voidCannonTemp >= 0) { voidCannonTemp -= diffSeconds; }
+        if (monsterCannonTemp >= 0) { monsterCannonTemp -= diffSeconds; }
+        if (teleCannonTemp >= 0) { teleCannonTemp -= diffSeconds; }
+        if (colorCooldown >= 0) { colorCooldown -= diffSeconds; }
 
         // Close to goal, pick a new one
         if (readyForNewDestination()) {
             Point<Double> newDest = newDestination();
             state = State.FREE;
             setDestination(newDest.x, newDest.y);
+        }
+
+        double dist = world.getPhysicsSystem().distance(x, y, target.x, target.y);
+        if (dist < lineOfSight) {
+            if (life < 1 && voidCannonTemp < VOID_CANNON_THRESHOLD) {
+                world.gameObjects.add(new VoidOrb(x, y, target.x, target.y, this));
+                voidCannonTemp += voidCannonCooldown;
+            }
+            if (life < 0.7 && monsterCannonTemp < MONSTER_CANNON_THRESHOLD) {
+                world.gameObjects.add(new MonsterOrb(x, y, target.x, target.y));
+                monsterCannonTemp += monsterCannonCooldown;
+            }
+            if (life < 0.3 && teleCannonTemp < TELE_CANNON_THRESHOLD) {
+                world.gameObjects.add(new TeleportOrb(x, y, target.x, target.y));
+                teleCannonTemp +=teleCannonCooldown;
+            }
         }
 
         super.move(diffSeconds);
@@ -59,7 +94,7 @@ public class Boss extends EnemyAI
 
             Const.Type type = Const.Type.values()[obj.type()];
 
-            // if object is taget, we're being attacked
+            // if object is target, we're being attacked
             switch (type) {
                 case AVATAR:
                 case TREE:
@@ -77,24 +112,27 @@ public class Boss extends EnemyAI
     }
     public void hit() {
         if (!isLiving) { return; }
-        // every hit decreases life
+        voidCannonCooldown = Math.max(voidCannonCooldown-0.1, 0.4);
+        if (life < 0.7) {
+            monsterCannonCooldown = Math.max(monsterCannonCooldown-0.1, 0.4);
+        }
+        if (life < 0.3) {
+            teleCannonCooldown = Math.max(teleCannonCooldown-0.1, 0.4);
+        }
 
+        lineOfSight = Math.min(lineOfSight*1.1, 1000);
 
-        if (world.weaponState == WeaponState.SWORD) {
+        if (((RPGWorld)world).weaponState == WeaponState.SWORD) {
 
             world.gameState = GameState.DIALOG;
             ChatBoxButton chatBox = new ChatBoxButton(posXChatBox, posYChatBox, 600, 100, "Adlez: His armour is too thick!",this);
             world.chatBoxObjects.add(chatBox);
         } else {
-            life -= 0.21;
+            life -= 0.08;
             healthBar.health = life;
-            color = REDDER;
             colorCooldown = COLOR_COOLDOWN;
 
-            // if Goblin is dead, delete it
-            if (life <= 0) {
-                die();
-            }
+            if (life <= 0) { die(); }
         }
 
     }
@@ -104,7 +142,6 @@ public class Boss extends EnemyAI
         ((RPGWorld)world).addBones(x, y);
         world.gameState = GameState.COMPLETE;
     }
-
 }
 
 
