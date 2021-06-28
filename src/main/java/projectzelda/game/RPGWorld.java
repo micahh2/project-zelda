@@ -200,7 +200,7 @@ public class RPGWorld extends World {
         relY = (int) (0.65 * worldHeight);
         mainMenuObjects.add(new UIButton(relX, relY, buttonWidth, buttonHeight, "Play"));
         ImageRef logoRef = new ImageRef("/images/logo.png", 0, 0, 1438, 510);
-        ImageRef gameOverRef = new ImageRef("/images/game-over.png", 0, 0, 969, 116);
+        ImageRef gameOverRef = new ImageRef("/images/game-over.png", 0, 0, 1103, 437);
         ImageRef gameCompleteRef = new ImageRef("/images/game-complete.png", 0, 0, 1386, 116);
         mainMenuObjects.add(new UIImage(worldWidth/2-logoRef.x2/2, (int)(worldHeight*0.1), logoRef));
         deathMenuObjects.add(new UIImage(worldWidth/2-gameOverRef.x2/2, (int)(worldHeight*0.1), gameOverRef));
