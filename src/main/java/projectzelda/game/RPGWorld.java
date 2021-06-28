@@ -237,10 +237,10 @@ public class RPGWorld extends World {
         questState = QuestState.START;
 
         // UNCOMMENT TO SKIP TO END
-         ((Avatar)avatar).addItem("SWORD", sword);
-        ((Avatar)avatar).addItem("BOW", bow);
-        ((Avatar)avatar).switchWeapon(WeaponState.BOW);
-       questState = QuestState.BOSS;
+         //((Avatar)avatar).addItem("SWORD", sword);
+        //((Avatar)avatar).addItem("BOW", bow);
+       // ((Avatar)avatar).switchWeapon(WeaponState.BOW);
+       //questState = QuestState.BOSS;
         //// 
 
     }
