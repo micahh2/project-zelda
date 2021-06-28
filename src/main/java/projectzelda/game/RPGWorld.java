@@ -200,7 +200,12 @@ public class RPGWorld extends World {
         relY = (int) (0.65 * worldHeight);
         mainMenuObjects.add(new UIButton(relX, relY, buttonWidth, buttonHeight, "Play"));
         ImageRef logoRef = new ImageRef("/images/logo.png", 0, 0, 1438, 510);
+        ImageRef gameOverRef = new ImageRef("/images/game-over.png", 0, 0, 969, 116);
+        ImageRef gameCompleteRef = new ImageRef("/images/game-complete.png", 0, 0, 1386, 116);
         mainMenuObjects.add(new UIImage(worldWidth/2-logoRef.x2/2, (int)(worldHeight*0.1), logoRef));
+        deathMenuObjects.add(new UIImage(worldWidth/2-gameOverRef.x2/2, (int)(worldHeight*0.1), gameOverRef));
+        completeGameMenuObjects.add(new UIImage(worldWidth/2-gameCompleteRef.x2/2, (int)(worldHeight*0.1), gameCompleteRef));
+
 
         // add the death menu buttons
         relY = (int) (0.4 * worldHeight);
@@ -251,8 +256,8 @@ public class RPGWorld extends World {
         //
         if (userInput.isMousePressed && button == 1) {
             if (this.gameState == GameState.PAUSE ||this.gameState == GameState.COMPLETE) {
-                UIButton resumeButton = (UIButton) pauseMenuObjects.get(0);
-                UIButton quitButton = (UIButton) pauseMenuObjects.get(1);
+                UIButton resumeButton = (UIButton) pauseMenuObjects.get(1);
+                UIButton quitButton = (UIButton) pauseMenuObjects.get(2);
 
                 if (userInput.mouseMovedX >= resumeButton.x && userInput.mouseMovedX <= resumeButton.getMaxX()
                         && (userInput.mouseMovedY >= resumeButton.y && userInput.mouseMovedY <= resumeButton.getMaxY())) {

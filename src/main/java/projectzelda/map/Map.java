@@ -116,14 +116,18 @@ public class Map implements MediaInfo, WorldInfo {
         return null;
     }
 
+    
     public List<String> getImageSources() {
         ArrayList<String> sources = new ArrayList<String>();
         for (Tileset t : tilesets) {
             sources.add(t.imageSource);
         }
         sources.add("/images/logo.png");
+        sources.add("/images/game-complete.png");
+        sources.add("/images/game-over.png");
         return sources;
     }
+    
 
     public List<VirtualImage> getVirtualImages() {
         // These are the objectgroups that should be drawn regardless if they have a matching (We just use non-background tiles to draw from)
