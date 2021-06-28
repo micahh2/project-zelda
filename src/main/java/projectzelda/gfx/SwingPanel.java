@@ -42,6 +42,8 @@ class SwingPanel extends JPanel implements GraphicSystem {
     private WorldInfo worldInfo;
     private int width;
     private int height;
+    private int worldOffX = 0;
+    private int worldOffY = 0;
     private long lastTick = 0;
     private List<ImageRefTo> animationTiles;
     AffineTransform clearTransform;
@@ -96,18 +98,18 @@ class SwingPanel extends JPanel implements GraphicSystem {
     }
 
     public void clear(long tick) {
-        graphics.drawImage(background, -(int) world.worldPartX, -(int) world.worldPartY, this);
+        graphics.drawImage(background, -(int) world.worldPartX+worldOffX, -(int) world.worldPartY+worldOffY, this);
 
         // Draw animated tiles
         if (tick - lastTick > 100) {
             animationTiles = mediaInfo.getAnimationTiles(tick);
             lastTick = tick;
         }
-        ImageDrawer.drawTiles(graphics, animationTiles, -(int) world.worldPartX, -(int) world.worldPartY, images, this);
+        ImageDrawer.drawTiles(graphics, animationTiles, -(int) world.worldPartX+worldOffX, -(int) world.worldPartY+worldOffY, images, this);
     }
 
     public void drawForeground(long tick) {
-        graphics.drawImage(foreground, -(int) world.worldPartX, -(int) world.worldPartY, this);
+        graphics.drawImage(foreground, -((int)world.worldPartX)+worldOffX, -((int)world.worldPartY)+worldOffY, this);
     }
 
 
@@ -295,6 +297,11 @@ class SwingPanel extends JPanel implements GraphicSystem {
             return;
         }
         graphics.drawImage(img, x1, y1, x2, y2, imageRef.x1, imageRef.y1, imageRef.x2, imageRef.y2, this);
+    }
+
+    public void setWorldOffset(int x, int y) {
+        worldOffX = x;
+        worldOffY = x;
     }
 
     public void redraw() {

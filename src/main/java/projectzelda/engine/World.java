@@ -3,8 +3,6 @@
 
 package projectzelda.engine;
 
-import projectzelda.game.WeaponState;
-
 import java.util.ArrayList;
 
 public abstract class World {
@@ -43,7 +41,6 @@ public abstract class World {
 
     
     public GameState gameState = GameState.MAIN_MENU;
-    public WeaponState weaponState = WeaponState.NONE;
 
     protected World() {
     }

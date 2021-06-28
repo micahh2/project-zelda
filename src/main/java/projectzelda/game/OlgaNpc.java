@@ -1,6 +1,7 @@
 package projectzelda.game;
 
 import projectzelda.engine.ImageRef;
+import projectzelda.engine.GameObject;
 
 public class OlgaNpc extends NPC {
 
@@ -129,5 +130,14 @@ public class OlgaNpc extends NPC {
             default:  // Java's a pretty horrible language, huh? 
                 return false;
         }
+    }
+
+    @Override
+    public boolean hasQuestProgress(QuestState q) {
+        if (q != QuestState.OLGA_MONSTERS) { return false; }
+        for (GameObject go : world.gameObjects) {
+            if (go instanceof Bones || go instanceof Monster) { return false; }
+        }
+        return true;
     }
 }

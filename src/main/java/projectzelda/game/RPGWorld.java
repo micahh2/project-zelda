@@ -12,6 +12,8 @@ public class RPGWorld extends World {
 
     private double timeSinceLastShot = 0;
 
+    public WeaponState weaponState = WeaponState.NONE;
+
     private HelpText helpText;
 
 
@@ -54,7 +56,6 @@ public class RPGWorld extends World {
         Sword sword = new Sword(swordMO.imageRef, swordSwing);
         avatar = new Avatar(playerMO.x, playerMO.y, playerMO.imageRef, sword, bow);
 
-        // avatar = new Avatar(100, 50, new ImageRef("Rocks2", 0, 0, 32, 32));
         StartAnimation startAnimation = new StartAnimation(playerMO.x, playerMO.y, Color.WHITE);
         gameObjects.add(startAnimation);
         gameObjects.add(avatar);
@@ -173,6 +174,13 @@ public class RPGWorld extends World {
         MapObject RockMo = map.getFirstObject("DestroyableRocks");
         Rock rock = new Rock(RockMo.startingBounds.x1, RockMo.startingBounds.y1, RockMo.imageRef);
         gameObjects.add(rock);
+
+        // UNCOMMENT TO SKIP TO END
+        //((Avatar)avatar).addItem("SWORD", sword);
+        //((Avatar)avatar).addItem("BOW", bow);
+        //((Avatar)avatar).switchWeapon(WeaponState.BOW);
+        //questState = QuestState.BOSS;
+        //// 
 
 
         int worldWidth = worldInfo.getPartWidth();
