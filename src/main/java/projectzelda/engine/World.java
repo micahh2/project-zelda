@@ -29,7 +29,7 @@ public abstract class World {
     public ArrayList<TextObject> textObjects = new ArrayList<TextObject>();
 
     public ArrayList<UIObject> pauseMenuObjects = new ArrayList<>();
-    public ArrayList<UIObject> chatBoxObjects = new ArrayList<>();
+    public UIObject chatBox;
     public ArrayList<UIObject> mainMenuObjects = new ArrayList<>();
     public ArrayList<UIObject> deathMenuObjects = new ArrayList<>();
     public ArrayList<UIObject> hudObjects = new ArrayList<>();
@@ -149,11 +149,9 @@ public abstract class World {
 
             long startDrawOther = System.currentTimeMillis();
             // draw all Chatboxes
-           // if (gameState == GameState.DIALOG)  {
-                for (int i = 0; i < chatBoxObjects.size(); i++) {
-                    chatBoxObjects.get(i).draw(graphicSystem, currentTick);
-                }
-          // }
+            if (chatBox != null) {
+                chatBox.draw(graphicSystem, currentTick);
+            }
 
             // draw all TextObjects
             for (int i = 0; i < textObjects.size(); i++) {

@@ -24,7 +24,7 @@ public class Avatar extends CircularGameObject {
 
     private int counterBones = 0;
     double timeToDie = 2.0;
-    boolean dying = false;
+    public boolean dying = false;
 
     public double life = 1.0;
     public HealthBar healthBar;
@@ -89,14 +89,17 @@ public class Avatar extends CircularGameObject {
             QuestState q = ((RPGWorld) world).questState;
             Const.Type type = Const.Type.values()[obj.type()];
             switch (type) {
-                case TREE:
-                case WATER:
-                case WALL:
                 case ANIMAL:
                 case NPC:
                 case PUMPKIN:
-                case ROCK:
                 case CHEST:
+                    ((RPGWorld)world).addNotification("Press 'E' to interact");
+                    this.moveBack();
+                    break;
+                case TREE:
+                case WATER:
+                case WALL:
+                case ROCK:
                     this.moveBack();
                     break;
                 case LAVA:
@@ -109,19 +112,15 @@ public class Avatar extends CircularGameObject {
                 case GOBLIN:
                     this.moveBack();
                     if (((RPGWorld)world).weaponState == WeaponState.NONE) {
-                        world.gameState = GameState.DIALOG;
-                        chatBox = new ChatBoxButton(posXChatBox, posYChatBox, 600, 100, "Adlez: I should talk to someone before fighting this.", Const.Type.GOBLIN);
-                        world.chatBoxObjects.add(chatBox);
+                        ((RPGWorld)world).addChatBox("Adlez: I should talk to someone before fighting this.", obj);
                     }
                     break;
 
                     // pick up Bones
                 case BONES:
-                    hit(-0.25);
-
+                    hit(-0.25); // Heal some
                     counterBones++;
-                    chatBox = new ChatBoxButton(posXChatBox, posYChatBox, 600, 100, "Bones picked up", Const.Type.BONES);
-                    world.chatBoxObjects.add(chatBox);
+                    ((RPGWorld)world).addNotification("Bones picked up");
                     obj.isLiving = false;
                     break;
             }
@@ -287,6 +286,7 @@ public class Avatar extends CircularGameObject {
     }
 
     public void draw(GraphicSystem gs, long tick) {
+        if (dying) { return; }
 
         if (((RPGWorld)world).weaponState == WeaponState.SWORD) {
             sword.draw(gs, tick);

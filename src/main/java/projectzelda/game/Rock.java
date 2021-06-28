@@ -67,8 +67,7 @@ public class Rock extends RectangularGameObject
         } else {
             world.gameState = GameState.DIALOG;
             // if const.type is rock game freezes, using bones or goblin seems to work ok though
-            ChatBoxButton chatBox = new ChatBoxButton(posXChatBox, posYChatBox, 600, 100, "It might be bad idea to break this.",this);
-            world.chatBoxObjects.add(chatBox);
+            ((RPGWorld)world).addChatBox("It might be bad idea to break this.", this);
         }
 
     }
