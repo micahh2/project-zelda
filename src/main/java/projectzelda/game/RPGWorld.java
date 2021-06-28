@@ -37,6 +37,8 @@ public class RPGWorld extends World {
     int posXChatBox;
     int posYChatBox;
 
+
+
     public RPGWorld(projectzelda.map.Map map) {
         this.map = map;
         worldInfo = map; // Implements world dim
@@ -50,6 +52,7 @@ public class RPGWorld extends World {
         //play the background music
         sound.playBackgroundMusic();
         sound.setVolume(-20.0F);
+
 
         // add the Avatar
         MapObject playerMO = map.getFirstObject("Player");
@@ -234,12 +237,182 @@ public class RPGWorld extends World {
         questState = QuestState.START;
 
         // UNCOMMENT TO SKIP TO END
-        // ((Avatar)avatar).addItem("SWORD", sword);
-        // ((Avatar)avatar).addItem("BOW", bow);
-        // ((Avatar)avatar).switchWeapon(WeaponState.BOW);
-        // questState = QuestState.BOSS;
+         ((Avatar)avatar).addItem("SWORD", sword);
+        //((Avatar)avatar).addItem("BOW", bow);
+        //((Avatar)avatar).switchWeapon(WeaponState.BOW);
+        questState = QuestState.BOB_COMPLETED;
         //// 
 
+    }
+    public void initForCheckpoint() {
+        //play the background music
+        sound.playBackgroundMusic();
+        sound.setVolume(-20.0F);
+
+
+        // add the Avatar
+        MapObject playerMO = map.getFirstObject("Player");
+        MapObject swordMO = map.getFirstObject("Swords");
+        ImageRef arrow = map.getFirstObject("Arrow").imageRef;
+        List<ImageRef> bowFrames = map.getAllObjectImageRefs("Bow");
+        ImageRef swordSwing = map.getFirstObject("Swing").imageRef;
+        Bow bow = new Bow(bowFrames, arrow);
+        Sword sword = new Sword(swordMO.imageRef, swordSwing);
+        avatar = new Avatar(playerMO.x, playerMO.y, playerMO.imageRef, sword, bow);
+
+        StartAnimation startAnimation = new StartAnimation(playerMO.x, playerMO.y, Color.WHITE);
+        gameObjects.add(startAnimation);
+        gameObjects.add(avatar);
+
+        bonesImage = map.getFirstObject("Bones").imageRef;
+
+        MapObject bossMo = map.getFirstObject("Boss");
+        Boss boss = new Boss(bossMo.x, bossMo.y, bossMo.imageRef, avatar);
+        gameObjects.add(boss);
+
+
+        // Get a list of NPCs
+        npcs = map.getAllObjects("Npcs");
+        double charScale = 0.7;
+
+        MapObject steveMo = npcs.get(0);
+        int widthSteve = steveMo.startingBounds.x2 - steveMo.startingBounds.x1;
+        int heightSteve = steveMo.startingBounds.y2 - steveMo.startingBounds.y1;
+        NPC steve = new SteveNpc(steveMo.x, steveMo.y, (int) (widthSteve * charScale), (int) (heightSteve * charScale), steveMo.imageRef);
+        gameObjects.add(steve);
+
+        MapObject catMo = npcs.get(1);
+        int widthCat = catMo.startingBounds.x2 - catMo.startingBounds.x1;
+        int heightCat = catMo.startingBounds.y2 - catMo.startingBounds.y1;
+        CatNpc cat = new CatNpc(catMo.x, catMo.y, (int) widthCat / 2, (int) heightCat / 2, catMo.imageRef);
+        gameObjects.add(cat);
+
+        MapObject dogMo = npcs.get(2);
+        int widthDog = dogMo.startingBounds.x2 - dogMo.startingBounds.x1;
+        int heightDog = dogMo.startingBounds.y2 - dogMo.startingBounds.y1;
+        DogNpc dog = new DogNpc(dogMo.x, dogMo.y, (int) widthDog / 2, (int) heightDog / 2, dogMo.imageRef);
+        gameObjects.add(dog);
+
+        MapObject brutusMo = npcs.get(3);
+        int widthBrutus = brutusMo.startingBounds.x2 - brutusMo.startingBounds.x1;
+        int heightBrutus = brutusMo.startingBounds.y2 - brutusMo.startingBounds.y1;
+        NPC brutus = new BrutusNpc(brutusMo.x, brutusMo.y, (int) (widthBrutus * charScale), (int) (heightBrutus * charScale), brutusMo.imageRef);
+        gameObjects.add(brutus);
+
+        MapObject olgaMo = npcs.get(4);
+        int widthOlga = olgaMo.startingBounds.x2 - olgaMo.startingBounds.x1;
+        int heightOlga = olgaMo.startingBounds.y2 - olgaMo.startingBounds.y1;
+        NPC olga = new OlgaNpc(olgaMo.x, olgaMo.y, (int) (widthOlga * charScale), (int) (heightOlga * charScale), olgaMo.imageRef);
+        gameObjects.add(olga);
+
+        MapObject bobMo = npcs.get(5);
+        int widthBob = bobMo.startingBounds.x2 - bobMo.startingBounds.x1;
+        int heightBob = bobMo.startingBounds.y2 - bobMo.startingBounds.y1;
+        NPC bob = new BobNpc(bobMo.x, bobMo.y, (int) (widthBob * charScale), (int) (heightBob * charScale), bobMo.imageRef, cat, dog);
+        gameObjects.add(bob);
+
+        npcs = new ArrayList<>();
+
+        // set WorldPart position
+        worldPartX = 0;
+        worldPartY = 0;
+
+
+        // create houses and trees
+        List<MapObject> houses = map.getAllObjects("Housebases");
+        for (MapObject house : houses) {
+            int width = house.startingBounds.x2 - house.startingBounds.x1;
+            int height = house.startingBounds.y2 - house.startingBounds.y1;
+            gameObjects.add(new House(house.startingBounds.x1, house.startingBounds.y1, width, height));
+        }
+
+        List<MapObject> walls = map.getAllObjects("Walls");
+        for (MapObject wall : walls) {
+            int width = wall.startingBounds.x2 - wall.startingBounds.x1;
+            int height = wall.startingBounds.y2 - wall.startingBounds.y1;
+            gameObjects.add(new Wall(wall.startingBounds.x1, wall.startingBounds.y1, width, height));
+        }
+
+        List<MapObject> waters = map.getAllObjects("Water");
+        for (MapObject water : waters) {
+            int width = water.startingBounds.x2 - water.startingBounds.x1;
+            int height = water.startingBounds.y2 - water.startingBounds.y1;
+            gameObjects.add(new Water(water.startingBounds.x1, water.startingBounds.y1, width, height));
+        }
+
+        List<MapObject> lavas = map.getAllObjects("Lava");
+        for (MapObject lava : lavas) {
+            int width = lava.startingBounds.x2 - lava.startingBounds.x1;
+            int height = lava.startingBounds.y2 - lava.startingBounds.y1;
+            gameObjects.add(new Lava(lava.startingBounds.x1, lava.startingBounds.y1, width, height));
+        }
+
+
+        List<MapObject> trees = map.getAllObjects("Treebases");
+        for (MapObject tree : trees) {
+            int radius = Math.round((tree.startingBounds.x2 - tree.startingBounds.x1) / 2);
+            gameObjects.add(new Tree(tree.startingBounds.x1, tree.startingBounds.y1, radius));
+        }
+
+        MapObject RockMo = map.getFirstObject("DestroyableRocks");
+        Rock rock = new Rock(RockMo.startingBounds.x1, RockMo.startingBounds.y1, RockMo.imageRef);
+        gameObjects.add(rock);
+
+        int worldWidth = worldInfo.getPartWidth();
+        int worldHeight = worldInfo.getPartHeight();
+
+        // calculate relative ui button width and height
+        int buttonWidth = (int) (0.2 * worldInfo.getPartWidth());
+        int buttonHeight = (int) (0.1 * worldInfo.getPartHeight());
+
+        // add the pause menu buttons
+        int relX = (int) (0.4 * worldWidth);
+        int relY = (int) (0.3 * worldHeight);
+
+        pauseMenuObjects.add(new UIButton(relX, relY, buttonWidth, buttonHeight, "Resume"));
+        relY = (int) (0.6 * worldHeight);
+        pauseMenuObjects.add(new UIButton(relX, relY, buttonWidth, buttonHeight, "Quit"));
+
+        // add the main menu buttons
+        relY = (int) (0.65 * worldHeight);
+        mainMenuObjects.add(new UIButton(relX, relY, buttonWidth, buttonHeight, "Play"));
+        ImageRef logoRef = new ImageRef("/images/logo.png", 0, 0, 1438, 510);
+        mainMenuObjects.add(new UIImage(worldWidth / 2 - logoRef.x2 / 2, (int) (worldHeight * 0.1), logoRef));
+
+        // add the death menu buttons
+        relY = (int) (0.4 * worldHeight);
+        deathMenuObjects.add(new UIButton(relX, relY, buttonWidth, buttonHeight, "Restart"));
+        relY = (int) (0.6 * worldHeight);
+        deathMenuObjects.add(new UIButton(relX, relY, buttonWidth, buttonHeight, "Quit"));
+
+        // add screen upon completion
+        relY = (int) (0.65 * worldHeight);
+        completeGameMenuObjects.add(new UIButton(relX, relY, buttonWidth, buttonHeight, "You win the game!"));
+
+
+        // initialize the background and add it to different screens
+        Background background = new Background(0, 0, map.getPartWidth(), map.getHeight(), new Color(1f, 1f, 1f, 0.2f));
+        pauseMenuObjects.add(background);
+        mainMenuObjects.add(background);
+        deathMenuObjects.add(background);
+        completeGameMenuObjects.add(background);
+
+        // add the hud elements
+        hudObjects.add(((Avatar) avatar).healthBar);
+
+        int itemSlotX = (int) (0.31 * worldInfo.getPartWidth());
+        int itemSlotY = (int) (0.01 * worldInfo.getPartHeight());
+        hudObjects.add(new ItemSlot(itemSlotX, itemSlotY, (Avatar) avatar, "SWORD", sword.imageRef));
+        itemSlotX = (int) (0.33 * worldInfo.getPartWidth());
+        hudObjects.add(new ItemSlot(itemSlotX, itemSlotY, (Avatar) avatar, "BOW", bow.imageRef));
+
+
+
+        // skip to boss
+        ((Avatar)avatar).addItem("SWORD", sword);
+        ((Avatar)avatar).addItem("BOW", bow);
+        ((Avatar)avatar).switchWeapon(WeaponState.BOW);
+        questState = QuestState.BOSS;
     }
 
     @Override
@@ -256,6 +429,21 @@ public class RPGWorld extends World {
         weaponState = WeaponState.NONE;
         init();
     }
+
+    public void respawnAtCheckpoint() {
+        gameObjects.clear();
+        textObjects.clear();
+        pauseMenuObjects.clear();
+        chatBox = null;
+        mainMenuObjects.clear();
+        deathMenuObjects.clear();
+        hudObjects.clear();
+        completeGameMenuObjects.clear();
+        gameState = GameState.MAIN_MENU;
+        initForCheckpoint();
+    }
+
+
 
     public void addMonster(double x, double y) {
         gameObjects.add(new Monster(x, y, monsterImage, avatar));
@@ -280,6 +468,7 @@ public class RPGWorld extends World {
             if (this.gameState == GameState.PAUSE || this.gameState == GameState.COMPLETE) {
                 UIButton resumeButton = (UIButton) pauseMenuObjects.get(0);
                 UIButton quitButton = (UIButton) pauseMenuObjects.get(1);
+                UIButton quitButton2 = (UIButton) completeGameMenuObjects.get(0);
 
                 if (userInput.mouseMovedX >= resumeButton.x && userInput.mouseMovedX <= resumeButton.getMaxX()
                         && (userInput.mouseMovedY >= resumeButton.y && userInput.mouseMovedY <= resumeButton.getMaxY())) {
@@ -288,6 +477,10 @@ public class RPGWorld extends World {
 
                 if (userInput.mouseMovedX >= quitButton.x && userInput.mouseMovedX <= quitButton.getMaxX()
                         && (userInput.mouseMovedY >= quitButton.y && userInput.mouseMovedY <= quitButton.getMaxY())) {
+                    System.exit(0);
+                }
+                if (userInput.mouseMovedX >= quitButton2.x && userInput.mouseMovedX <= quitButton2.getMaxX()
+                        && (userInput.mouseMovedY >= quitButton2.y && userInput.mouseMovedY <= quitButton2.getMaxY())) {
                     System.exit(0);
                 }
 
@@ -322,7 +515,14 @@ public class RPGWorld extends World {
 
             if (userInput.mouseMovedX >= restartButton.x && userInput.mouseMovedX <= restartButton.getMaxX()
                     && (userInput.mouseMovedY >= restartButton.y && userInput.mouseMovedY <= restartButton.getMaxY())) {
-                reset();
+                    if (questState == QuestState.BOSS) {
+                        respawnAtCheckpoint();
+                    } else {
+                        reset();
+                    }
+
+
+
             }
 
             if (userInput.mouseMovedX >= quitButton.x && userInput.mouseMovedX <= quitButton.getMaxX()
@@ -379,7 +579,7 @@ public class RPGWorld extends World {
                      * */
 
                     // can't close menus with movement keys
-                    if (gameState != GameState.PAUSE && gameState != GameState.MAIN_MENU && gameState != GameState.COMPLETE) {
+                    if (gameState != GameState.PAUSE && gameState != GameState.MAIN_MENU && gameState != GameState.COMPLETE && gameState != GameState.DEATH) {
                         if (chatBox != null) {
                             ChatBoxButton chatBoxButton = (ChatBoxButton)chatBox;
                             if (chatBoxButton.obj != null) {

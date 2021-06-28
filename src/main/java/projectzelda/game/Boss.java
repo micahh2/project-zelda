@@ -126,7 +126,7 @@ public class Boss extends EnemyAI
             world.gameState = GameState.DIALOG;
             ((RPGWorld)world).addChatBox("Adlez: His armour is too thick!", this);
         } else {
-            life -= 0.08;
+            life -= 0.50;
             healthBar.health = life;
             colorCooldown = COLOR_COOLDOWN;
 

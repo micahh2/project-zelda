@@ -93,13 +93,14 @@ public class Avatar extends CircularGameObject {
                 case NPC:
                 case PUMPKIN:
                 case CHEST:
+                case ROCK:
                     ((RPGWorld)world).addNotification("Press 'E' to interact");
                     this.moveBack();
                     break;
                 case TREE:
                 case WATER:
                 case WALL:
-                case ROCK:
+
                     this.moveBack();
                     break;
                 case LAVA:
@@ -277,10 +278,6 @@ public class Avatar extends CircularGameObject {
     public void questNPC(NPC npc) {
         world.gameState = GameState.DIALOG;
         QuestState q = ((RPGWorld) world).questState;
-        if (q == QuestState.BOB_COMPLETED) {
-            addItem("BOW", bow);
-           // world.weaponState = WeaponState.BOW;
-        }
         chatBoxText = npc.getNpcQuestText(q, 0);
         ((RPGWorld) world).addChatBox(chatBoxText, npc);
     }
@@ -335,4 +332,6 @@ public class Avatar extends CircularGameObject {
         dying = true;
         ((RPGWorld) world).throwGrenade(x, y);
     }
+
+
 }
