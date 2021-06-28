@@ -126,7 +126,6 @@ public class Boss extends EnemyAI
         colorCooldown = COLOR_COOLDOWN;
 
         if (life <= 0) { die(); }
-
     }
 
     public void die() {
