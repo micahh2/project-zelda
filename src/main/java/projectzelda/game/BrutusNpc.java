@@ -139,8 +139,6 @@ public class BrutusNpc extends NPC {
             case BOB_PETS_FOUND:
                 return brutusNpcQuestBobInProgText;
             case BOB_COMPLETED:
-                Avatar a = (Avatar) ((RPGWorld)world).avatar;
-                a.addItem("BOW",bow);
                 return brutusNpcQuestBobCompleted;
 
             case BOSS:
