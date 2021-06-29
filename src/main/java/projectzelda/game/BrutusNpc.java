@@ -102,14 +102,14 @@ public class BrutusNpc extends NPC {
     };
 
     static String[] brutusNpcQuestBoss = {
-            "Brutus: Did you kill it yet?",
+            "Brutus: Did you kill their king yet?",
             "Adlez: No, not yet.",
             "Adlez: I forgot where to go.",
             "Brutus: Just south-west of us. Please hurry!"
 
     };
 
-
+    Bow bow;
 
     public BrutusNpc(double x, double y, int width, int height, ImageRef imageRef) {
         super(x, y, width, height, imageRef);
@@ -140,6 +140,8 @@ public class BrutusNpc extends NPC {
             case BOB_PETS_FOUND:
                 return brutusNpcQuestBobInProgText;
             case BOB_COMPLETED:
+                Avatar a = (Avatar) ((RPGWorld)world).avatar;
+                a.addItem("BOW",bow);
                 return brutusNpcQuestBobCompleted;
 
             case BOSS:
