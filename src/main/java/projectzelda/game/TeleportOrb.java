@@ -44,14 +44,10 @@ class TeleportOrb extends CircularGameObject
                 case AVATAR:
                     Avatar avatar = (Avatar)obj;
                     avatar.teleport(reX, reY);
-                    if (!active) {
-                        active = true;
-                        speed = 0;
-                        radius *= 3;
-                    }
+                    activate();
                     return;
                 case SWORD_SWING:
-                    this.isLiving = false;
+                    activate();
                     return;
                 case SHOT:
                     if (active) {
@@ -64,6 +60,13 @@ class TeleportOrb extends CircularGameObject
         }
 
         super.move(diffSeconds);
+    }
+
+    public void activate() {
+        if (!active) { return; }
+        active = true;
+        speed = 0;
+        radius *= 3;
     }
 
     @Override
