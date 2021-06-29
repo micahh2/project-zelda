@@ -155,13 +155,13 @@ public class Map implements MediaInfo, WorldInfo {
     }
 
     // These should be things that wont move
-    final List<String> backgroundLayerNames = List.of("Bottom", "Furnitures", "Water", "Trees");
+    final List<String> backgroundLayerNames = List.of("Bottom", "Rocks", "Furnitures", "Water", "Trees");
 
     public List<ImageRefTo> getNonBackgroundTiles() {
         ArrayList<ImageRefTo> tiles = new ArrayList<ImageRefTo>();
         java.util.Map<String, List<ImageRefTo>> tilesByLayer = getTilesByLayer();
         for (Layer l : layers) {
-            if (backgroundLayerNames.contains(l.name)) { continue; }
+            if (backgroundLayerNames.contains(l.name) || l.name.equals("Mountain")) { continue; }
             tiles.addAll(tilesByLayer.get(l.name));
         }
         return tiles;
@@ -178,7 +178,7 @@ public class Map implements MediaInfo, WorldInfo {
     }
 
     // These things shouldn't move and should never be under a character
-    final List<String> foregroundLayerNames = List.of("Trees", "Rocks", "Houses");
+    final List<String> foregroundLayerNames = List.of("Trees", "Houses");
 
     public List<ImageRefTo> getForegroundTiles() {
         ArrayList<ImageRefTo> tiles = new ArrayList<ImageRefTo>();

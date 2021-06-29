@@ -73,9 +73,8 @@ public class Rock extends RectangularGameObject
     }
 
     public void die() {
-
-
         this.isLiving = false;
+        ((RPGWorld)world).removeMountain();
     }
 
     public boolean isDead () {
