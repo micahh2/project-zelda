@@ -16,7 +16,6 @@ public class RPGWorld extends World {
 
     private HelpText helpText;
 
-
     private double spawnGrenade = 0;
     private projectzelda.map.Map map;
 
@@ -187,6 +186,11 @@ public class RPGWorld extends World {
         Rock rock = new Rock(RockMo.startingBounds.x1, RockMo.startingBounds.y1, RockMo.imageRef);
         gameObjects.add(rock);
 
+        MapObject mountain = map.getFirstObject("Mountain");
+        int mountainWidth = mountain.startingBounds.x2 - mountain.startingBounds.x1;
+        int mountainHeight = mountain.startingBounds.y2 - mountain.startingBounds.y1;
+        gameObjects.add(new HitBox(mountain.startingBounds.x1, mountain.startingBounds.y1, mountainWidth, mountainHeight, mountain.imageRef, Const.Type.MOUNTAIN));
+
         int worldWidth = worldInfo.getPartWidth();
         int worldHeight = worldInfo.getPartHeight();
         helpText = new HelpText((int) (0.15 * worldInfo.getPartWidth()), (int) (0.85 * worldInfo.getPartHeight()));
@@ -240,10 +244,10 @@ public class RPGWorld extends World {
         questState = QuestState.START;
 
         // UNCOMMENT TO SKIP TO END
-        //((Avatar)avatar).addItem("SWORD", sword);
-        //((Avatar)avatar).addItem("BOW", bow);
-        //((Avatar)avatar).switchWeapon(WeaponState.BOW);
-        //questState = QuestState.BOB_COMPLETED;
+        ((Avatar)avatar).addItem("SWORD", sword);
+        ((Avatar)avatar).addItem("BOW", bow);
+        ((Avatar)avatar).switchWeapon(WeaponState.BOW);
+        questState = QuestState.BOB_COMPLETED;
         //// 
 
     }
@@ -299,7 +303,13 @@ public class RPGWorld extends World {
         gameObjects.addFirst(new Bones(x, y, bonesImage));
     }
 
-
+    public void removeMountain() {
+        for (GameObject go : gameObjects) {
+            if (go.type() != Const.Type.MOUNTAIN.ordinal()) { continue; }
+            go.isLiving = false;
+            return;
+        }
+    }
 
     public void processUserInput(UserInput userInput, double diffSeconds) {
         // distinguish if Avatar shall move or shoots	  

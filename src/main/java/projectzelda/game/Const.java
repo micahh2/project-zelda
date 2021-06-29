@@ -22,6 +22,7 @@ public final class Const
         WATER,
         LAVA,
         WALL,
+        MOUNTAIN,
         ROCK
     }
 }
