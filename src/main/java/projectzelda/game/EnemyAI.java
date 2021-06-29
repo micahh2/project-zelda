@@ -8,7 +8,7 @@ import java.awt.Color;
 public abstract class EnemyAI extends CircularGameObject {
     // hit points
     protected double life = 1.0;
-
+    public GameObject target;
     protected static final Color NORMAL_COLOR = new Color(160, 80, 40);
     protected static final Color REDDER = new Color(160, 40, 20);
     protected static final double COLOR_COOLDOWN = 2;
@@ -80,5 +80,11 @@ public abstract class EnemyAI extends CircularGameObject {
         int healthBarY = (int) (y - radius - 2 * healthBar.height);
         healthBar.x = healthBarX;
         healthBar.y = healthBarY;
+    }
+
+    public void setClone(EnemyAI e) {
+        super.setClone(e);
+        e.life = life;
+        e.adjustHealthBarPosition();
     }
 }

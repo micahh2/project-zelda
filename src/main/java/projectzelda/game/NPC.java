@@ -101,6 +101,9 @@ public class NPC extends RectangularGameObject {
     public void setFollow(GameObject go) {
         followTarget = go;
     }
+    public GameObject getFollow() {
+        return followTarget;
+    }
 
     public void setOrigin(double inX, double inY) {
         originX = inX;
@@ -123,8 +126,25 @@ public class NPC extends RectangularGameObject {
         return followTarget != null || stuck && stuckTimer < 0;
     }
 
+    public void flip() {
+        flippedX = !flippedX;
+    }
+
     public void hit() { die(); }
     public void die() { isLiving = false; }
 
     public int type() { return Const.Type.NPC.ordinal(); }
+
+    public GameObject clone() {
+        NPC n = new NPC(x, y, width, height, imageRef.clone());
+        setClone(n);
+        return n;
+    }
+
+    public void setClone(NPC n) {
+        super.setClone(n);
+        n.setOrigin(originX, originY);
+        n.setFollow(followTarget);
+        if (flippedX) { n.flip(); }
+    }
 }

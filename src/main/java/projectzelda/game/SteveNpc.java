@@ -1,6 +1,7 @@
 package projectzelda.game;
 
 import projectzelda.engine.ImageRef;
+import projectzelda.engine.GameObject;
 
 public class SteveNpc extends NPC {
 
@@ -99,5 +100,12 @@ public class SteveNpc extends NPC {
             default:  // Java's a pretty horrible language, huh? 
                 return false;
         }
+    }
+
+    @Override
+    public GameObject clone() {
+        NPC n = new SteveNpc(x, y, width, height, imageRef.clone());
+        setClone(n);
+        return n;
     }
 }

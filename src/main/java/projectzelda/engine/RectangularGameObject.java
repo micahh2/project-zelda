@@ -37,4 +37,10 @@ public abstract class RectangularGameObject extends GameObject {
 
         return Math.abs(b.x - a.x) < firstWidth && Math.abs(b.y - a.y) < firstHeight;
     }
+
+    public void setClone(RectangularGameObject r) {
+        super.setClone(r);
+        r.width = width;
+        r.height = height;
+    }
 }

@@ -4,11 +4,9 @@ import projectzelda.engine.*;
 
 public class Monster extends EnemyAI
 {
-    public GameObject target;
-
     private int posXChatBox = world.worldInfo.getPartWidth() / 2 - 300;
     private int posYChatBox = world.worldInfo.getPartHeight() - 100;
-    boolean hasHadFreeMove = false;
+    public boolean hasHadFreeMove = false;
 
     public Monster(double x, double y, ImageRef imageRef,  GameObject target)
     {
@@ -113,6 +111,17 @@ public class Monster extends EnemyAI
             }
         }
 
+    }
+
+    public GameObject clone() {
+        Monster b = new Monster(x, y, imageRef, target);
+        setClone(b);
+        return b;
+    }
+
+    public void setClone(Monster m) {
+        super.setClone(m);
+        m.hasHadFreeMove = hasHadFreeMove;
     }
 
 

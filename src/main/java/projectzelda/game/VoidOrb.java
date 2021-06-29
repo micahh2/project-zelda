@@ -7,12 +7,12 @@ import java.awt.Color;
 class VoidOrb extends CircularGameObject
 { 
     private double lifeTime = 5;
-    GameObject parent;
+    public GameObject parent;
     double targetDir;
     double xDest;
     double yDest;
     double totalDist;
-    boolean inverse = false;
+    public boolean inverse = false;
 
     public VoidOrb(double x, double y, double xDest, double yDest, GameObject parent)
     {
@@ -77,4 +77,17 @@ class VoidOrb extends CircularGameObject
     }
 
     public final int type() { return Const.Type.SHOT.ordinal();}
+
+    public GameObject clone() {
+        VoidOrb v = new VoidOrb(x, y, destX, destY, parent);
+        setClone(v);
+        return v;
+    }
+
+    public void setClone(VoidOrb v) {
+        super.setClone(v);
+        v.parent = parent;
+        v.lifeTime = lifeTime;
+        v.inverse = inverse;
+    }
 }

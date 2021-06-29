@@ -6,13 +6,14 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.Map.Entry;
 
 public class Avatar extends CircularGameObject {
-    private boolean flippedX = false;
+    public boolean flippedX = false;
     private HashMap<String, GameObject> inventory;
 
 
-    private Sword  sword;
+    private Sword sword;
     private Bow bow;
 
     private ChatBoxButton chatBox;
@@ -48,8 +49,8 @@ public class Avatar extends CircularGameObject {
         this.sword = sword;
         this.bow = bow;
         //weaponState = ((RPGWorld) world).weaponState;
-        bow.offset((int) x, (int) y);
-        sword.offset((int) x, (int) y);
+        bow.setXY(x, y);
+        sword.setXY(x, y);
     }
 
     @Override
@@ -127,19 +128,14 @@ public class Avatar extends CircularGameObject {
         int endx = (int) x;
         int endy = (int) y;
 
-        if ((startx < endx && !flippedX) || (startx > endx && flippedX)) {
-            int tempx = imageRef.x1;
-            imageRef.x1 = imageRef.x2;
-            imageRef.x2 = tempx;
-            flippedX = !flippedX;
-            bow.flip();
-            sword.flip();
-        }
+        if ((startx < endx && !flippedX) || (startx > endx && flippedX)) { flip(); }
+
+        sword.setXY(x, y);
+        bow.setXY(x, y);
 
         int diffx = endx - startx;
         int diffy = endy - starty;
-        sword.offset(diffx, diffy);
-        bow.offset(diffx, diffy);
+
         if (diffx < 0 && diffy == 0) {
             fireDir = Arrow.Dir.LEFT;
         } else if (diffx < 0 && diffy < 0) {
@@ -157,6 +153,15 @@ public class Avatar extends CircularGameObject {
         } else if (diffx == 0 && diffy > 0) {
             fireDir = Arrow.Dir.DOWN;
         }
+    }
+
+    public void flip() {
+        int tempx = imageRef.x1;
+        imageRef.x1 = imageRef.x2;
+        imageRef.x2 = tempx;
+        flippedX = !flippedX;
+        bow.flip();
+        sword.flip();
     }
 
     public void interactWithNpc() {
@@ -211,8 +216,8 @@ public class Avatar extends CircularGameObject {
 
 
     public void teleport(int toX, int toY) {
-        bow.offset(toX-(int)x, toY-(int)y);
-        sword.offset(toX-(int)x, toY-(int)y);
+        bow.setXY(toX, toY);
+        sword.setXY(toX, toY);
         x = toX;
         y = toY;
         destX = toX;
@@ -221,6 +226,14 @@ public class Avatar extends CircularGameObject {
 
     public void addItem(String itemType, GameObject item) {
         inventory.put(itemType, item);
+    }
+
+    public void addBow() {
+        addItem("BOW", bow);
+    }
+
+    public void addSword() {
+        addItem("SWORD", sword);
     }
 
     public void questPumpkin(Pumpkin pumpkin) {
@@ -295,6 +308,9 @@ public class Avatar extends CircularGameObject {
         ((RPGWorld)world).weaponState = weaponState;
     }
 
+    public HashMap<String, GameObject> getInventory() { return inventory; }
+    public void setInventory(HashMap<String, GameObject> in) { inventory = in; }
+
     public void fire() {
         if (((RPGWorld)world).weaponState == WeaponState.BOW) {
             bow.fire(fireDir);
@@ -329,5 +345,34 @@ public class Avatar extends CircularGameObject {
         ((RPGWorld) world).throwGrenade(x, y);
     }
 
+    public GameObject clone() {
+        Sword s = (Sword)sword.clone();
+        Bow b = (Bow)bow.clone();
+        Avatar a = new Avatar(x, y, imageRef.clone(), s, b);
+        super.setClone(a);
+        setClone(a);
+
+        HashMap<String, GameObject> inv = new HashMap<>();
+        for (Entry<String, GameObject> entry : inventory.entrySet()) {
+            if (entry.getValue() == sword) {
+                inv.put(entry.getKey(), s);
+                continue;
+            }
+            if (entry.getValue() == bow) {
+                inv.put(entry.getKey(), b);
+                continue;
+            }
+            System.out.println("ERROR Cloning Avatar: " + entry);
+        }
+        a.inventory = inv;
+
+        return a;
+    }
+    public void setClone(Avatar a) {
+        super.setClone(a);
+        a.dying = dying;
+        a.life = life;
+        a.flippedX = flippedX;
+    }
 
 }

@@ -32,4 +32,12 @@ class StartAnimation extends CircularGameObject
     }
 
     public final int type() { return Const.Type.ANIMATION.ordinal();}
+
+    public GameObject clone() {
+        StartAnimation s = new StartAnimation(x, y, color);
+        s.radius = s.radius;
+        s.isLiving = s.isLiving;
+
+        return s;
+    }
 }

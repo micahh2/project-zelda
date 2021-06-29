@@ -2,6 +2,7 @@ package projectzelda.game;
 
 import projectzelda.*;
 import java.util.List;
+import java.util.LinkedList;
 import java.awt.Color;
 
 import projectzelda.engine.*;
@@ -18,14 +19,14 @@ public class Bow extends RectangularGameObject {
     public Bow(List<ImageRef> frames, ImageRef arrow) {
         super(0, 0, 0, 0, frames.get(0).x2, frames.get(0).y2, Color.WHITE);
         this.isMoving = false;
-        this.imageRef = frames.get(0);
+        this.imageRef = frames.get(0).clone();
         this.frames = frames;
         this.arrowImage = arrow;
     }
 
-    public void offset(int x, int y) {
-        this.x += x;
-        this.y += y;
+    public void setXY(double x, double y) {
+        this.x = x;
+        this.y = y;
     }
 
     public void flip() {
@@ -38,11 +39,11 @@ public class Bow extends RectangularGameObject {
         int imgY = (int)y-height/2;
         if (flippedX) {
             imgX += 2;
-            gs.drawImage(imageRef, (int)imgX, (int)imgY, (int)imgX+imageRef.x2, (int)imgY+imageRef.y2);
+            gs.drawImage(imageRef, imgX, imgY, imgX+imageRef.x2, imgY+imageRef.y2);
             return;
         }
         imgX -= 2;
-        gs.drawImage(imageRef, (int)imgX+imageRef.x2, (int)imgY, (int)imgX, (int)imgY+imageRef.y2);
+        gs.drawImage(imageRef, imgX+imageRef.x2, imgY, imgX, imgY+imageRef.y2);
     }
 
     public void fire(Arrow.Dir dir) {
@@ -54,4 +55,21 @@ public class Bow extends RectangularGameObject {
     }
 
     public int type() { return Const.Type.BOW.ordinal(); }
+
+    public GameObject clone() {
+        List<ImageRef> newF = new LinkedList<ImageRef>();
+        for (ImageRef f : frames) {
+            newF.add(f.clone());
+        }
+        Bow b = new Bow(newF, arrowImage.clone());
+        b.isMoving = isMoving;
+        b.hasDestination = hasDestination;
+        b.isLiving = isLiving;
+        b.x = x;
+        b.y = y;
+        b.width = width;
+        b.height = height;
+        if (flippedX) { b.flip(); }
+        return b;
+    }
 }
