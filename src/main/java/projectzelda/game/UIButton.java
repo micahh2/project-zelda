@@ -35,6 +35,13 @@ public class UIButton extends UIObject {
         return y + height;
     }
 
+    public boolean contains(int mouseX, int mouseY){
+        return mouseX >= x 
+            && mouseX <= x + width
+            && mouseY >= y 
+            && mouseY <= y + height;
+    }
+
     @Override
     public void draw(GraphicSystem gs, long tick) {
         gs.fillRoundRectScreen(x, y, width, height, 5, 5, color);

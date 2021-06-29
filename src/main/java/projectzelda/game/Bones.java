@@ -25,4 +25,10 @@ class Bones extends CircularGameObject
     }
 
     public int type() { return Const.Type.BONES.ordinal(); }
+    
+    public GameObject clone() {
+        Bones b = new Bones(x, y, imageRef);
+        b.life = life;
+        return b;
+    }
 }

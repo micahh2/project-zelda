@@ -5,21 +5,20 @@ import projectzelda.engine.*;
 public class Boss extends EnemyAI
 {
 
-    public GameObject target;
+    public double voidCannonCooldown = 2.2;
+    public double VOID_CANNON_THRESHOLD = 1;
+    public double voidCannonTemp = 0;
 
-    double voidCannonCooldown = 2.2;
-    double VOID_CANNON_THRESHOLD = 1;
-    double voidCannonTemp = 0;
+    public double monsterCannonCooldown = 3.2;
+    public double MONSTER_CANNON_THRESHOLD = 1;
+    public double monsterCannonTemp = 0;
 
-    double monsterCannonCooldown = 3.2;
-    double MONSTER_CANNON_THRESHOLD = 1;
-    double monsterCannonTemp = 0;
+    public double teleCannonCooldown = 2.2;
+    public double TELE_CANNON_THRESHOLD = 1;
+    public double teleCannonTemp = 0;
+    public int teleportIndex = 0;
 
-    double teleCannonCooldown = 2.2;
-    double TELE_CANNON_THRESHOLD = 1;
-    double teleCannonTemp = 0;
-
-    double lineOfSight = 400;
+    public double lineOfSight = 400;
 
     public Boss(double x, double y, ImageRef imageRef, GameObject target)
     {
@@ -78,7 +77,8 @@ public class Boss extends EnemyAI
                 monsterCannonTemp += monsterCannonCooldown;
             }
             if (life < 0.3 && teleCannonTemp < TELE_CANNON_THRESHOLD) {
-                world.gameObjects.add(new TeleportOrb(x, y, target.x, target.y));
+                world.gameObjects.add(new TeleportOrb(x, y, target.x, target.y, teleportIndex));
+                teleportIndex++;
                 teleCannonTemp +=teleCannonCooldown;
             }
         }
@@ -126,7 +126,6 @@ public class Boss extends EnemyAI
         colorCooldown = COLOR_COOLDOWN;
 
         if (life <= 0) { die(); }
-
     }
 
     public void die() {
@@ -135,6 +134,27 @@ public class Boss extends EnemyAI
         if (!((Avatar)world.avatar).dying) {
             world.gameState = GameState.COMPLETE;
         }
+    }
+
+    public GameObject clone() {
+        Boss b = new Boss(x, y, imageRef, target);
+        setClone(b);
+        return b;
+    }
+
+    public void setClone(Boss b) {
+        super.setClone(b);
+        b.voidCannonCooldown = voidCannonCooldown;
+        b.voidCannonTemp = voidCannonTemp;
+
+        b.monsterCannonCooldown = monsterCannonCooldown;
+        b.monsterCannonTemp = monsterCannonTemp;
+
+        b.teleCannonCooldown = teleCannonCooldown;
+        b.teleCannonTemp = teleCannonTemp;
+        b.teleportIndex = teleportIndex;
+
+        b.lineOfSight = lineOfSight;
     }
 }
 

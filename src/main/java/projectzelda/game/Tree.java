@@ -20,4 +20,8 @@ class Tree extends CircularGameObject
   public void draw(GraphicSystem gs, long tick) { return; }
   
   public int type() { return Const.Type.TREE.ordinal(); }
+
+  public GameObject clone() {
+      return new Tree(x, y, radius);
+  }
 }

@@ -44,4 +44,9 @@ public abstract class CircularGameObject extends GameObject {
         }
         return y1 < radius;
     }
+
+    public void setClone(CircularGameObject r) {
+        super.setClone(r);
+        r.radius = radius;
+    }
 }

@@ -1,6 +1,7 @@
 package projectzelda.game;
 
 import projectzelda.engine.ImageRef;
+import projectzelda.engine.GameObject;
 
 public class BobNpc extends NPC {
 
@@ -47,10 +48,10 @@ public class BobNpc extends NPC {
             "Adlez: Thanks."
     };
 
-    CatNpc cat;
-    DogNpc dog;
-    boolean hasDog = false;
-    boolean hasCat = false;
+    public CatNpc cat;
+    public DogNpc dog;
+    public boolean hasDog = false;
+    public boolean hasCat = false;
     int foundDistance = 128;
 
     public BobNpc(double x, double y, int width, int height, ImageRef imageRef, CatNpc cat, DogNpc dog) {
@@ -147,5 +148,14 @@ public class BobNpc extends NPC {
             default:  // Java's a pretty horrible language, huh? 
                 return false;
         }
+    }
+
+    @Override
+    public GameObject clone() {
+        BobNpc n = new BobNpc(x, y, width, height, imageRef.clone(), cat, dog);
+        setClone(n);
+        n.hasDog = hasDog;
+        n.hasCat = hasCat;
+        return n;
     }
 }

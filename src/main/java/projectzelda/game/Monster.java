@@ -4,11 +4,9 @@ import projectzelda.engine.*;
 
 public class Monster extends EnemyAI
 {
-    public GameObject target;
-
     private int posXChatBox = world.worldInfo.getPartWidth() / 2 - 300;
     private int posYChatBox = world.worldInfo.getPartHeight() - 100;
-    boolean hasHadFreeMove = false;
+    public boolean hasHadFreeMove = false;
 
     public Monster(double x, double y, ImageRef imageRef,  GameObject target)
     {
@@ -40,34 +38,24 @@ public class Monster extends EnemyAI
     public void hit() {
         if (!isLiving) { return; }
         // every hit decreases life
-        if (((RPGWorld) world).questState == QuestState.OLGA_MONSTERS ) {
-            // every hit decreases life
-            life -= 0.21;
-            healthBar.health = life;
-            color = REDDER;
-            colorCooldown = COLOR_COOLDOWN;
+        // every hit decreases life
+        life -= 0.21;
+        healthBar.health = life;
 
-            // if Goblin is dead, delete it
-            if (life <= 0) {
-                die();
-            }
-            // make monsters easier to kill during bossfight > can quickly stack up and become too chaotic?
-        } else if (((RPGWorld) world).questState == QuestState.BOSS) {
+        // if Goblin is dead, delete it
+        if (life <= 0) {
+            die();
+        }
+        // make monsters easier to kill during bossfight > can quickly stack up and become too chaotic?
+        if (((RPGWorld) world).questState == QuestState.BOSS) {
             //world.gameState = GameState.DIALOG;
             // if const.type is rock game freezes, using bones or goblin seems to work ok though
             life -= 1.0;
             healthBar.health = life;
-            color = REDDER;
-            colorCooldown = COLOR_COOLDOWN;
 
             // if Goblin is dead, delete it
-            if (life <= 0) {
-                die();
-            }
-        } else {
-            ((RPGWorld) world).addChatBox("Adlez: I should talk to someone before fighting this.", this);
+            if (life <= 0) { die(); }
         }
-
     }
     public void move(double diffSeconds) {
         if (hitCooldown >= 0) { hitCooldown -= diffSeconds; }
@@ -124,6 +112,17 @@ public class Monster extends EnemyAI
             }
         }
 
+    }
+
+    public GameObject clone() {
+        Monster b = new Monster(x, y, imageRef, target);
+        setClone(b);
+        return b;
+    }
+
+    public void setClone(Monster m) {
+        super.setClone(m);
+        m.hasHadFreeMove = hasHadFreeMove;
     }
 
 

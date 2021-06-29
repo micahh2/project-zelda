@@ -34,5 +34,12 @@ public class Pumpkin extends RectangularGameObject {
 
     public String[] getPumpkinQuestText() { return pumpkinQuestText; }
 
+    public GameObject clone() {
+        Pumpkin c = new Pumpkin(x, y, width, height, imageRef);
+        c.setPumpkinText(getPumpkinText());
+
+        return c;
+    }
+
     public int type() { return Const.Type.PUMPKIN.ordinal(); }
 }

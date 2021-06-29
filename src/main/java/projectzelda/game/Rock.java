@@ -26,14 +26,14 @@ public class Rock extends RectangularGameObject
             "Adlez: .. and save this town!"
     };
 
-    public Rock(double x, double y, ImageRef imageref)
-        {
-            super(x, y, 0, 0, 128, 46, null);
-            this.isMoving = false;
-            this.imageRef = imageref;
-            healthBar = new HealthBar(0, 0, 80, 5);
-            adjustHealthBarPosition();
-        }
+    public Rock(double x, double y, ImageRef imageRef)
+    {
+        super(x, y, 0, 0, 128, 46, null);
+        this.isMoving = false;
+        this.imageRef = imageRef;
+        healthBar = new HealthBar(0, 0, 80, 5);
+        adjustHealthBarPosition();
+    }
 
     // Invisible
     @Override
@@ -93,4 +93,9 @@ public class Rock extends RectangularGameObject
 
     public String[] getRockQuestText() { return rockQuestText; }
 
+    public GameObject clone() {
+        Rock r = new Rock(x, y, imageRef);
+        r.adjustHealthBarPosition();
+        return r;
+    }
 }

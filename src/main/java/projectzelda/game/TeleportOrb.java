@@ -6,23 +6,23 @@ import java.awt.Color;
 
 class TeleportOrb extends CircularGameObject
 { 
-    private double lifeTime = 5;
-    boolean active = false;
+    public double lifeTime = 5;
+    public boolean active = false;
 
     int reX;
     int reY;
 
     int[] posXs = {100, 200, 400, 500, 600, 700, 1200, 100};
     int[] posYs = {200, 300, 500, 300, 600, 100, 1200, 1300};
-    static int index=0;
+    int index=0;
 
-    public TeleportOrb(double x, double y, double xDest, double yDest)
+    public TeleportOrb(double x, double y, double xDest, double yDest, int index)
     {
         super(x,y,Math.atan2(yDest-y, xDest-x), 350, 6, Color.CYAN);
         this.isMoving = true;
+        index = index % posXs.length;
         reX = posXs[index];
         reY = posYs[index];
-        index = (index+1)%posXs.length;
     }
 
     public void move(double diffSeconds)
@@ -79,4 +79,17 @@ class TeleportOrb extends CircularGameObject
     }
 
     public final int type() { return Const.Type.SHOT.ordinal();}
+
+    public GameObject clone() {
+        TeleportOrb t = new TeleportOrb(x, y, destX, destY, index);
+        setClone(t);
+        return t;
+    }
+
+    public void setClone(TeleportOrb t) {
+        super.setClone(t);
+
+        t.lifeTime = lifeTime;
+        t.active = active;
+    }
 }

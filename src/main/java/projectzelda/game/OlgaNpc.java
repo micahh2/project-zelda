@@ -140,4 +140,11 @@ public class OlgaNpc extends NPC {
         }
         return true;
     }
+
+    @Override
+    public GameObject clone() {
+        NPC n = new OlgaNpc(x, y, width, height, imageRef.clone());
+        setClone(n);
+        return n;
+    }
 }

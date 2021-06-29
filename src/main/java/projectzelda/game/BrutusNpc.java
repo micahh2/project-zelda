@@ -1,6 +1,7 @@
 package projectzelda.game;
 
 import projectzelda.engine.ImageRef;
+import projectzelda.engine.GameObject;
 
 public class BrutusNpc extends NPC {
 
@@ -109,8 +110,6 @@ public class BrutusNpc extends NPC {
 
     };
 
-    Bow bow;
-
     public BrutusNpc(double x, double y, int width, int height, ImageRef imageRef) {
         super(x, y, width, height, imageRef);
     }
@@ -140,8 +139,6 @@ public class BrutusNpc extends NPC {
             case BOB_PETS_FOUND:
                 return brutusNpcQuestBobInProgText;
             case BOB_COMPLETED:
-                Avatar a = (Avatar) ((RPGWorld)world).avatar;
-                a.addItem("BOW",bow);
                 return brutusNpcQuestBobCompleted;
 
             case BOSS:
@@ -183,5 +180,20 @@ public class BrutusNpc extends NPC {
             default:
                 return false;*/
         }
+    }
+
+    @Override
+    public void makeQuestProgress(QuestState q) {
+        if (q == QuestState.BOB_COMPLETED) {
+            Avatar a = (Avatar)((RPGWorld)world).avatar;
+            a.addBow();
+        }
+    }
+
+    @Override
+    public GameObject clone() {
+        BrutusNpc n = new BrutusNpc(x, y, width, height, imageRef.clone());
+        setClone(n);
+        return n;
     }
 }

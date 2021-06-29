@@ -16,7 +16,6 @@ final class Main {
     {
         SwingScreenInfo screenInfo = new SwingScreenInfo();
         Map map = new Map("/map/world_map.tmx", screenInfo);
-        System.out.println(map);
 
         // Map implements multiple interfaces
         Frame frame = new SwingFrame(map, map, screenInfo); 

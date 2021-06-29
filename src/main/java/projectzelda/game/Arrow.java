@@ -116,4 +116,9 @@ class Arrow extends CircularGameObject
 
     public final int type() { return Const.Type.SHOT.ordinal();}
 
+
+    public GameObject clone() {
+        Arrow a = new Arrow(x, y, dir, imageRef);
+        return a;
+    }
 }

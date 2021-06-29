@@ -6,9 +6,9 @@ import java.awt.Color;
 
 class MonsterOrb extends CircularGameObject
 { 
-    private double lifeTime = 10;
+    public double lifeTime = 10;
 
-    GameObject target;
+    public GameObject target;
 
     public MonsterOrb(double x, double y, GameObject target)
     {
@@ -58,4 +58,16 @@ class MonsterOrb extends CircularGameObject
     }
 
     public final int type() { return Const.Type.SHOT.ordinal();}
+
+    public GameObject clone() {
+        MonsterOrb m = new MonsterOrb(x, y, target);
+        setClone(m);
+        return m;
+    }
+
+    public void setClone(MonsterOrb m) {
+        super.setClone(m);
+        m.target = target;
+        m.lifeTime = lifeTime;
+    }
 }

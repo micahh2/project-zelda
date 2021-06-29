@@ -7,7 +7,7 @@ package projectzelda.engine;
 import projectzelda.*;
 import java.awt.Color;
 
-public abstract class GameObject 
+public abstract class GameObject implements Cloneable
 {
     // yes, public  :(
     //
@@ -82,9 +82,9 @@ public abstract class GameObject
 
     // set the LOCATION of an object as destination
     public void setDestination(GameObject obj)
-    { setDestination(obj.x, obj.y);	  
+    { 
+        setDestination(obj.x, obj.y);	  
     }
-
 
     // move back to the position BEFORE the move Method was called
     public void moveBack() { x=xOld; y=yOld; }
@@ -98,4 +98,16 @@ public abstract class GameObject
     public abstract boolean hasCollision(CircularGameObject b);
     public abstract void draw(GraphicSystem gs, long tick);
 
+    public abstract GameObject clone();
+    public void setClone(GameObject go) {
+        go.destX = destX;
+        go.destY = destY;
+        go.isMoving = isMoving;
+        go.hasDestination = hasDestination;
+        go.xOld = xOld;
+        go.yOld = yOld;
+        go.alfa = alfa;
+        go.speed = speed;
+        go.isLiving = isLiving;
+    }
 }

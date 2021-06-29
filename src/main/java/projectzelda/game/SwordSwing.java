@@ -16,13 +16,13 @@ public class SwordSwing extends CircularGameObject {
         super(x + (flippedX ? 10 : -10), y, 0, 0, 22, Color.WHITE);
 
         this.isMoving = false;
-        this.imageRef = imageRef;
+        this.imageRef = imageRef.clone();
         this.flippedX = flippedX;
     }
 
-    public void offset(int x, int y) {
-        this.x += x;
-        this.y += y;
+    public void setXY(double x, double y) {
+        this.x = x;
+        this.y = y;
     }
 
     @Override
@@ -60,6 +60,11 @@ public class SwordSwing extends CircularGameObject {
             return;
         }
         gs.drawImage(imageRef, (int)imgX+imageRef.x2, (int)imgY, (int)imgX, (int)imgY+imageRef.y2);
+    }
+
+    public GameObject clone() {
+        SwordSwing s = new SwordSwing(x, y, imageRef, flippedX);
+        return s;
     }
 
     public int type() { return Const.Type.SWORD_SWING.ordinal(); }

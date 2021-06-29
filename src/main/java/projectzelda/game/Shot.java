@@ -60,5 +60,12 @@ class Shot extends CircularGameObject
         gs.fillOval((int)x, (int)y, radius, radius, color);
     }
 
+    public GameObject clone() {
+        Shot s = new Shot(x, y, alfa, lifeTime);
+        s.destX = destX;
+        s.destY = destY;
+        return s;
+    }
+
     public final int type() { return Const.Type.SHOT.ordinal();}
 }

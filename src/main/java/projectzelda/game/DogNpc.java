@@ -1,6 +1,7 @@
 package projectzelda.game;
 
 import projectzelda.engine.ImageRef;
+import projectzelda.engine.GameObject;
 
 public class DogNpc extends NPC {
 
@@ -32,4 +33,11 @@ public class DogNpc extends NPC {
 
     @Override
     public int type() { return Const.Type.ANIMAL.ordinal(); }
+
+    @Override
+    public GameObject clone() {
+        NPC n = new DogNpc(x, y, width, height, imageRef.clone());
+        setClone(n);
+        return n;
+    }
 }

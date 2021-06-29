@@ -18,15 +18,15 @@ public class Sword extends RectangularGameObject {
     public Sword(ImageRef imageRef, ImageRef swordSwing) {
         super(0, 0, 0, 0, imageRef.x2, imageRef.y2, Color.WHITE);
         this.isMoving = false;
-        this.imageRef = imageRef;
+        this.imageRef = imageRef.clone();
         this.swordSwingImage = swordSwing;
     }
 
-    public void offset(int x, int y) {
-        this.x += x;
-        this.y += y;
+    public void setXY(double x, double y) {
+        this.x = x;
+        this.y = y;
         if (this.swordSwing != null) {
-            this.swordSwing.offset(x, y);
+            this.swordSwing.setXY(x, y);
         }
     }
 
@@ -58,4 +58,11 @@ public class Sword extends RectangularGameObject {
     }
 
     public int type() { return Const.Type.BOW.ordinal(); }
+
+    public GameObject clone() {
+        Sword s = new Sword(imageRef.clone(), swordSwingImage.clone());
+        if (flippedX) { s.flip(); }
+
+        return s;
+    }
 }

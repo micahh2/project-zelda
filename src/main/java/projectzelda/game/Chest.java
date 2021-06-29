@@ -31,4 +31,10 @@ public class Chest extends RectangularGameObject {
     public String[] getChestQuestText() { return chestQuestText; }
     public int type() { return Const.Type.CHEST.ordinal(); }
 
+    public GameObject clone() {
+        Chest c = new Chest(x, y, width, height, imageRef);
+        c.setChestText(getChestText());
+
+        return c;
+    }
 }
