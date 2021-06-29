@@ -374,5 +374,4 @@ public class Avatar extends CircularGameObject {
         a.life = life;
         a.flippedX = flippedX;
     }
-
 }
