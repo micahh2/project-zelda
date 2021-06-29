@@ -224,7 +224,7 @@ public class RPGWorld extends World {
 
         // add screen upon completion
         relY = (int) (0.65 * worldHeight);
-        completeGameMenuObjects.add(new UIButton(relX, relY, buttonWidth, buttonHeight, "You win the game!"));
+        completeGameMenuObjects.add(new UIButton(relX, relY, buttonWidth, buttonHeight, "Done."));
 
 
         // initialize the background and add it to different screens
@@ -240,10 +240,10 @@ public class RPGWorld extends World {
         questState = QuestState.START;
 
         // UNCOMMENT TO SKIP TO END
-        //((Avatar)avatar).addItem("SWORD", sword);
-        //((Avatar)avatar).addItem("BOW", bow);
-        //((Avatar)avatar).switchWeapon(WeaponState.BOW);
-        //questState = QuestState.BOB_COMPLETED;
+        ((Avatar)avatar).addItem("SWORD", sword);
+        ((Avatar)avatar).addItem("BOW", bow);
+        ((Avatar)avatar).switchWeapon(WeaponState.BOW);
+        questState = QuestState.BOB_COMPLETED;
         //// 
 
     }
@@ -314,44 +314,23 @@ public class RPGWorld extends World {
             if (this.gameState == GameState.PAUSE || this.gameState == GameState.COMPLETE) {
                 UIButton resumeButton = (UIButton) pauseMenuObjects.get(0);
                 UIButton quitButton = (UIButton) pauseMenuObjects.get(1);
-                UIButton quitButton2 = (UIButton) completeGameMenuObjects.get(0);
+                UIButton quitButton2 = (UIButton) completeGameMenuObjects.get(1);
 
-                if (userInput.mouseMovedX >= resumeButton.x && userInput.mouseMovedX <= resumeButton.getMaxX()
-                        && (userInput.mouseMovedY >= resumeButton.y && userInput.mouseMovedY <= resumeButton.getMaxY())) {
+                if (resumeButton.contains(userInput.mouseMovedX, userInput.mouseMovedY)) {
                     gameState = GameState.PLAY;
                 }
 
-                if (userInput.mouseMovedX >= quitButton.x && userInput.mouseMovedX <= quitButton.getMaxX()
-                        && (userInput.mouseMovedY >= quitButton.y && userInput.mouseMovedY <= quitButton.getMaxY())) {
+                if (quitButton.contains(userInput.mouseMovedX, userInput.mouseMovedY) || quitButton2.contains(userInput.mouseMovedX, userInput.mouseMovedY)) {
                     System.exit(0);
                 }
-                if (userInput.mouseMovedX >= quitButton2.x && userInput.mouseMovedX <= quitButton2.getMaxX()
-                        && (userInput.mouseMovedY >= quitButton2.y && userInput.mouseMovedY <= quitButton2.getMaxY())) {
-                    System.exit(0);
-                }
-
-            } else {
-                // only 1 shot every ... seconds:
-                timeSinceLastShot += diffSeconds;
-                if (timeSinceLastShot > 0.2) {
-                    timeSinceLastShot = 0;
-
-
-                    Shot shot = new Shot(
-                            avatar.x, avatar.y, userInput.mouseMovedX + worldPartX, userInput.mouseMovedY + worldPartY);
-                    //this.gameObjects.add(shot);
-                }
-            }
+            } 
         }
 
 
         UIButton playButton = (UIButton) mainMenuObjects.get(0);
 
-        if (userInput.isMousePressed) {
-            if (userInput.mouseMovedX >= playButton.x && userInput.mouseMovedX <= playButton.getMaxX()
-                    && (userInput.mouseMovedY >= playButton.y && userInput.mouseMovedY <= playButton.getMaxY())) {
-                gameState = GameState.PLAY;
-            }
+        if (userInput.isMousePressed && playButton.contains(userInput.mouseMovedX, userInput.mouseMovedY)) {
+            gameState = GameState.PLAY;
         }
 
 
@@ -399,27 +378,11 @@ public class RPGWorld extends World {
                         sound.setVolume(-20.0f);
 
                     } 
-
-                    //this.gameState = this.gameState == GameState.PAUSE ? GameState.PLAY : GameState.PAUSE;
                     break;
-              /*  case (char) 10:
-                    if (!chatBoxObjects.isEmpty()) {
-                        ChatBoxButton chatBox = (ChatBoxButton) chatBoxObjects.get(0);
-                        handleDialog(chatBox);
-
-                    }
-                    break; */
                 case 'w':
                 case 'a':
                 case 's':
                 case 'd':
-
-                    /*
-                     * exit dialog via movement > problem if moved accidentally on object that gets deleted on collision dialog is lost
-                     *                          > if left out accidental dialog is forced upon user upon collision
-                     * fixes chatloop > game frozen until wasd pressed after chatbox is cleared
-                     * */
-
                     // can't close menus with movement keys
                     if (gameState != GameState.PAUSE && gameState != GameState.MAIN_MENU && gameState != GameState.COMPLETE && gameState != GameState.DEATH) {
                         if (chatBox != null) {
