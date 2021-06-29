@@ -53,6 +53,23 @@ public class Boss extends EnemyAI
         healthBar.draw(gs, tick);
     }
 
+    public void fireVoidCannon() {
+        if (voidCannonTemp > VOID_CANNON_THRESHOLD) { return; }
+        world.gameObjects.add(new VoidOrb(x, y, target.x, target.y, this));
+        voidCannonTemp += voidCannonCooldown;
+    }
+    public void fireMonsterCannon() {
+        if (monsterCannonTemp > MONSTER_CANNON_THRESHOLD) { return; }
+        world.gameObjects.add(new MonsterOrb(x, y, target));
+        monsterCannonTemp += monsterCannonCooldown;
+    }
+    public void fireTeleCannon() {
+        if (teleCannonTemp > TELE_CANNON_THRESHOLD) { return; }
+        world.gameObjects.add(new TeleportOrb(x, y, target.x, target.y, teleportIndex));
+        teleportIndex++;
+        teleCannonTemp +=teleCannonCooldown;
+    }
+
     public void move(double diffSeconds) {
         if (voidCannonTemp >= 0) { voidCannonTemp -= diffSeconds; }
         if (monsterCannonTemp >= 0) { monsterCannonTemp -= diffSeconds; }
@@ -68,18 +85,22 @@ public class Boss extends EnemyAI
 
         double dist = world.getPhysicsSystem().distance(x, y, target.x, target.y);
         if (dist < lineOfSight) {
-            if (life < 1 && voidCannonTemp < VOID_CANNON_THRESHOLD) {
-                world.gameObjects.add(new VoidOrb(x, y, target.x, target.y, this));
-                voidCannonTemp += voidCannonCooldown;
-            }
-            if (life < 0.7 && monsterCannonTemp < MONSTER_CANNON_THRESHOLD) {
-                world.gameObjects.add(new MonsterOrb(x, y, target));
-                monsterCannonTemp += monsterCannonCooldown;
-            }
-            if (life < 0.3 && teleCannonTemp < TELE_CANNON_THRESHOLD) {
-                world.gameObjects.add(new TeleportOrb(x, y, target.x, target.y, teleportIndex));
-                teleportIndex++;
-                teleCannonTemp +=teleCannonCooldown;
+            if (life < 0.3) {
+                fireVoidCannon();
+                fireMonsterCannon();
+                fireTeleCannon();
+            } else if (life < 0.6) {
+                fireTeleCannon();
+                fireVoidCannon();
+            } else if (life < 0.7) {
+                fireVoidCannon();
+                fireMonsterCannon();
+            } else if (life < 0.8) {
+                fireMonsterCannon();
+            } else if (life < 0.9) {
+                fireTeleCannon();
+            } else if (life < 1) {
+                fireVoidCannon();
             }
         }
 

@@ -14,6 +14,6 @@ public class UIImage extends UIObject {
 
     @Override
     public void draw(GraphicSystem gs, long tick) {
-        gs.drawImage(imageRef, x, y, x+imageRef.x2, y+imageRef.y2);
+        gs.drawImageScreen(imageRef, x, y, x+imageRef.x2, y+imageRef.y2);
     }
 }
