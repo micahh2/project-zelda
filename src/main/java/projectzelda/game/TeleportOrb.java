@@ -8,6 +8,8 @@ class TeleportOrb extends CircularGameObject
 { 
     public double lifeTime = 5;
     public boolean active = false;
+    public final double ANIMATION_SECONDS = .5;
+    public double animationSeconds = ANIMATION_SECONDS;
 
     int reX;
     int reY;
@@ -31,6 +33,9 @@ class TeleportOrb extends CircularGameObject
         if (lifeTime <= 0) { 
             this.isLiving=false; 
             return;
+        }
+        if (animationSeconds > 0) {
+            animationSeconds = Math.max(0, animationSeconds - diffSeconds);
         }
 
         GameObjectList collisions = world.getPhysicsSystem().getCollisions(this);
@@ -63,7 +68,7 @@ class TeleportOrb extends CircularGameObject
     }
 
     public void activate() {
-        if (!active) { return; }
+        if (active) { return; }
         active = true;
         speed = 0;
         radius *= 3;
@@ -74,7 +79,8 @@ class TeleportOrb extends CircularGameObject
         if (active) {
             gs.fillOval((int)x, (int)y, radius, radius, Color.WHITE);
             gs.drawOval((int)x, (int)y, radius, radius, 1, color);
-            gs.drawOval(reX, reY, 3, 3, 1, Color.WHITE);
+            int notifRadius = (int)(Math.pow(animationSeconds/ANIMATION_SECONDS, 3) * 700 + 3);
+            gs.drawOval(reX-notifRadius/2, reY-notifRadius/2, notifRadius, notifRadius, 3, Color.WHITE);
             return;
         }
         gs.drawOval((int)x, (int)y, radius, radius, 1, Color.WHITE);

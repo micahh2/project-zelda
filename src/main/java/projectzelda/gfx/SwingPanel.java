@@ -87,7 +87,6 @@ class SwingPanel extends JPanel implements GraphicSystem {
 
         List<VirtualImage> virtualImages = mediaInfo.getVirtualImages();
         for (VirtualImage vi : virtualImages) {
-            System.out.println("Loading virtual image: " + vi.name);
             BufferedImage bi = ImageDrawer.drawVirtualImage(vi, images, this);
             images.put(vi.name, bi);
         }

@@ -8,10 +8,7 @@ import java.awt.*;
 public class Rock extends RectangularGameObject
 {
 
-    public HealthBar healthBar;
-    public int  radius = 20;
     protected double life = 1.0;
-    protected static final Color REDDER = new Color(160, 40, 20);
     protected static final double COLOR_COOLDOWN = 0.2;
     protected double colorCooldown = 0;
     private int posXChatBox = world.worldInfo.getPartWidth() / 2 - 300;
@@ -29,34 +26,34 @@ public class Rock extends RectangularGameObject
     public Rock(double x, double y, ImageRef imageRef)
     {
         super(x, y, 0, 0, 128, 46, null);
-        this.isMoving = false;
+        this.isMoving = true;
         this.imageRef = imageRef;
-        healthBar = new HealthBar(0, 0, 80, 5);
-        adjustHealthBarPosition();
+    }
+
+
+    @Override
+    public void move(double diffSeconds) {
+        if(colorCooldown > 0) { colorCooldown -= diffSeconds; }
     }
 
     // Invisible
     @Override
     public void draw(GraphicSystem gs, long tick) {
-        gs.draw(this);
-        healthBar.draw(gs, tick);
+        int shake = 0;
+        if (colorCooldown > 0 && tick % 3 == 0) {
+            shake = (int)(Math.random()*2)+1;
+        }
+        int x2 = (int)x + width+shake;
+        int y2 = (int)y + height+shake;
+        gs.drawImage(imageRef, (int)x+shake, (int)y+shake, x2, y2);
     }
 
     public int type() { return Const.Type.ROCK.ordinal(); }
-
-    protected void adjustHealthBarPosition() {
-        int healthBarX = (int) (x - healthBar.width /10);
-        int healthBarY = (int) (y - radius + 15 * healthBar.height);
-        healthBar.x = healthBarX;
-        healthBar.y = healthBarY;
-    }
 
     public void hit() {
         // every hit decreases life
         if (((RPGWorld) world).questState == QuestState.BOSS) {
             life -= 0.21;
-            healthBar.health = life;
-            color = REDDER;
             colorCooldown = COLOR_COOLDOWN;
 
             // if Goblin is dead, delete it
@@ -94,7 +91,6 @@ public class Rock extends RectangularGameObject
 
     public GameObject clone() {
         Rock r = new Rock(x, y, imageRef);
-        r.adjustHealthBarPosition();
         return r;
     }
 }

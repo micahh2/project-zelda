@@ -6,7 +6,7 @@ public class Boss extends EnemyAI
 {
 
     public double voidCannonCooldown = 2.2;
-    public double VOID_CANNON_THRESHOLD = 1;
+    public double VOID_CANNON_THRESHOLD = .7;
     public double voidCannonTemp = 0;
 
     public double monsterCannonCooldown = 3.2;
@@ -75,6 +75,7 @@ public class Boss extends EnemyAI
         if (monsterCannonTemp >= 0) { monsterCannonTemp -= diffSeconds; }
         if (teleCannonTemp >= 0) { teleCannonTemp -= diffSeconds; }
         if (colorCooldown >= 0) { colorCooldown -= diffSeconds; }
+        if (hitCooldown >= 0) { hitCooldown -= diffSeconds; }
 
         // Close to goal, pick a new one
         if (readyForNewDestination()) {
@@ -89,10 +90,10 @@ public class Boss extends EnemyAI
                 fireVoidCannon();
                 fireMonsterCannon();
                 fireTeleCannon();
-            } else if (life < 0.6) {
+            } else if (life < 0.4) {
                 fireTeleCannon();
                 fireVoidCannon();
-            } else if (life < 0.7) {
+            } else if (life < 0.6) {
                 fireVoidCannon();
                 fireMonsterCannon();
             } else if (life < 0.8) {
@@ -117,6 +118,13 @@ public class Boss extends EnemyAI
             // if object is target, we're being attacked
             switch (type) {
                 case AVATAR:
+                    isMoving = false;
+                    state = State.STUCK;
+                    moveBack();
+                    if (hitCooldown < 0) {
+                        ((Avatar)obj).hit();
+                        hitCooldown = hitCooldownSeconds;
+                    }
                 case TREE:
                 case ROCK:
                 case GOBLIN:

@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.net.URL;
+import java.net.URI;
 import java.io.File;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
@@ -43,8 +43,8 @@ public class Map implements MediaInfo, WorldInfo {
 
         try {
 
-            URL resourceUri = getClass().getResource(src);
-            File file = new File(resourceUri.getPath());
+            URI resourceUri = getClass().getResource(src).toURI();
+            File file = new File(resourceUri);
 
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();

@@ -33,8 +33,12 @@ public class Chest extends RectangularGameObject {
 
     public GameObject clone() {
         Chest c = new Chest(x, y, width, height, imageRef);
-        c.setChestText(getChestText());
-
+        setClone(c);
         return c;
+    }
+
+    public void setClone(Chest c) {
+        super.setClone(c);
+        c.setChestText(getChestText());
     }
 }
