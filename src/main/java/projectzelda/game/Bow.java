@@ -14,6 +14,8 @@ public class Bow extends RectangularGameObject {
     public boolean flippedX = false;
     ImageRef arrowImage;
     Arrow arrow;
+    final double COOLDOWN = 0.7;
+    double weaponTemp = 0;
     List<ImageRef> frames;
 
     public Bow(List<ImageRef> frames, ImageRef arrow) {
@@ -48,6 +50,8 @@ public class Bow extends RectangularGameObject {
 
     public void fire(Arrow.Dir dir) {
         if (arrow != null && arrow.isLiving) { return; }
+        if (weaponTemp > 0) { return; }
+        weaponTemp = COOLDOWN;
         int imgX = (int)x-width/2;
 
         arrow = new Arrow(imgX, y, dir, arrowImage);

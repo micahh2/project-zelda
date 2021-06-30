@@ -68,6 +68,9 @@ public class Avatar extends CircularGameObject {
         if (sword.weaponTemp > 0) {
             sword.weaponTemp -= diffSeconds;
         }
+        if (bow.weaponTemp > 0) {
+            bow.weaponTemp -= diffSeconds;
+        }
         if (elementHitTimeout > 0) {
             elementHitTimeout -= diffSeconds;
         }
@@ -76,8 +79,31 @@ public class Avatar extends CircularGameObject {
         int startx = (int) x;
         int starty = (int) y;
 
+
         // move Avatar one step forward
         super.move(diffSeconds);
+
+        double diffx = x - xOld;
+        double diffy = y - yOld;
+        if (diffx < 0 && diffy == 0) {
+            fireDir = Arrow.Dir.LEFT;
+        } else if (diffx < 0 && diffy < 0) {
+            fireDir = Arrow.Dir.UP_LEFT;
+        } else if (diffx < 0 && diffy > 0) {
+            fireDir = Arrow.Dir.DOWN_LEFT;
+        } else if (diffx > 0 && diffy == 0) {
+            fireDir = Arrow.Dir.RIGHT;
+        } else if (diffx > 0 && diffy < 0) {
+            fireDir = Arrow.Dir.UP_RIGHT;
+        } else if (diffx > 0 && diffy > 0) {
+            fireDir = Arrow.Dir.DOWN_RIGHT;
+        } else if (diffx == 0 && diffy < 0) {
+            fireDir = Arrow.Dir.UP;
+        } else if (diffx == 0 && diffy > 0) {
+            fireDir = Arrow.Dir.DOWN;
+        }
+        if ((xOld < x && !flippedX) || (xOld > x && flippedX)) { flip(); }
+
 
         // calculate all collisions with other Objects 
         GameObjectList collisions = world.getPhysicsSystem().getCollisions(this);
@@ -124,38 +150,13 @@ public class Avatar extends CircularGameObject {
             }
         }
 
-        // Hacky, but we can flip the orientation of the avatar by switching the image coordinates to draw from
-        int endx = (int) x;
-        int endy = (int) y;
-
-        if ((startx < endx && !flippedX) || (startx > endx && flippedX)) { flip(); }
 
         sword.setXY(x, y);
         bow.setXY(x, y);
-
-        int diffx = endx - startx;
-        int diffy = endy - starty;
-
-        if (diffx < 0 && diffy == 0) {
-            fireDir = Arrow.Dir.LEFT;
-        } else if (diffx < 0 && diffy < 0) {
-            fireDir = Arrow.Dir.UP_LEFT;
-        } else if (diffx < 0 && diffy > 0) {
-            fireDir = Arrow.Dir.DOWN_LEFT;
-        } else if (diffx > 0 && diffy == 0) {
-            fireDir = Arrow.Dir.RIGHT;
-        } else if (diffx > 0 && diffy < 0) {
-            fireDir = Arrow.Dir.UP_RIGHT;
-        } else if (diffx > 0 && diffy > 0) {
-            fireDir = Arrow.Dir.DOWN_RIGHT;
-        } else if (diffx == 0 && diffy < 0) {
-            fireDir = Arrow.Dir.UP;
-        } else if (diffx == 0 && diffy > 0) {
-            fireDir = Arrow.Dir.DOWN;
-        }
     }
 
     public void flip() {
+        // Hacky, but we can flip the orientation of the avatar by switching the image coordinates to draw from
         int tempx = imageRef.x1;
         imageRef.x1 = imageRef.x2;
         imageRef.x2 = tempx;

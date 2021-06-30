@@ -86,5 +86,9 @@ public abstract class EnemyAI extends CircularGameObject {
         super.setClone(e);
         e.life = life;
         e.adjustHealthBarPosition();
+        e.hitCooldownSeconds = hitCooldownSeconds;
+        e.hitCooldown = hitCooldown;
+        e.colorCooldown = colorCooldown;
+        e.worldInfo = worldInfo;
     }
 }
