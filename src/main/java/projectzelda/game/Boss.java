@@ -121,8 +121,8 @@ public class Boss extends EnemyAI
                     isMoving = false;
                     state = State.STUCK;
                     moveBack();
-                    if (hitCooldown < 0) {
-                        ((Avatar)obj).hit();
+                    if (life < 1 && hitCooldown < 0) {
+                        ((Avatar)obj).hit(0.1);
                         hitCooldown = hitCooldownSeconds;
                     }
                 case TREE:

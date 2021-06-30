@@ -8,7 +8,7 @@ class TeleportOrb extends CircularGameObject
 { 
     public double lifeTime = 5;
     public boolean active = false;
-    public final double ANIMATION_SECONDS = .5;
+    public final double ANIMATION_SECONDS = .3;
     public double animationSeconds = ANIMATION_SECONDS;
 
     int reX;
@@ -34,7 +34,7 @@ class TeleportOrb extends CircularGameObject
             this.isLiving=false; 
             return;
         }
-        if (animationSeconds > 0) {
+        if (active && animationSeconds > 0) {
             animationSeconds = Math.max(0, animationSeconds - diffSeconds);
         }
 
@@ -79,7 +79,7 @@ class TeleportOrb extends CircularGameObject
         if (active) {
             gs.fillOval((int)x, (int)y, radius, radius, Color.WHITE);
             gs.drawOval((int)x, (int)y, radius, radius, 1, color);
-            int notifRadius = (int)(Math.pow(animationSeconds/ANIMATION_SECONDS, 3) * 700 + 3);
+            int notifRadius = (int)(Math.pow(animationSeconds/ANIMATION_SECONDS, 3) * 400 + 3);
             gs.drawOval(reX-notifRadius/2, reY-notifRadius/2, notifRadius, notifRadius, 3, Color.WHITE);
             return;
         }
