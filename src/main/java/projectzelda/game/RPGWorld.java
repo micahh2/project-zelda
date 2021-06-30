@@ -228,7 +228,7 @@ public class RPGWorld extends World {
 
         // add screen upon completion
         relY = (int) (0.65 * worldHeight);
-        completeGameMenuObjects.add(new UIButton(relX, relY, buttonWidth, buttonHeight, "Done."));
+        completeGameMenuObjects.add(new UIButton(relX, relY, buttonWidth, buttonHeight, "Done"));
 
 
         // initialize the background and add it to different screens
