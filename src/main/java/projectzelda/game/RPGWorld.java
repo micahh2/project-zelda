@@ -440,8 +440,7 @@ public class RPGWorld extends World {
             horz += 10;
         }
         // Move character
-
-        if (horz != 0 || vert != 0) {
+        if ((horz != 0 || vert != 0) && gameState == GameState.PLAY) {
             avatar.setDestination(avatar.x + horz, avatar.y + vert);
         }
 
